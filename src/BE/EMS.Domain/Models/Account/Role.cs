@@ -16,8 +16,6 @@ namespace EMS.Domain.Models.Account
         {
         }
         public virtual ICollection<UserRole> UserRoles { get; set; }
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
-        public virtual ICollection<Permission> Permissions { get; set; }
         public string Description { get; set; } // Ví dụ thêm thuộc tính mô tả
 
     }
