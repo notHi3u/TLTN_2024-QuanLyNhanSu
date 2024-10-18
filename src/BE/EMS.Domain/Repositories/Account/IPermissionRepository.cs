@@ -1,14 +1,14 @@
-﻿using Account.Domain.Filters;
-using Account.Domain.Models;
+﻿using Account.Domain.Models;
 using Common.Data;
 using Common.Dtos;
+using EMS.Domain.Filters.Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Repositories
+namespace EMS.Domain.Repositories.Account
 {
     public interface IPermissionRepository : IBaseRepository<Permission>
     {

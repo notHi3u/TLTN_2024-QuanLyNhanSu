@@ -3,7 +3,7 @@ using Common.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Repositories
+namespace EMS.Domain.Repositories.Account
 {
     public interface IRolePermissionRepository : IBaseRepository<RolePermission>
     {

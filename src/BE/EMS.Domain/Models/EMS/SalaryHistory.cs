@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EMS.Domain.Models
 {
-    public class SalaryStatement
+    public class SalaryHistory
     {
         public long Id { get; set; } 
         public required string EmployeeId { get; set; }

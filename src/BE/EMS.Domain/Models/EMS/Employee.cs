@@ -1,4 +1,5 @@
 ﻿
+using EMS.Domain.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -29,5 +30,8 @@ using System.Threading.Tasks;
             public string? DepartmentId { get; set; }// Mã phòng ban (Foreign Key)
             public string? TaxId { get; set; }// Mã số thuế thu nhập cá nhân
             public string Email { get; set; }// Email
+
+            public string? UserId { get; set; }
+            public virtual User User { get; set; }
         }
     }

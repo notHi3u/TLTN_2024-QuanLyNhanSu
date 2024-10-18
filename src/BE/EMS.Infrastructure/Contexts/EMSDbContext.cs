@@ -22,8 +22,7 @@ namespace Account.Infrastructure.Context
             base.OnModelCreating(builder);
             builder.Entity<User>(b =>
             {
-                b.Property(e => e.PhoneNumber)
-                .HasMaxLength(20);   // Each User can have many entries in the UserRole join table
+
                 b.HasMany(e => e.UserRoles)
                     .WithOne(e => e.User)
                     .HasForeignKey(ur => ur.UserId)

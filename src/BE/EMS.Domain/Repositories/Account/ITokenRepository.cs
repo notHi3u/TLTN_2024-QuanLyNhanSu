@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Repositories
+namespace EMS.Domain.Repositories.Account
 {
     public interface ITokenRepository : IBaseRepository<RefreshToken>
     {

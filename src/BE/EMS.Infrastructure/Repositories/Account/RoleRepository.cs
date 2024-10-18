@@ -1,15 +1,15 @@
-﻿using Account.Domain.Filters;
-using Account.Domain.Repositories;
-using Common.Data;
+﻿using Common.Data;
 using Common.Dtos;
+using EMS.Domain.Filters.Account;
 using EMS.Domain.Models.Account;
+using EMS.Domain.Repositories.Account;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Account.Infrastructure.Repositories
+namespace EMS.Infrastructure.Repositories.Account
 {
     public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
@@ -22,7 +22,7 @@ namespace Account.Infrastructure.Repositories
         {
             // Retrieve the role from the database using the provided ID
             if (!IsDeep)
-            return await _dbSet.FindAsync(id);
+                return await _dbSet.FindAsync(id);
             return await _dbSet
                 .AsNoTracking()
                 .Include(r => r.RolePermissions)

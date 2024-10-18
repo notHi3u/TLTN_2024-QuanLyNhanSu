@@ -1,9 +1,9 @@
-﻿using Account.Domain.Filters;
-using Account.Domain.Repositories;
-using Account.Infrastructure.Context;
+﻿using Account.Infrastructure.Context;
 using Common.Data;
 using Common.Dtos;
+using EMS.Domain.Filters.Account;
 using EMS.Domain.Models.Account;
+using EMS.Domain.Repositories.Account;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Account.Infrastructure.Repositories
+namespace EMS.Infrastructure.Repositories.Account
 {
-    public class UserRepository : BaseRepository<User>,IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         public UserRepository(EMSDbContext context, ILogger<UserRepository> logger)
             : base(context, logger)
