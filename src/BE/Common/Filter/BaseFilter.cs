@@ -52,5 +52,17 @@
         }
 
         public bool? IsDeep { get; set; } = false;
+
+        //Lọc theo từ bắt đầu
+        public DateOnly? StartDate { get; set; }
+
+        //Lọc tới ngày kết thúc
+        public DateOnly? EndDate { get; set; }
+
+        //Lọc theo ngày bắt đầu, kết thúc
+        public bool HasValidDateRange()
+        {
+            return StartDate.HasValue && EndDate.HasValue && StartDate <= EndDate;
+        }
     }
 }

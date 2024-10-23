@@ -1,12 +1,7 @@
-﻿using Account.Domain.Models;
-using Common.Data;
+﻿using Common.Data;
 using Common.Dtos;
 using EMS.Domain.Filters.Account;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using EMS.Domain.Models.Account;
 
 namespace EMS.Domain.Repositories.Account
 {

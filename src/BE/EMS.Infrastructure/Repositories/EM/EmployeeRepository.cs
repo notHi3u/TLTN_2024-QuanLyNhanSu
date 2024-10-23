@@ -1,18 +1,14 @@
-﻿using Account.Infrastructure.Context;
-using Common.Data;
+﻿using Common.Data;
 using Common.Dtos;
 using EMS.Domain.Filters.EMS;
 using EMS.Domain.Models;
-using EMS.Domain.Repositories.EMS.EMS.Domain.Repositories.EMS;
+using EMS.Domain.Models.EM;
+using EMS.Domain.Repositories.EM;
+using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EMS.Infrastructure.Repositories.EMS
+namespace EMS.Infrastructure.Repositories.EM
 {
     public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
     {
@@ -30,14 +26,6 @@ namespace EMS.Infrastructure.Repositories.EMS
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        // Get all employees
-        public async Task<IEnumerable<Employee>> GetAllAsync()
-        {
-            _logger.LogInformation("Getting all Employees");
-            return await _dbSet
-                .AsNoTracking()
-                .ToListAsync();
-        }
 
         // Get employees with pagination
         public async Task<PagedDto<Employee>> GetPagedAsync(EmployeeFilter filter)
@@ -57,7 +45,7 @@ namespace EMS.Infrastructure.Repositories.EMS
             // Apply filtering based on Keyword
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
-                query = query.Where(e => e.FirstName.Contains(filter.Keyword) || e.LastName.Contains(filter.Keyword));
+                query = query.Where(e => e.FirstName!.Contains(filter.Keyword) || e.LastName!.Contains(filter.Keyword));
             }
 
             // Calculate total count before pagination

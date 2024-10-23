@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EMS.Domain.Models
+﻿namespace EMS.Domain.Models.EM
 {
     public class SalaryHistory
     {
@@ -16,5 +10,7 @@ namespace EMS.Domain.Models
         public decimal Bonus { get; set; }
         public decimal Deductions { get; set; } 
         public decimal NetSalary { get; set; }
+
+        public virtual Employee Employee { get; set; }
     }
 }

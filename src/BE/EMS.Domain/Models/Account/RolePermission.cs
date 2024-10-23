@@ -1,18 +1,12 @@
-﻿using EMS.Domain.Models.Account;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Account.Domain.Models
+﻿namespace EMS.Domain.Models.Account
 {
     public class RolePermission
     {
-        public required string RoleId { get; set; }
-        public required string PermissionId { get; set; }
+        public string RoleId { get; set; } // Assuming the RoleId is of long type
+        public string PermissionId { get; set; } // Assuming the PermissionId is also of long type
 
         public virtual Role Role { get; set; }
         public virtual Permission Permission { get; set; }
     }
 }
+
