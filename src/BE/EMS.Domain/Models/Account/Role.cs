@@ -1,10 +1,4 @@
-﻿using Account.Domain.Models;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace EMS.Domain.Models.Account
 {
@@ -16,10 +10,10 @@ namespace EMS.Domain.Models.Account
             : base(name)
         {
         }
-        public virtual ICollection<UserRole> UserRoles { get; set; }
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
-        public virtual ICollection<Permission> Permissions { get; set; }
-        public string Description { get; set; } // Ví dụ thêm thuộc tính mô tả
 
+        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public string Description { get; set; } // Ví dụ thêm thuộc tính mô tả
+        public ICollection<Permission> Permissions { get; set; } = new List<Permission>();
+        public ICollection<RolePermission> RolePermissions { get; set; }
     }
 }

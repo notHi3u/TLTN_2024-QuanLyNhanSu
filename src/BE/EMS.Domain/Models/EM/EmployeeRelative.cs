@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Account.Infrastructure.Repositories
+﻿namespace EMS.Domain.Models.EM
 {
     public class EmployeeRelative
     {
@@ -16,5 +10,7 @@ namespace Account.Infrastructure.Repositories
         public required string PhoneNumber { get; set; }
         public string? Adress { get; set; }
         public bool EmergencyContact { get; set; }
+
+        public virtual Employee Employee { get; set; }
     }
 }

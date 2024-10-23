@@ -1,19 +1,17 @@
-﻿using Account.Domain.Filters;
-using Account.Domain.Models;
-using Account.Infrastructure.Context;
-using Common.Data;
+﻿using Common.Data;
 using Common.Dtos;
+using EMS.Domain.Filters.Account;
+using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
+using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EMS.Infrastructure.Repositories.Account
 {
     public class PermissionRepository : BaseRepository<Permission>, IPermissionRepository
     {
-        public PermissionRepository(Context.EMSDbContext context, ILogger<PermissionRepository> logger)
+        public PermissionRepository(AccountDbContext context, ILogger<PermissionRepository> logger)
             : base(context, logger)
         {
         }

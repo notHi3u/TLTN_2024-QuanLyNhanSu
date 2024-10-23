@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EMS.Domain.Models
+﻿namespace EMS.Domain.Models.EM
 {
     public class Attendance
     {
@@ -14,5 +8,9 @@ namespace EMS.Domain.Models
         public required bool WorkStatus { get; set; }
         public string? AbsentReasons { get; set; }
         public bool Status { get; set; } = false;
+        public long TimeCardId { get; set; }
+
+        public virtual Employee Employee { get; set; }
+        public virtual TimeCard TimeCard { get; set; }
     }
 }

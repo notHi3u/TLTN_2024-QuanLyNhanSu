@@ -1,17 +1,15 @@
-﻿using Account.Domain.Models;
-using Account.Infrastructure.Context;
-using Common.Data;
+﻿using Common.Data;
+using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
+using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EMS.Infrastructure.Repositories.Account
 {
     public class RolePermissionRepository : BaseRepository<RolePermission>, IRolePermissionRepository
     {
-        public RolePermissionRepository(Context.EMSDbContext context, ILogger<RolePermissionRepository> logger)
+        public RolePermissionRepository(AccountDbContext context, ILogger<RolePermissionRepository> logger)
             : base(context, logger)
         {
         }
@@ -40,25 +38,6 @@ namespace EMS.Infrastructure.Repositories.Account
             return await _dbSet
                 .AsNoTracking() // Improves performance for read-only queries
                 .FirstOrDefaultAsync(rp => rp.RoleId == roleId && rp.PermissionId == permissionId); // Fetch the RolePermission with both RoleId and PermissionId
-        }
-
-        // Optionally, you can add more methods as per your application's requirements
-        public async Task<List<RolePermission>> GetAllByRoleIdAsync(string roleId)
-        {
-            _logger.LogInformation($"Getting all RolePermissions for Role ID {roleId}");
-            return await _dbSet
-                .Where(rp => rp.RoleId == roleId)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<List<RolePermission>> GetAllByPermissionIdAsync(string permissionId)
-        {
-            _logger.LogInformation($"Getting all RolePermissions for Permission ID {permissionId}");
-            return await _dbSet
-                .Where(rp => rp.PermissionId == permissionId)
-                .AsNoTracking()
-                .ToListAsync();
         }
     }
 }

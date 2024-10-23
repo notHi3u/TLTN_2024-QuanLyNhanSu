@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EmployeeManagementService.Domain.Models
+﻿namespace EMS.Domain.Models.EM
 {
     public class WorkHistory
     {
@@ -14,5 +8,7 @@ namespace EmployeeManagementService.Domain.Models
         public required string DepartmentId { get; set; }
         public DateOnly StartDate { get; set; } // Ngày bắt đầu làm việc
         public DateOnly EndDate { get; set; } // Ngày kết thúc hợp đồng
+
+        public virtual Employee Employee { get; set; }
     }
 }

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 
-namespace Account.Domain.Models
+namespace EMS.Domain.Models.Account
 {
     public class Permission
     {
         public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public virtual ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
-    }
+        public required string Name { get; set; }
+        public string? DepartmentId { get; set; }
+        public string? Description { get; set; }
 
+        // Additional properties or methods can be added as needed
+        public virtual List<RolePermission> RolePermissions { get; set; }
+    }
 }

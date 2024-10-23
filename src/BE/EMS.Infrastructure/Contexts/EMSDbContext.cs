@@ -1,68 +1,52 @@
-﻿using Account.Domain.Models;
-using EMS.Domain.Models.Account;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using EMS.Domain.Models.EM;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
-namespace Account.Infrastructure.Context
+
+namespace EMS.Infrastructure.Contexts
 {
-    public class EMSDbContext
-        : IdentityDbContext<
-            User, Role, string,
-            IdentityUserClaim<string>, UserRole, IdentityUserLogin<string>,
-            IdentityRoleClaim<string>, IdentityUserToken<string>>
+    public class EMSDbContext : DbContext
     {
         public EMSDbContext(DbContextOptions<EMSDbContext> options)
             : base(options)
         {
         }
 
+        // DbSets for Employee Management-related entities
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<LeaveRequest> LeaveRequests { get; set; }
+        public DbSet<LeaveBalance> LeaveBalances { get; set; }
+        public DbSet<EmployeeRelative> EmployeeRelatives { get; set; }
+        public DbSet<Salary> Salaries { get; set; }
+        public DbSet<SalaryHistory> SalaryHistories { get; set; }
+        public DbSet<TimeCard> TimeCards { get; set; }
+        public DbSet<WorkHistory> WorkHistories { get; set; }
+        public DbSet<HolidayLeavePolicy> HolidayLeavePolicies { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<User>(b =>
-            {
-                b.Property(e => e.PhoneNumber)
-                .HasMaxLength(20);   // Each User can have many entries in the UserRole join table
-                b.HasMany(e => e.UserRoles)
-                    .WithOne(e => e.User)
-                    .HasForeignKey(ur => ur.UserId)
-                    .IsRequired();
-            });
-            builder.Entity<Role>(b =>
-            {
-                b.Property(r => r.Description)
-                .HasMaxLength(250);
-                b.HasMany(e => e.UserRoles)
-              .WithOne(e => e.Role)
-              .HasForeignKey(ur => ur.RoleId)
-              .IsRequired();
-            });
-            builder.Entity<RolePermission>()
-        .HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
-            builder.Entity<RolePermission>()
-                .HasOne(rp => rp.Role)
-                .WithMany(r => r.RolePermissions)
-                .HasForeignKey(rp => rp.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // Department and Employee (1-n)
+            builder.Entity<Department>()
+                .HasMany(d => d.Employees)
+                .WithOne(e => e.Department)
+                .HasForeignKey(e => e.DepartmentId);
 
-            builder.Entity<RolePermission>()
-                .HasOne(rp => rp.Permission)
-                .WithMany(p => p.RolePermissions)
-                .HasForeignKey(rp => rp.PermissionId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // User and Employee (1-1)
+            builder.Entity<Employee>()
+                .HasOne(e => e.User)
+                .WithOne(u => u.Employee)
+                .HasForeignKey<Employee>(e => e.Id); // Assuming Employee.Id matches User.Id
 
-            builder.Entity<RefreshToken>().HasKey(t => t.Id);
+            // Additional Employee configurations...
+            builder.Entity<Employee>().HasKey(e => e.Id);
+            builder.Entity<Salary>().HasKey(s => s.Id);
+            builder.Entity<SalaryHistory>().HasKey(sh => sh.Id);
+            builder.Entity<TimeCard>().HasKey(tc => tc.Id);
+            builder.Entity<Department>().HasKey(d => d.Id);
 
-            builder.HasDefaultSchema("Account");
-
-            // Fluent API configurations go here.
-            // For example:
-            // builder.Entity<SomeEntity>().Property(e => e.PropertyName).IsRequired();
+            builder.HasDefaultSchema("EMS"); // Default schema for employee management entities
         }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
-        public DbSet<RolePermission> RolePermissions { get; set; }
     }
 }

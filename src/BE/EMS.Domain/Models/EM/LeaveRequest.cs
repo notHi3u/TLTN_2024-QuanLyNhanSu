@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Account.Infrastructure.Repositories
+﻿namespace EMS.Domain.Models.EM
 {
     public class LeaveRequest
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public required string EmployeeId { get; set; }
         public required string LeaveType { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
+
+        public virtual Employee Employee { get; set; }
     }
 }

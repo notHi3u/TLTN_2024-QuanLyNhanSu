@@ -1,22 +1,18 @@
-﻿using Account.Domain.Models;
-using Account.Domain.Repositories;
-using Account.Infrastructure.Context;
-using Common.Data;
+﻿using Common.Data;
 using EMS.Domain.Models.Account;
+using EMS.Domain.Repositories.Account;
+using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Account.Infrastructure.Repositories
+namespace EMS.Infrastructure.Repositories.Account
 {
-    public class TokenRepository : BaseRepository<RefreshToken>,ITokenRepository
+    public class TokenRepository : BaseRepository<RefreshToken>, ITokenRepository
     {
-        private readonly EMSDbContext _context;
+        private readonly AccountDbContext _context;
         private readonly ILogger<TokenRepository> _logger;
 
-        public TokenRepository(EMSDbContext context, ILogger<TokenRepository> logger)
+        public TokenRepository(AccountDbContext context, ILogger<TokenRepository> logger)
             : base(context, logger)
         {
             _context = context;
@@ -33,7 +29,7 @@ namespace Account.Infrastructure.Repositories
 
         public async Task<bool> RevokeToken(string tokenId)
         {
-            var token =  _context.RefreshTokens
+            var token = _context.RefreshTokens
                 .Where(t => t.Id == tokenId)
                 .FirstOrDefault();
             if (token == null)

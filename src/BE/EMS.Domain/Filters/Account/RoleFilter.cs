@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Filters
+namespace EMS.Domain.Filters.Account
 {
-    public class UserFilter:FilterBase
+    public class RoleFilter : FilterBase
     {
     }
 }
