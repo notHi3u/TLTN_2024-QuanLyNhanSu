@@ -3,6 +3,7 @@ using Common.Dtos;
 using EMS.Domain.Filters.EMS;
 using EMS.Domain.Models;
 using EMS.Domain.Models.EM;
+using EMS.Domain.Repositories.Account;
 using EMS.Domain.Repositories.EM;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -12,20 +13,13 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
     {
-        public EmployeeRepository(EMSDbContext context, ILogger<EmployeeRepository> logger)
+        private readonly IUserRepository _userRepository;
+        public EmployeeRepository(EMSDbContext context, ILogger<EmployeeRepository> logger, IUserRepository userRepository)
             : base(context, logger)
         {
+            _userRepository = userRepository;
         }
-
-        // Get employee by ID
-        public async Task<Employee?> GetByIdAsync(string id)
-        {
-            _logger.LogInformation($"Getting Employee with ID {id}");
-            return await _dbSet
-                .AsNoTracking() // Optimizes for read-only queries
-                .FirstOrDefaultAsync(e => e.Id == id);
-        }
-
+        
 
         // Get employees with pagination
         public async Task<PagedDto<Employee>> GetPagedAsync(EmployeeFilter filter)
@@ -86,6 +80,21 @@ namespace EMS.Infrastructure.Repositories.EM
                 _dbSet.Remove(employee);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<bool> LinkEmployeeToUserAsync(string employeeId, string userId)
+        {
+            var employee = await GetByIdAsync(userId);
+
+            var user = await _userRepository.GetByIdAsync(userId);
+
+            if (employee != null && user !=null)
+            {
+                employee.UserId = user.Id;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

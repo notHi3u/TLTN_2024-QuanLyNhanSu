@@ -16,11 +16,6 @@ namespace EMS.Infrastructure.Repositories.Account
         {
         }
 
-        public async Task<User?> GetByIdAsync(string id)
-        {
-            // Retrieve the user from the database using the provided ID
-            return await _dbSet.FindAsync(id);
-        }
         public async Task<PagedDto<User>> GetPagedAsync(UserFilter filter)
         {
             // Khởi tạo giá trị mặc định cho filter nếu cần

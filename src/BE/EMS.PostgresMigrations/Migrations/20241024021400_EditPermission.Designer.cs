@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024021400_EditPermission")]
+    partial class EditPermission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,6 +112,20 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", "EMS");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Description = "Administrator Role",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Description = "Employee Role",
+                            Name = "Employee"
+                        });
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.RolePermission", b =>
