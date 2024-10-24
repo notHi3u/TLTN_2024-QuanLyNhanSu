@@ -12,6 +12,6 @@ namespace EMS.Domain.Repositories.EM
 {
     public interface IAttendanceRepository: IBaseRepository<Attendance>
     {
-        Task<PagedDto<Employee>> GetPagedAsync(EmployeeFilter filter);
+        Task<PagedDto<Attendance>> GetPagedAsync(AttendanceFilter filter);
     }
 }

@@ -12,6 +12,6 @@ namespace EMS.Domain.Repositories.EM
 {
     public interface IHolidayLeavePolicyRepository:IBaseRepository<HolidayLeavePolicy>
     {
-        Task<PagedDto<HolidayLeavePolicy>> GetPagedAsync(HolidayLeavePolicy filter);
+        Task<PagedDto<HolidayLeavePolicy>> GetPagedAsync(HolidayLeavePolicyFilter filter);
     }
 }

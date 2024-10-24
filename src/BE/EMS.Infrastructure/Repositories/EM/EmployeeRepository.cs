@@ -1,7 +1,6 @@
 ﻿using Common.Data;
 using Common.Dtos;
 using EMS.Domain.Filters.EMS;
-using EMS.Domain.Models;
 using EMS.Domain.Models.EM;
 using EMS.Domain.Repositories.Account;
 using EMS.Domain.Repositories.EM;
@@ -52,34 +51,6 @@ namespace EMS.Infrastructure.Repositories.EM
                 .ToListAsync();
 
             return new PagedDto<Employee>(employees, totalCount, pageIndex, pageSize);
-        }
-
-        // Add new employee
-        public async Task AddEmployeeAsync(Employee employee)
-        {
-            _logger.LogInformation($"Adding Employee {employee.FirstName} {employee.LastName}");
-            await _dbSet.AddAsync(employee);
-            await _context.SaveChangesAsync();
-        }
-
-        // Update existing employee
-        public async Task UpdateEmployeeAsync(Employee employee)
-        {
-            _logger.LogInformation($"Updating Employee {employee.Id}");
-            _dbSet.Update(employee);
-            await _context.SaveChangesAsync();
-        }
-
-        // Delete employee by ID
-        public async Task DeleteEmployeeAsync(string id)
-        {
-            _logger.LogInformation($"Deleting Employee with ID {id}");
-            var employee = await GetByIdAsync(id);
-            if (employee != null)
-            {
-                _dbSet.Remove(employee);
-                await _context.SaveChangesAsync();
-            }
         }
 
         public async Task<bool> LinkEmployeeToUserAsync(string employeeId, string userId)

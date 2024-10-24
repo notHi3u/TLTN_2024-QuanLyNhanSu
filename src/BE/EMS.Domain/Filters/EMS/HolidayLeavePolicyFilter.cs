@@ -9,5 +9,6 @@ namespace EMS.Domain.Filters.EMS
 {
     public class HolidayLeavePolicyFilter: FilterBase
     {
+        public int? EffectiveYear { get; set; }
     }
 }

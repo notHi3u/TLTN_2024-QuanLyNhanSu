@@ -104,7 +104,7 @@ namespace EMS.Infrastructure.Contexts
             builder.Entity<Employee>()
                 .HasMany(e => e.Attendances)
                 .WithOne(a => a.Employee)
-                .HasForeignKey(a => a.EmpployeeId);
+                .HasForeignKey(a => a.EmployeeId);
 
             // Employee and LeaveRequest (1-n)
             builder.Entity<Employee>()

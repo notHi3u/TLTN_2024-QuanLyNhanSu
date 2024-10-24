@@ -9,5 +9,8 @@ namespace EMS.Domain.Filters.EMS
 {
     public class SalaryHistoryFilter: FilterBase
     {
+        public string? EmployeeId { get; set; }
+        public int? Month { get; set; }
+        public int? Year { get; set; }
     }
 }

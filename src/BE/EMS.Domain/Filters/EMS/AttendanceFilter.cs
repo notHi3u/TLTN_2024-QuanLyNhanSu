@@ -9,5 +9,6 @@ namespace EMS.Domain.Filters.EMS
 {
     public class AttendanceFilter: FilterBase
     {
+        public string? EmployeeId { get; set; }
     }
 }

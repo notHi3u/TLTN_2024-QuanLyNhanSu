@@ -3,7 +3,7 @@
     public class Attendance
     {
         public long Id { get; set; }
-        public required string EmpployeeId { get; set; }
+        public required string EmployeeId { get; set; }
         public required DateOnly Date { get; set; }
         public required bool WorkStatus { get; set; }
         public string? AbsentReasons { get; set; }
