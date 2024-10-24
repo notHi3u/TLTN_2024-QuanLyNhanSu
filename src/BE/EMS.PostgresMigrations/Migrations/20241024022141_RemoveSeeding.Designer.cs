@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024022141_RemoveSeeding")]
+    partial class RemoveSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,7 +223,7 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
-                    b.Property<string>("EmployeeId")
+                    b.Property<string>("EmpployeeId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -235,7 +238,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmpployeeId");
 
                     b.HasIndex("TimeCardId");
 
@@ -739,7 +742,7 @@ namespace EMS.PostgresMigrations.Migrations
                 {
                     b.HasOne("EMS.Domain.Models.EM.Employee", "Employee")
                         .WithMany("Attendances")
-                        .HasForeignKey("EmployeeId")
+                        .HasForeignKey("EmpployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

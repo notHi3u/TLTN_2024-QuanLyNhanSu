@@ -38,7 +38,8 @@ namespace EMS.Infrastructure.Contexts
         {
             base.OnModelCreating(builder);
 
-            // Account-related entity configurations
+            #region Account-related entity configurations
+
             builder.Entity<User>(b =>
             {
                 b.Property(e => e.PhoneNumber)
@@ -83,7 +84,9 @@ namespace EMS.Infrastructure.Contexts
 
             builder.Entity<RefreshToken>().HasKey(t => t.Id);
 
-            builder.HasDefaultSchema("Account"); // Default schema for account entities
+            #endregion
+
+            #region Employee Management-related entity configurations
 
             // Department and Employee (1-n)
             builder.Entity<Department>()
@@ -101,7 +104,7 @@ namespace EMS.Infrastructure.Contexts
             builder.Entity<Employee>()
                 .HasMany(e => e.Attendances)
                 .WithOne(a => a.Employee)
-                .HasForeignKey(a => a.EmpployeeId);
+                .HasForeignKey(a => a.EmployeeId);
 
             // Employee and LeaveRequest (1-n)
             builder.Entity<Employee>()
@@ -166,7 +169,7 @@ namespace EMS.Infrastructure.Contexts
                 .HasMaxLength(15); // Example constraint
 
             builder.Entity<Salary>()
-                .HasKey (s => s.Id);
+                .HasKey(s => s.Id);
 
             builder.Entity<Salary>()
                 .Property(s => s.BaseSalary)
@@ -191,7 +194,14 @@ namespace EMS.Infrastructure.Contexts
                 .Property(hp => hp.HolidayCount)
                 .IsRequired(); // Make this field required
 
+
             builder.HasDefaultSchema("EMS"); // Default schema for employee management entities
+
+            #endregion
+
+            #region Seeding
+            
+            #endregion
         }
     }
 }

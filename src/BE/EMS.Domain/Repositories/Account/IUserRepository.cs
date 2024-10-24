@@ -7,7 +7,6 @@ namespace EMS.Domain.Repositories.Account
 {
     public interface IUserRepository : IBaseRepository<User>
     {
-        Task<User?> GetByIdAsync(string id);
         Task<PagedDto<User>> GetPagedAsync(UserFilter filter);
     }
 }

@@ -9,7 +9,9 @@ namespace EMS.Domain.Repositories.EM
 {
     public interface IEmployeeRepository : IBaseRepository<Employee>
     {
-        Task<Employee?> GetByIdAsync(string id);
         Task<PagedDto<Employee>> GetPagedAsync(EmployeeFilter filter);
+
+        // Task to link employee to a user
+        Task<bool> LinkEmployeeToUserAsync(string employeeId, string userId);
     }
 }

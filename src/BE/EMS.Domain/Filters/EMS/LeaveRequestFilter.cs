@@ -9,5 +9,7 @@ namespace EMS.Domain.Filters.EMS
 {
     public class LeaveRequestFilter: FilterBase
     {
+        public string? EmployeeId { get; set; }
+        public string? LeaveType { get; set; }
     }
 }

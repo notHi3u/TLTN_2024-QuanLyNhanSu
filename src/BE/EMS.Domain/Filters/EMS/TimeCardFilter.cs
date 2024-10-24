@@ -9,5 +9,7 @@ namespace EMS.Domain.Filters.EMS
 {
     public class TimeCardFilter: FilterBase
     {
+        public string? EmployeeId { get; set; }
+        public DateOnly? WeekStartDate { get; set; }
     }
 }

@@ -9,5 +9,7 @@ namespace EMS.Domain.Filters.EMS
 {
     public class LeaveBalanceFilter: FilterBase
     {
+        public string? EmployeeId { get; set; }
+        public int? Year { get; set; }
     }
 }

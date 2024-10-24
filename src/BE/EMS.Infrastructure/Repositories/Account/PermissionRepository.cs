@@ -16,14 +16,6 @@ namespace EMS.Infrastructure.Repositories.Account
         {
         }
 
-        public async Task<Permission?> GetByIdAsync(string id)
-        {
-            _logger.LogInformation($"Getting Permission with ID {id}");
-            return await _dbSet
-                .AsNoTracking() // Optional: improve performance for read-only queries
-                .FirstOrDefaultAsync(p => p.Id == id);
-        }
-
         public async Task<PagedDto<Permission>> GetPagedAsync(PermissionFilter filter)
         {
             _logger.LogInformation("Getting paged Permissions");

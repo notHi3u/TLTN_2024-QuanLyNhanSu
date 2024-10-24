@@ -1,8 +1,8 @@
 ﻿using Common.Data;
 using Common.Dtos;
 using EMS.Domain.Filters.EMS;
-using EMS.Domain.Models;
 using EMS.Domain.Models.EM;
+using EMS.Domain.Repositories.Account;
 using EMS.Domain.Repositories.EM;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -12,20 +12,13 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
     {
-        public EmployeeRepository(EMSDbContext context, ILogger<EmployeeRepository> logger)
+        private readonly IUserRepository _userRepository;
+        public EmployeeRepository(EMSDbContext context, ILogger<EmployeeRepository> logger, IUserRepository userRepository)
             : base(context, logger)
         {
+            _userRepository = userRepository;
         }
-
-        // Get employee by ID
-        public async Task<Employee?> GetByIdAsync(string id)
-        {
-            _logger.LogInformation($"Getting Employee with ID {id}");
-            return await _dbSet
-                .AsNoTracking() // Optimizes for read-only queries
-                .FirstOrDefaultAsync(e => e.Id == id);
-        }
-
+        
 
         // Get employees with pagination
         public async Task<PagedDto<Employee>> GetPagedAsync(EmployeeFilter filter)
@@ -60,32 +53,19 @@ namespace EMS.Infrastructure.Repositories.EM
             return new PagedDto<Employee>(employees, totalCount, pageIndex, pageSize);
         }
 
-        // Add new employee
-        public async Task AddEmployeeAsync(Employee employee)
+        public async Task<bool> LinkEmployeeToUserAsync(string employeeId, string userId)
         {
-            _logger.LogInformation($"Adding Employee {employee.FirstName} {employee.LastName}");
-            await _dbSet.AddAsync(employee);
-            await _context.SaveChangesAsync();
-        }
+            var employee = await GetByIdAsync(userId);
 
-        // Update existing employee
-        public async Task UpdateEmployeeAsync(Employee employee)
-        {
-            _logger.LogInformation($"Updating Employee {employee.Id}");
-            _dbSet.Update(employee);
-            await _context.SaveChangesAsync();
-        }
+            var user = await _userRepository.GetByIdAsync(userId);
 
-        // Delete employee by ID
-        public async Task DeleteEmployeeAsync(string id)
-        {
-            _logger.LogInformation($"Deleting Employee with ID {id}");
-            var employee = await GetByIdAsync(id);
-            if (employee != null)
+            if (employee != null && user !=null)
             {
-                _dbSet.Remove(employee);
+                employee.UserId = user.Id;
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
     }
 }
