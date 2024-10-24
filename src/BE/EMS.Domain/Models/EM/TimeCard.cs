@@ -1,4 +1,6 @@
-﻿namespace EMS.Domain.Models.EM
+﻿using Common.Enums;
+
+namespace EMS.Domain.Models.EM
 {
     public class TimeCard
     {
@@ -13,11 +15,6 @@
         public virtual Employee Employee { get; set; }
     }
 
-    public enum TimeCardStatus
-    {
-        Pending,   // 0
-        Approved,  // 1
-        Rejected   // 2
-    }
+    
 
 }

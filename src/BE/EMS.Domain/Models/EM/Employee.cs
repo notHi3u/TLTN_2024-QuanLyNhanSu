@@ -1,4 +1,5 @@
-﻿using EMS.Domain.Models.Account;
+﻿using Common.Enums;
+using EMS.Domain.Models.Account;
 
 namespace EMS.Domain.Models.EM
 {
@@ -38,12 +39,5 @@ namespace EMS.Domain.Models.EM
         public virtual ICollection<WorkHistory> WorkHistories { get; set; }
 
     }
-    public enum EmployeeStatus
-    {
-        Active,
-        Inactive,
-        OnLeave,
-        Retired,
-        Terminated
-    }
+    
 }
