@@ -19,6 +19,18 @@ namespace EMS.Infrastructure.Repositories.Account
         {
         }
 
+        public async Task<Role?> GetByIdAsync(string id, bool IsDeep)
+        {
+            // Retrieve the role from the database using the provided ID
+            if (!IsDeep)
+                return await _dbSet.FindAsync(id);
+            return await _dbSet
+                .AsNoTracking()
+                .Include(r => r.RolePermissions)
+                .ThenInclude(rp => rp.Permission)
+                .FirstOrDefaultAsync(r => r.Id == id);
+        }
+
         public async Task<PagedDto<Role>> GetPagedAsync(RoleFilter filter)
         {
             // Đảm bảo filter không phải là null và khởi tạo giá trị mặc định nếu cần

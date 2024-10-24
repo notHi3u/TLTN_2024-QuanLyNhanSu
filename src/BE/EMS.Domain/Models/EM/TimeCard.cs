@@ -7,9 +7,17 @@
         public DateOnly WeekStartDate { get; set; } // Ngày đầu tuần
         public List<long>? AttendanceIds { get; set; }// Mã các ngày
         public DateTime SubmittedAt { get; set; } // Thời gian nộp
-        public bool Status { get; set; } = false;// Trạng thái duyệt
+        public TimeCardStatus? Status { get; set; }// Trạng thái duyệt
 
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual Employee Employee { get; set; }
     }
+
+    public enum TimeCardStatus
+    {
+        Pending,   // 0
+        Approved,  // 1
+        Rejected   // 2
+    }
+
 }
