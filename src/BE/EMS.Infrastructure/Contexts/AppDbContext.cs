@@ -187,7 +187,7 @@ namespace EMS.Infrastructure.Contexts
 
             builder.Entity<TimeCard>()
                 .Property(tc => tc.Status)
-                .HasDefaultValue(false); // Default status
+                .HasDefaultValue(TimeCardStatus.Pending); // Default status
 
             // HolidayLeavePolicy configuration
             builder.Entity<HolidayLeavePolicy>()

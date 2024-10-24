@@ -18,4 +18,8 @@
     <ProjectReference Include="..\EMS.Infrastructure\EMS.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\EM\" />
+  </ItemGroup>
+
 </Project>
