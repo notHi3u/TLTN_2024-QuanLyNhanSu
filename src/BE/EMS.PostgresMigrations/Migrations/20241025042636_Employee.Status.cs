@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class EmployeeStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -208,7 +208,6 @@ namespace EMS.PostgresMigrations.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    DepartmentId = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     RoleId = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: true)
@@ -264,7 +263,7 @@ namespace EMS.PostgresMigrations.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EmpployeeId = table.Column<string>(type: "text", nullable: false),
+                    EmployeeId = table.Column<string>(type: "text", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     WorkStatus = table.Column<bool>(type: "boolean", nullable: false),
                     AbsentReasons = table.Column<string>(type: "text", nullable: true),
@@ -305,13 +304,13 @@ namespace EMS.PostgresMigrations.Migrations
                     PhoneNumber = table.Column<string>(type: "text", nullable: true),
                     HireDate = table.Column<DateOnly>(type: "date", nullable: false),
                     FiredDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    Position = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false),
+                    Position = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: true, defaultValue: 1),
                     MaritalStatus = table.Column<string>(type: "text", nullable: true),
-                    EducationLevel = table.Column<string>(type: "text", nullable: false),
-                    IdNumber = table.Column<string>(type: "text", nullable: false),
+                    EducationLevel = table.Column<string>(type: "text", nullable: true),
+                    IdNumber = table.Column<string>(type: "text", nullable: true),
                     DepartmentId = table.Column<string>(type: "text", nullable: true),
-                    TaxId = table.Column<string>(type: "text", nullable: false),
+                    TaxId = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: true)
                 },
@@ -470,7 +469,7 @@ namespace EMS.PostgresMigrations.Migrations
                     WeekStartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     AttendanceIds = table.Column<List<long>>(type: "bigint[]", nullable: true),
                     SubmittedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Status = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
+                    Status = table.Column<int>(type: "integer", nullable: true, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -560,10 +559,10 @@ namespace EMS.PostgresMigrations.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attendances_EmpployeeId",
+                name: "IX_Attendances_EmployeeId",
                 schema: "EMS",
                 table: "Attendances",
-                column: "EmpployeeId");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_TimeCardId",
@@ -664,10 +663,10 @@ namespace EMS.PostgresMigrations.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Attendances_Employees_EmpployeeId",
+                name: "FK_Attendances_Employees_EmployeeId",
                 schema: "EMS",
                 table: "Attendances",
-                column: "EmpployeeId",
+                column: "EmployeeId",
                 principalSchema: "EMS",
                 principalTable: "Employees",
                 principalColumn: "Id",
