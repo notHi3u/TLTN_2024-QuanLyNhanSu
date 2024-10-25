@@ -1,5 +1,4 @@
 ﻿using Common.Dtos;
-using EMS.Application.DTOs;
 using EMS.Application.Services.Account;
 using EMS.Domain.Models.Account;
 using Microsoft.AspNetCore.Authentication.BearerToken;
@@ -15,8 +14,9 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
 using Common.Configurations;
+using EMS.Application.DTOs.Account;
 
-namespace EMS.API.Endpoints
+namespace EMS.API.Endpoints.Account
 {
     public static class IdentityEndpoints
     {
@@ -157,7 +157,6 @@ namespace EMS.API.Endpoints
             .AllowAnonymous();
             #endregion
 
-
             #region Logout
             routeGroup.MapPost("/logout", async (
                 [FromServices] SignInManager<User> signInManager,
@@ -180,7 +179,6 @@ namespace EMS.API.Endpoints
             })
             .RequireAuthorization();
             #endregion
-
 
             #region Refresh Token
             routeGroup.MapPost("/refresh", async Task<IResult> (
@@ -234,8 +232,6 @@ namespace EMS.API.Endpoints
                 return Results.Ok(successResponse);
             }).ConfigureApiResponses();
             #endregion
-
-
 
             #region Confirm Email
             routeGroup.MapGet("/confirmEmail", async Task<Results<ContentHttpResult, UnauthorizedHttpResult>>
@@ -342,7 +338,7 @@ namespace EMS.API.Endpoints
 
                 var user = await userManager.FindByEmailAsync(resetRequest.Email);
 
-                if (user is null || !(await userManager.IsEmailConfirmedAsync(user)))
+                if (user is null || !await userManager.IsEmailConfirmedAsync(user))
                 {
                     // Don't reveal that the user does not exist or is not confirmed, so don't return a 200 if we would have
                     // returned a 400 for an invalid code given a valid user email.
@@ -411,7 +407,7 @@ namespace EMS.API.Endpoints
                 }
 
                 string[]? recoveryCodes = null;
-                if (tfaRequest.ResetRecoveryCodes || (tfaRequest.Enable == true && await userManager.CountRecoveryCodesAsync(user) == 0))
+                if (tfaRequest.ResetRecoveryCodes || tfaRequest.Enable == true && await userManager.CountRecoveryCodesAsync(user) == 0)
                 {
                     var recoveryCodesEnumerable = await userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
                     recoveryCodes = recoveryCodesEnumerable?.ToArray();
@@ -447,7 +443,7 @@ namespace EMS.API.Endpoints
             #endregion
 
             #region Setup information for 2fa
-            accountGroup.MapGet("/2fa/setup-info", async Task<Results<Ok<BaseResponse<TwoFactorAuthSetupInfoDto>>, ValidationProblem, NotFound>>
+            accountGroup.MapGet("/2fa/setup", async Task<Results<Ok<BaseResponse<TwoFactorAuthSetupInfoDto>>, ValidationProblem, NotFound>>
                 (ClaimsPrincipal claimsPrincipal, [FromServices] IServiceProvider serviceProvider) =>
             {
                 var i2faService = serviceProvider.GetRequiredService<ITfaService>();
@@ -467,7 +463,7 @@ namespace EMS.API.Endpoints
             #endregion
 
             #region Enable 2fa
-            tfaGroup.MapPost("/enable2fa", async Task<Results<Ok<BaseResponse<TwoFactorResponse>>, ValidationProblem, NotFound>>
+            tfaGroup.MapPost("/enable", async Task<Results<Ok<BaseResponse<TwoFactorResponse>>, ValidationProblem, NotFound>>
                 (ClaimsPrincipal claimsPrincipal, [FromServices] IServiceProvider sp, [FromBody] TwoFactorAuthSetupRequestDto tfaRequest) =>
             {
                 var userManager = sp.GetRequiredService<UserManager<User>>();

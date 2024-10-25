@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Application.DTOs
+namespace EMS.Application.DTOs.Account
 {
-    public class TwoFactorAuthDisableRequestDto
+    public class TwoFactorResetRequestDto
     {
-        public string Password {  get; set; }
+        public string Password { get; set; }
     }
 }

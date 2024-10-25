@@ -1,10 +1,10 @@
 ﻿using Common.Configurations;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
 using EMS.Application.Services.Account;
 using EMS.Domain.Filters.Account;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EMS.API.Endpoints
+namespace EMS.API.Endpoints.Account
 {
     public static class PermissionEndpoints
     {

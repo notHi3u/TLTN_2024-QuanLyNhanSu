@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EMS.Application.DTOs
+namespace EMS.Application.DTOs.Account
 {
     public class UserRequestDto
     {

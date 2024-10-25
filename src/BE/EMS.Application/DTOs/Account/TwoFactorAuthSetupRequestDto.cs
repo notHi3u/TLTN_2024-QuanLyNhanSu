@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Application.DTOs
+namespace EMS.Application.DTOs.Account
 {
     public class TwoFactorAuthSetupRequestDto
     {
-        public required string VerificationCode {  get; set; }
+        public required string VerificationCode { get; set; }
     }
 }

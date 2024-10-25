@@ -1,7 +1,7 @@
 ﻿
 using Common.Configurations;
 using Common.Helpers;
-using EMS.API.Endpoints;
+using EMS.API.Endpoints.Account;
 using EMS.Application.Automapper;
 using EMS.Application.Services.Account;
 using EMS.Domain.Models;
@@ -26,7 +26,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "AAMS (Account & Auth Manage System",
+        Title = "EMS (Employee Management System)",
         Version = "v1"
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Application.DTOs
+namespace EMS.Application.DTOs.Account
 {
     public class RequestTokenResponseDto
     {
-        public string AccessToken { get; set; } 
+        public string AccessToken { get; set; }
         public long Expires { get; set; }
         public void SetExpiresFromDateTime(DateTime expirationTime)
         {

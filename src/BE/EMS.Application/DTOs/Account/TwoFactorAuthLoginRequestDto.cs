@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Application.DTOs
+namespace EMS.Application.DTOs.Account
 {
-    public class LoginRequestDto
+    public class TwoFactorAuthLoginRequestDto
     {
         /// <summary>
         /// The user's email address which acts as a user name.
@@ -14,8 +14,8 @@ namespace EMS.Application.DTOs
         public required string Email { get; init; }
 
         /// <summary>
-        /// The user's password.
+        /// The 2fa verification code.
         /// </summary>
-        public required string Password { get; init; }
+        public required string VerificationCode { get; init; }
     }
 }

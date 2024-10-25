@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Application.DTOs
+namespace EMS.Application.DTOs.Account
 {
-    public class PermissionRequestDto
+    public class RoleRequestDto
     {
         public string Name { get; set; }
-        public string Description { get; set; }
-    }
+        public string? Description { get; set; }
 
+    }
 }

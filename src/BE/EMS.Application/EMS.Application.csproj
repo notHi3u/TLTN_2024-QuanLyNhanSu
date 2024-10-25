@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DTOs\EM\" />
     <Folder Include="Services\EM\" />
   </ItemGroup>
 

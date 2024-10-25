@@ -1,11 +1,11 @@
 ﻿using Common.Configurations;
 using Common.Dtos;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
 using EMS.Application.Services.Account;
 using EMS.Domain.Filters.Account;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EMS.API.Endpoints
+namespace EMS.API.Endpoints.Account
 {
     public static class UserEndpoints
     {
@@ -14,6 +14,7 @@ namespace EMS.API.Endpoints
             var userGroup = app.MapGroup("/users")
                 .WithTags("User");
 
+            #region Get All Users
             userGroup.MapGet("/", async ([FromServices] IUserService userService, [AsParameters] UserFilter filter) =>
             {
                 try
@@ -25,12 +26,13 @@ namespace EMS.API.Endpoints
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception if necessary
                     var errorResponse = BaseResponse<PagedDto<UserResponseDto>>.Failure("An error occurred while retrieving users.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
+            #endregion
 
+            #region Get User By Id
             userGroup.MapGet("/{id:guid}", async (IUserService userService, string id) =>
             {
                 try
@@ -45,12 +47,13 @@ namespace EMS.API.Endpoints
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception if necessary
                     var errorResponse = BaseResponse<UserResponseDto>.Failure("An error occurred while retrieving the user.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
+            #endregion
 
+            #region Create User
             userGroup.MapPost("/", async (IUserService userService, [FromBody] UserRequestDto createUserDto) =>
             {
                 if (createUserDto == null)
@@ -71,12 +74,13 @@ namespace EMS.API.Endpoints
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception if necessary
                     var errorResponse = BaseResponse<UserResponseDto>.Failure("An error occurred while creating the user.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
+            #endregion
 
+            #region Update User
             userGroup.MapPut("/{id:guid}", async (IUserService userService, string id, [FromBody] UserRequestDto updateUserDto) =>
             {
                 if (updateUserDto == null)
@@ -97,12 +101,13 @@ namespace EMS.API.Endpoints
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception if necessary
                     var errorResponse = BaseResponse<UserResponseDto>.Failure("An error occurred while updating the user.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
+            #endregion
 
+            #region Delete User
             userGroup.MapDelete("/{id:guid}", async (IUserService userService, string id) =>
             {
                 try
@@ -117,13 +122,14 @@ namespace EMS.API.Endpoints
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception if necessary
                     var errorResponse = BaseResponse<UserResponseDto>.Failure("An error occurred while deleting the user.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
+            #endregion
 
-            userGroup.MapPost("/{userId:guid}/roles/{roleName}", async (IUserService userService, string userId, string roleName) =>
+            #region Assign Single Role to User
+            userGroup.MapPost("/{userId:guid}/role", async (IUserService userService, string userId, string roleName) =>
             {
                 try
                 {
@@ -137,12 +143,13 @@ namespace EMS.API.Endpoints
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception if necessary
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while assigning the role.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
+            #endregion
 
+            #region Assign Multiple Roles to User
             userGroup.MapPost("/{userId:guid}/roles", async (IUserService userService, string userId, [FromBody] IEnumerable<string> roleNames) =>
             {
                 try
@@ -157,13 +164,14 @@ namespace EMS.API.Endpoints
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception if necessary
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while assigning the roles.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
+            #endregion
 
-            userGroup.MapDelete("/{userId:guid}/roles/{roleName}", async (IUserService userService, string userId, string roleName) =>
+            #region Remove Role from User
+            userGroup.MapDelete("/{userId:guid}/role", async (IUserService userService, string userId, string roleName) =>
             {
                 try
                 {
@@ -177,11 +185,32 @@ namespace EMS.API.Endpoints
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception if necessary
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while removing the role.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
+            #endregion
+
+            #region Remove Multiple Roles from User
+            userGroup.MapDelete("/{userId:guid}/roles", async (IUserService userService, string userId, [FromBody] IEnumerable<string> roleNames) =>
+            {
+                try
+                {
+                    var response = await userService.RemoveRolesFromUserAsync(userId, roleNames);
+                    if (!response.IsSuccess)
+                    {
+                        var errorResponse = BaseResponse<bool>.Failure("Failed to remove roles.");
+                        return Results.BadRequest(errorResponse);
+                    }
+                    return Results.Ok(BaseResponse<bool>.Success(true, 200));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<bool>.Failure("An error occurred while removing roles.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
         }
     }
 }

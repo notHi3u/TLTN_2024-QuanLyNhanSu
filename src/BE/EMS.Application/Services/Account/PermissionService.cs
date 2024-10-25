@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.Dtos;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
 using EMS.Domain.Filters.Account;
 using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
@@ -34,6 +34,15 @@ namespace EMS.Application.Services.Account
             }
 
             var permission = _mapper.Map<Permission>(permissionRequestDto);
+
+            // Check for existence of a permission with the same name
+            if (await _permissionRepository.ExistsAsync(p => p.Name == permission.Name))
+            {
+                // You can return null, throw an exception, or return a specific response
+                // Here, I'll return a null response and let the calling method handle it
+                throw new ArgumentException("Permission already exists"); // or create a specific response indicating a duplicate
+            }
+
             permission.Id = Guid.NewGuid().ToString();
             await _permissionRepository.AddAsync(permission);
             return _mapper.Map<PermissionResponseDto>(permission);
