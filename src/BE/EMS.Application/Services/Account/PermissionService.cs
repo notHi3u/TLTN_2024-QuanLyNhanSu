@@ -122,6 +122,12 @@ namespace EMS.Application.Services.Account
             }
 
             _mapper.Map(permissionRequestDto, permission);
+
+            if(await _permissionRepository.ExistsAsync(p => p.Name == permissionRequestDto.Name))
+            {
+                throw new ArgumentException("Permission already exists");
+            }
+
             await _permissionRepository.UpdateAsync(permission);
             return _mapper.Map<PermissionResponseDto>(permission);
         }
