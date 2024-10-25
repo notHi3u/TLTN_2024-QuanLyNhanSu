@@ -9,7 +9,7 @@ namespace EMS.Infrastructure.Repositories.Account
 {
     public class UserRoleRepository : BaseRepository<UserRole>, IUserRoleRepository
     {
-        public UserRoleRepository(AccountDbContext context, ILogger<UserRoleRepository> logger)
+        public UserRoleRepository(AppDbContext context, ILogger<UserRoleRepository> logger)
             : base(context, logger)
         {
         }

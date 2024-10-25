@@ -9,7 +9,7 @@ namespace EMS.Infrastructure.Repositories.Account
 {
     public class RolePermissionRepository : BaseRepository<RolePermission>, IRolePermissionRepository
     {
-        public RolePermissionRepository(AccountDbContext context, ILogger<RolePermissionRepository> logger)
+        public RolePermissionRepository(AppDbContext context, ILogger<RolePermissionRepository> logger)
             : base(context, logger)
         {
         }

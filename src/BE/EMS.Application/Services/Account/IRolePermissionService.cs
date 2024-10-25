@@ -11,8 +11,8 @@ namespace EMS.Application.Services.Account
     {
         Task<RolePermissionResponseDto?> GetRolePermissionByRoleIdAsync(string roleId);
         Task<RolePermissionResponseDto?> GetRolePermissionByPermissionIdAsync(string permissionId);
-        Task<List<RolePermissionResponseDto?>> GetAllRolePermissionsByRoleIdAsync(string roleId);
-        Task<List<RolePermissionResponseDto?>> GetAllRolePermissionsByPermissionIdAsync(string permissionId);
+        Task<List<RolePermissionResponseDto?>> GetRolePermissionsByRoleIdAsync(string roleId);
+        Task<List<RolePermissionResponseDto?>> GetRolePermissionsByPermissionIdAsync(string permissionId);
         Task<RolePermissionResponseDto?> AddRolePermissionAsync(string roleId, string permissionId);
         Task<bool> RemoveRolePermissionAsync(string roleId, string permissionId);
         Task<bool> RolePermissionExistsAsync(string roleId, string permissionId);

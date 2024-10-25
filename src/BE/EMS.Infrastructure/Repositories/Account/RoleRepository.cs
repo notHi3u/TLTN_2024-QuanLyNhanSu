@@ -14,7 +14,7 @@ namespace EMS.Infrastructure.Repositories.Account
 {
     public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
-        public RoleRepository(AccountDbContext context, ILogger<RoleRepository> logger)
+        public RoleRepository(AppDbContext context, ILogger<RoleRepository> logger)
             : base(context, logger)
         {
         }

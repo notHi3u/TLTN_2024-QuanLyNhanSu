@@ -11,7 +11,7 @@ namespace EMS.Infrastructure.Repositories.Account
 {
     public class PermissionRepository : BaseRepository<Permission>, IPermissionRepository
     {
-        public PermissionRepository(AccountDbContext context, ILogger<PermissionRepository> logger)
+        public PermissionRepository(AppDbContext context, ILogger<PermissionRepository> logger)
             : base(context, logger)
         {
         }

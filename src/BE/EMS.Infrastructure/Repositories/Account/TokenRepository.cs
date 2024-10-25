@@ -9,10 +9,10 @@ namespace EMS.Infrastructure.Repositories.Account
 {
     public class TokenRepository : BaseRepository<RefreshToken>, ITokenRepository
     {
-        private readonly AccountDbContext _context;
+        private readonly AppDbContext _context;
         private readonly ILogger<TokenRepository> _logger;
 
-        public TokenRepository(AccountDbContext context, ILogger<TokenRepository> logger)
+        public TokenRepository(AppDbContext context, ILogger<TokenRepository> logger)
             : base(context, logger)
         {
             _context = context;
