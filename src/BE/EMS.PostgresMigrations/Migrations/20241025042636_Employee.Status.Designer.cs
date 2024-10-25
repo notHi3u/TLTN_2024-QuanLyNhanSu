@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241024021400_EditPermission")]
-    partial class EditPermission
+    [Migration("20241025042636_Employee.Status")]
+    partial class EmployeeStatus
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,20 +112,6 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", "EMS");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            Description = "Administrator Role",
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            Description = "Employee Role",
-                            Name = "Employee"
-                        });
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.RolePermission", b =>
@@ -237,7 +223,7 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
-                    b.Property<string>("EmpployeeId")
+                    b.Property<string>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -252,7 +238,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmpployeeId");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("TimeCardId");
 
@@ -293,7 +279,6 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("EducationLevel")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
@@ -315,7 +300,6 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("IdNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
@@ -333,15 +317,14 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Position")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int?>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<string>("TaxId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
@@ -554,10 +537,10 @@ namespace EMS.PostgresMigrations.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("Status")
+                    b.Property<int?>("Status")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("timestamp with time zone");
@@ -756,7 +739,7 @@ namespace EMS.PostgresMigrations.Migrations
                 {
                     b.HasOne("EMS.Domain.Models.EM.Employee", "Employee")
                         .WithMany("Attendances")
-                        .HasForeignKey("EmpployeeId")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -162,6 +162,11 @@ namespace EMS.Infrastructure.Contexts
             builder.Entity<Employee>()
                 .HasKey(e => e.Id);
 
+            builder.Entity<Employee>()
+                .Property(tc => tc.Status)
+                .HasConversion<int>()
+                .HasDefaultValue(EmployeeStatus.Inactive);
+
             builder.Entity<EmployeeRelative>()
                 .HasKey(er => er.Id);
 
@@ -188,6 +193,7 @@ namespace EMS.Infrastructure.Contexts
 
             builder.Entity<TimeCard>()
                 .Property(tc => tc.Status)
+                .HasConversion<int>()
                 .HasDefaultValue(TimeCardStatus.Pending); // Default status
 
             // HolidayLeavePolicy configuration

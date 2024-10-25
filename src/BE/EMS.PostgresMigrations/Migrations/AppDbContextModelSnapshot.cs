@@ -317,7 +317,9 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<int?>("Status")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<string>("TaxId")
                         .HasColumnType("text");
