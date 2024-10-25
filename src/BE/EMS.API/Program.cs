@@ -1,7 +1,14 @@
 ﻿
+using Common.Configurations;
+using Common.Helpers;
+using EMS.API.Endpoints;
+using EMS.Application.Automapper;
+using EMS.Application.Services.Account;
 using EMS.Domain.Models;
 using EMS.Domain.Models.Account;
+using EMS.Domain.Repositories.Account;
 using EMS.Infrastructure.Contexts;
+using EMS.Infrastructure.Repositories.Account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.RateLimiting;
@@ -80,41 +87,42 @@ builder.Services.AddAuthentication(opt =>
 });
 builder.Services.AddHealthChecks();
 
-// Register application services
-//builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-//builder.Services.AddScoped<IEmailSender, EmailSender>();
+//Register application services
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
-//builder.Services.AddScoped<I2faService, _2faService>();
+builder.Services.AddScoped<ITfaService, TfaService>();
 
-//builder.Services.AddScoped<ICacheService, RedisCacheService>();
-//builder.Services.AddScoped<IUserRedisCache, UserRedisCache>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-//builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-//builder.Services.AddScoped<IRoleService, RoleService>();
-//builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
-//builder.Services.AddScoped<IPermissionService, PermissionService>();
-//builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 
-//builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
-//builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
+builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
 
-//builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-//builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
-//builder.Services.AddScoped<IMailHelper, MailHelper>();
+builder.Services.AddScoped<IMailHelper, MailHelper>();
 
-//builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Add DbContext configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
            options.UseNpgsql(
                builder.Configuration.GetConnectionString("EMS"),
                b => b.MigrationsAssembly("EMS.PostgresMigrations")));
-
+builder.Services.AddIdentityApiEndpoints<User>().AddRoles<Role>()
+    .AddEntityFrameworkStores<AppDbContext>();
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
@@ -175,10 +183,10 @@ app.UseRateLimiter();
 //Minimals APIs
 //Map group Endpoints
 //app.MapGroup("/Auth").MapIdentityApi<User>();
-//IdentityEndpoints.MapIdentityApi<User>(app);
-//UserEndpoints.Map(app);
-//RoleEndpoints.Map(app);
-//PermissionEndpoints.Map(app);
+IdentityEndpoints.MapIdentityApi<User>(app);
+UserEndpoints.Map(app);
+RoleEndpoints.Map(app);
+PermissionEndpoints.Map(app);
 
 //IdentityEndpoints.MapCustomIdentityApi<User>(app);
 

@@ -11,7 +11,7 @@ namespace EMS.Infrastructure.Repositories.Account
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        public UserRepository(AccountDbContext context, ILogger<UserRepository> logger)
+        public UserRepository(AppDbContext context, ILogger<UserRepository> logger)
             : base(context, logger)
         {
         }
