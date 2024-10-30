@@ -11,7 +11,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class LeaveBalanceRepository : BaseRepository<LeaveBalance>, ILeaveBalanceRepository
     {
-        public LeaveBalanceRepository(EMSDbContext context, ILogger<LeaveBalanceRepository> logger)
+        public LeaveBalanceRepository(AppDbContext context, ILogger<LeaveBalanceRepository> logger)
             : base(context, logger)
         {
         }

@@ -57,7 +57,7 @@ namespace EMS.Application.Services.Account
             var permission = await _permissionRepository.GetByIdAsync(id);
             if (permission == null)
             {
-                return false; // or throw an exception if preferred
+                throw new ArgumentNullException(nameof(permission));
             }
 
             await _permissionRepository.DeleteAsync(permission);
@@ -98,7 +98,7 @@ namespace EMS.Application.Services.Account
             var permission = await _permissionRepository.GetByIdAsync(id);
             if (permission == null)
             {
-                return null; // or throw an exception if preferred
+                throw new ArgumentNullException(nameof(permission));
             }
 
             return _mapper.Map<PermissionResponseDto>(permission);

@@ -32,7 +32,7 @@ namespace EMS.Application.Services.Account
             var role = await _roleRepository.GetByIdAsync(id, IsDeep);
             if (role == null)
             {
-                return null; // or throw an exception if preferred
+                throw new ArgumentNullException(nameof(role));
             }
 
             return _mapper.Map<RoleResponseDto>(role);
@@ -62,7 +62,7 @@ namespace EMS.Application.Services.Account
             var role = await _roleRepository.GetByIdAsync(id);
             if (role == null)
             {
-                return null; // or throw an exception if preferred
+                throw new ArgumentNullException(nameof(role));
             }
 
             _mapper.Map(roleRequestDto, role);
@@ -75,7 +75,7 @@ namespace EMS.Application.Services.Account
             var role = await _roleRepository.GetByIdAsync(id);
             if (role == null)
             {
-                return false; // or throw an exception if preferred
+                throw new ArgumentNullException(nameof(role));
             }
 
             await _roleRepository.DeleteAsync(role);
@@ -146,7 +146,7 @@ namespace EMS.Application.Services.Account
         {
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role == null)
-                return null;
+                throw new ArgumentNullException(nameof(role));
 
             var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
             return _mapper.Map <IEnumerable<UserResponseDto>> (usersInRole);

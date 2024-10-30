@@ -156,8 +156,20 @@ namespace EMS.Infrastructure.Contexts
                 .HasForeignKey(a => a.TimeCardId);
 
             // Additional configurations for entities
+            builder.Entity<Attendance>()
+                .HasKey(a => a.Id);
+
+            builder.Entity<Attendance>()
+                .Property(a => a.Id)
+                .ValueGeneratedOnAdd();
+
             builder.Entity<Department>()
                 .HasKey(d => d.Id);
+
+            builder.Entity<Department>()
+                .Property(a => a.Id)
+                .ValueGeneratedOnAdd();
+
 
             builder.Entity<Employee>()
                 .HasKey(e => e.Id);
@@ -171,11 +183,19 @@ namespace EMS.Infrastructure.Contexts
                 .HasKey(er => er.Id);
 
             builder.Entity<EmployeeRelative>()
+                .Property(er =>er.Id)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<EmployeeRelative>()
                 .Property(er => er.PhoneNumber)
                 .HasMaxLength(15); // Example constraint
 
             builder.Entity<Salary>()
                 .HasKey(s => s.Id);
+
+            builder.Entity<Salary>()
+                .Property(s => s.Id)
+                .ValueGeneratedOnAdd();
 
             builder.Entity<Salary>()
                 .Property(s => s.BaseSalary)
@@ -185,11 +205,19 @@ namespace EMS.Infrastructure.Contexts
                 .HasKey(e => e.Id);
 
             builder.Entity<SalaryHistory>()
+                .Property(sh => sh.Id)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<SalaryHistory>()
                 .Property(sh => sh.BaseSalary)
                 .HasColumnType("decimal(18,2)"); // Specify decimal precision
 
             builder.Entity<TimeCard>()
                 .HasKey(e => e.Id);
+
+            builder.Entity<TimeCard>()
+                .Property(tc => tc.Id)
+                .ValueGeneratedOnAdd();
 
             builder.Entity<TimeCard>()
                 .Property(tc => tc.Status)
@@ -201,6 +229,30 @@ namespace EMS.Infrastructure.Contexts
                 .Property(hp => hp.HolidayCount)
                 .IsRequired(); // Make this field required
 
+            builder.Entity<HolidayLeavePolicy>()
+                .Property(hp => hp.Id)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<LeaveBalance>()
+                .HasKey(lb => lb.Id);
+
+            builder.Entity<LeaveBalance>()
+                .Property(lb => lb.Id)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<LeaveRequest>()
+                .HasKey(lr => lr.Id);
+
+            builder.Entity<LeaveRequest>()
+                .Property(lr => lr.Id)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<WorkHistory>()
+                .HasKey(wh => wh.Id);
+
+            builder.Entity<WorkHistory>()
+                .Property(wh => wh.Id)
+                .ValueGeneratedOnAdd();
 
             builder.HasDefaultSchema("EMS"); // Default schema for employee management entities
 

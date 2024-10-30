@@ -11,7 +11,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class DepartmentRepository : BaseRepository<Department>, IDepartmentRepository
     {
-        public DepartmentRepository(EMSDbContext context, ILogger<DepartmentRepository> logger)
+        public DepartmentRepository(AppDbContext context, ILogger<DepartmentRepository> logger)
             : base(context, logger)
         {
         }

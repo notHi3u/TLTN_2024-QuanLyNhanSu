@@ -13,7 +13,7 @@ namespace EMS.Infrastructure.Repositories.EM
     public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
     {
         private readonly IUserRepository _userRepository;
-        public EmployeeRepository(EMSDbContext context, ILogger<EmployeeRepository> logger, IUserRepository userRepository)
+        public EmployeeRepository(AppDbContext context, ILogger<EmployeeRepository> logger, IUserRepository userRepository)
             : base(context, logger)
         {
             _userRepository = userRepository;

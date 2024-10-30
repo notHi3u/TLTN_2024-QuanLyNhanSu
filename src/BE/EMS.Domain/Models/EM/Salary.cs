@@ -2,7 +2,7 @@
 {
     public class Salary
     {
-        public int Id { get; set; }  // Primary key
+        public long Id { get; set; }  // Primary key
         public required string EmployeeId { get; set; }  // Foreign key to Employee
         public decimal BaseSalary { get; set; }
         public decimal PercentBonus { get; set; }

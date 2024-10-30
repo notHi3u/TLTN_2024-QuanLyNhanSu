@@ -1,6 +1,7 @@
 ﻿using Common.Dtos;
 using EMS.Application.DTOs.EM;
 using EMS.Domain.Filters.Account;
+using EMS.Domain.Filters.EMS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,10 @@ namespace EMS.Application.Services.EM
 {
     public interface IAttendanceService
     {
-        Task<AttendanceRequestDto> GetAttendanceByIdAsync(string id);
-        Task<AttendanceRequestDto> CreateAttendanceAsync(AttendanceRequestDto attendanceRequestDto);
-        Task<AttendanceRequestDto> UpdateAttendanceAsync(string id, AttendanceRequestDto permissionRequestDto);
+        Task<AttendanceResponseDto> GetAttendanceByIdAsync(string id);
+        Task<AttendanceResponseDto> CreateAttendanceAsync(AttendanceRequestDto attendanceRequestDto);
+        Task<AttendanceResponseDto> UpdateAttendanceAsync(string id, AttendanceRequestDto attendanceRequestDto);
         Task<bool> DeleteAttendanceAsync(string id);
-        Task<PagedDto<AttendanceRequestDto>> GetPagedAttendancesAsync(PermissionFilter filter);
+        Task<PagedDto<AttendanceResponseDto>> GetPagedAttendancesAsync(AttendanceFilter filter);
     }
 }

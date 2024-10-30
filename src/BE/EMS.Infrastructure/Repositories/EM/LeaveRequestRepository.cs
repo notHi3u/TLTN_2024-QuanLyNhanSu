@@ -11,7 +11,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class LeaveRequestRepository : BaseRepository<LeaveRequest>, ILeaveRequestRepository
     {
-        public LeaveRequestRepository(EMSDbContext context, ILogger<LeaveRequestRepository> logger)
+        public LeaveRequestRepository(AppDbContext context, ILogger<LeaveRequestRepository> logger)
             : base(context, logger)
         {
         }
