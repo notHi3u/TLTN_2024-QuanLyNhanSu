@@ -1,4 +1,5 @@
-﻿using EMS.Application.DTOs.Account;
+﻿using Common.Configurations;
+using EMS.Application.DTOs.Account;
 using EMS.Application.Services.Account;
 using EMS.Domain.Filters.Account;
 using EMS.Domain.Models.Account;
@@ -29,7 +30,7 @@ namespace EMS.API.Endpoints.Account
                     // Log the exception if necessary
                     return Results.Problem(ex.Message);
                 }
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Get role by Id
@@ -42,7 +43,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.NotFound();
                 }
                 return Results.Ok(role);
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Create Role
@@ -56,7 +57,7 @@ namespace EMS.API.Endpoints.Account
 
                 var role = await roleService.CreateRoleAsync(createRoleDto);
                 return Results.Created($"/{role}", role);
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Update role
@@ -74,7 +75,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.NotFound();
                 }
                 return Results.Ok(updatedRole);
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Delete role
@@ -87,7 +88,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.NotFound();
                 }
                 return Results.NoContent();
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Assign Permission
@@ -99,7 +100,7 @@ namespace EMS.API.Endpoints.Account
                 if (newRolePermission == null)
                     return Results.NotFound();
                 return Results.Ok(newRolePermission);
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Revoke Permission
@@ -111,7 +112,7 @@ namespace EMS.API.Endpoints.Account
                 if (!newRolePermission)
                     return Results.NotFound();
                 return Results.Ok();
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Assign Role To Multiple Users
@@ -137,7 +138,7 @@ namespace EMS.API.Endpoints.Account
                     // Log the exception if necessary
                     return Results.Problem(ex.Message);
                 }
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Get Users By Role
@@ -158,7 +159,7 @@ namespace EMS.API.Endpoints.Account
                     // Log the exception if necessary
                     return Results.Problem(ex.Message);
                 }
-            });
+            }).ConfigureApiResponses();
             #endregion
 
             #region Remove Multiple Users From Role
@@ -184,7 +185,7 @@ namespace EMS.API.Endpoints.Account
                     // Log the exception if necessary
                     return Results.Problem(ex.Message);
                 }
-            });
+            }).ConfigureApiResponses();
             #endregion
 
         }

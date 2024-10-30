@@ -18,9 +18,4 @@
     <ProjectReference Include="..\EMS.Infrastructure\EMS.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\EM\" />
-    <Folder Include="Services\EM\" />
-  </ItemGroup>
-
 </Project>
