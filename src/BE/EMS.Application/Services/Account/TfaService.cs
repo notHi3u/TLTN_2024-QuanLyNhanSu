@@ -1,4 +1,4 @@
-﻿using EMS.Application.DTOs;
+﻿using EMS.Application.DTOs.Account;
 using EMS.Domain.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

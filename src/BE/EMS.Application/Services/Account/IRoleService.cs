@@ -1,5 +1,5 @@
 ﻿using Common.Dtos;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
 using EMS.Domain.Filters.Account;
 using System;
 using System.Collections.Generic;
@@ -16,5 +16,8 @@ namespace EMS.Application.Services.Account
         Task<RoleResponseDto> UpdateRoleAsync(string id, RoleRequestDto roleRequestDto);
         Task<bool> DeleteRoleAsync(string id);
         Task<PagedDto<RoleResponseDto>> GetPagedRolesAsync(RoleFilter filter);
+        Task<BaseResponse<bool>> AssignRoleToMultipleUsersAsync(string roleId, IEnumerable<string> userIds);
+        Task<IEnumerable<UserResponseDto>> GetUsersByRoleIdAsync(string roleId);
+        Task<bool> RemoveUsersFromRoleAsync(string roleId, IEnumerable<string> userIds);
     }
 }

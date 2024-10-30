@@ -27,4 +27,8 @@
     <ProjectReference Include="..\EMS.PostgresMigrations\EMS.PostgresMigrations.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoints\EM\" />
+  </ItemGroup>
+
 </Project>

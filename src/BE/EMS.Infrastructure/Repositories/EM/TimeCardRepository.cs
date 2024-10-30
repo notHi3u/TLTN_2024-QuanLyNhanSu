@@ -14,7 +14,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class TimeCardRepository : BaseRepository<TimeCard>, ITimeCardRepository
     {
-        public TimeCardRepository(EMSDbContext context, ILogger<TimeCardRepository> logger)
+        public TimeCardRepository(AppDbContext context, ILogger<TimeCardRepository> logger)
             : base(context, logger)
         {
         }

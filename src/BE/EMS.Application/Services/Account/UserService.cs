@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Common.Dtos;
 using Common.Helpers;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
 using EMS.Domain.Filters.Account;
 using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
@@ -307,6 +307,51 @@ namespace EMS.Application.Services.Account
         }
 
         #endregion
+
+        #region Remove Roles from User
+
+        public async Task<BaseResponse<bool>> RemoveRolesFromUserAsync(string userId, IEnumerable<string> roleNames)
+        {
+            if (string.IsNullOrWhiteSpace(userId) || roleNames == null || !roleNames.Any())
+            {
+                return BaseResponse<bool>.Failure("User ID cannot be null or empty, and at least one role name must be provided.");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BaseResponse<bool>.Failure("User not found.");
+            }
+
+            var errors = new List<string>();
+
+            foreach (var roleName in roleNames)
+            {
+                // Check if the user is in this role
+                if (!await _userManager.IsInRoleAsync(user, roleName))
+                {
+                    errors.Add($"User is not in role '{roleName}'.");
+                    continue; // Skip to the next role
+                }
+
+                // Remove the role from the user
+                var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+                if (!result.Succeeded)
+                {
+                    errors.AddRange(result.Errors.Select(e => e.Description));
+                }
+            }
+
+            if (errors.Any())
+            {
+                return BaseResponse<bool>.Failure(errors);
+            }
+
+            return BaseResponse<bool>.Success(true);
+        }
+
+        #endregion
+
 
         #region Update User Roles
 

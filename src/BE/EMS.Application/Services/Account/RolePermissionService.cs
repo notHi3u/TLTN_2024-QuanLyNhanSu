@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
 using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
 using Microsoft.Extensions.Logging;

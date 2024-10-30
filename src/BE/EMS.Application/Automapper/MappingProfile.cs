@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
+using EMS.Application.DTOs.EM;
 using EMS.Domain.Models.Account;
-using System;
-using System.Collections.Generic;
+using EMS.Domain.Models.EM;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EMS.Application.Automapper
 {
-    public class MappingProfile: Profile
+    public class MappingProfile : Profile
     {
-        public MappingProfile() 
+        public MappingProfile()
         {
             #region Permission
             CreateMap<PermissionRequestDto, Permission>();
@@ -19,7 +17,8 @@ namespace EMS.Application.Automapper
             #endregion
 
             #region Role
-            CreateMap<Role, RoleResponseDto>().ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src.RolePermissions.Select(ur => ur.Permission)));
+            CreateMap<Role, RoleResponseDto>()
+                .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src.RolePermissions.Select(rp => rp.Permission)));
             CreateMap<RoleRequestDto, Role>();
             #endregion
 
@@ -29,9 +28,76 @@ namespace EMS.Application.Automapper
 
             #region User
             CreateMap<User, UserResponseDto>()
-                    .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.UserRoles.Select(ur => ur.Role)));
-
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.UserRoles.Select(ur => ur.Role)));
             CreateMap<UserRequestDto, User>();
+            #endregion
+
+            #region Attendance
+            CreateMap<AttendanceRequestDto, Attendance>();
+            CreateMap<Attendance, AttendanceResponseDto>();
+            #endregion
+
+            #region Employee
+            CreateMap<EmployeeRequestDto, Employee>();
+            CreateMap<Employee, EmployeeResponseDto>()
+                .ForMember(dest => dest.TimeCards, opt => opt.MapFrom(src => src.TimeCards)) // Mapping for TimeCards
+                .ForMember(dest => dest.LeaveRequests, opt => opt.MapFrom(src => src.LeaveRequests)) // Mapping for LeaveRequests
+                .ForMember(dest => dest.LeaveBalances, opt => opt.MapFrom(src => src.LeaveBalances)) // Mapping for LeaveBalances
+                .ForMember(dest => dest.Attendances, opt => opt.MapFrom(src => src.Attendances)) // Mapping for Attendances
+                .ForMember(dest => dest.EmployeeRelatives, opt => opt.MapFrom(src => src.EmployeeRelatives)) // Mapping for EmployeeRelatives
+                .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department)) // Mapping for Department
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User)) // Mapping for User
+                .ForMember(dest => dest.Salary, opt => opt.MapFrom(src => src.Salary)) // Mapping for Salary
+                .ForMember(dest => dest.SalaryHistory, opt => opt.MapFrom(src => src.SalaryHistory)) // Mapping for SalaryHistory
+                .ForMember(dest => dest.WorkHistories, opt => opt.MapFrom(src => src.WorkHistories)); // Mapping for WorkHistories
+            #endregion
+
+            #region LeaveRequest
+            CreateMap<LeaveRequestRequestDto, LeaveRequest>();
+            CreateMap<LeaveRequest, LeaveRequestResponseDto>();
+            #endregion
+
+            #region LeaveBalance
+            CreateMap<LeaveBalanceRequestDto, LeaveBalance>();
+            CreateMap<LeaveBalance, LeaveBalanceResponseDto>();
+            #endregion
+
+            #region Salary
+            CreateMap<SalaryRequestDto, Salary>();
+            CreateMap<Salary, SalaryResponseDto>();
+            #endregion
+
+            #region SalaryHistory
+            CreateMap<SalaryHistoryRequestDto, SalaryHistory>();
+            CreateMap<SalaryHistory, SalaryHistoryResponseDto>();
+            #endregion
+
+            #region TimeCard
+            CreateMap<TimeCardRequestDto, TimeCard>();
+            CreateMap<TimeCard, TimeCardResponseDto>()
+                .ForMember(dest => dest.Attendances, opt => opt.MapFrom(src => src.Attendances));
+            #endregion
+
+            #region WorkHistory
+            CreateMap<WorkHistoryRequestDto, WorkHistory>();
+            CreateMap<WorkHistory, WorkHistoryResponseDto>();
+            #endregion
+
+            #region Department
+            CreateMap<DepartmentRequestDto, Department>();
+            CreateMap<Department, DepartmentResponseDto>()
+                .ForMember(dest => dest.Employees, opt => opt.MapFrom(src => src.Employees)) // Mapping for Employees
+                .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager)); // Mapping for Manager
+            #endregion
+
+            #region HolidayLeavePolicy
+            CreateMap<HolidayLeavePolicyRequestDto, HolidayLeavePolicy>();
+            CreateMap<HolidayLeavePolicy, HolidayLeavePolicyResponseDto>();
+            #endregion
+
+            #region EmployeeRelative
+            CreateMap<EmployeeRelativeRequestDto, EmployeeRelative>();
+            CreateMap<EmployeeRelative, EmployeeRelativeResponseDto>();
             #endregion
         }
     }

@@ -11,7 +11,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class HolidayLeavePolicyRepository : BaseRepository<HolidayLeavePolicy>, IHolidayLeavePolicyRepository
     {
-        public HolidayLeavePolicyRepository(EMSDbContext context, ILogger<HolidayLeavePolicyRepository> logger)
+        public HolidayLeavePolicyRepository(AppDbContext context, ILogger<HolidayLeavePolicyRepository> logger)
             : base(context, logger)
         {
         }

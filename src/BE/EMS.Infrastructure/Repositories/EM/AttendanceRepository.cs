@@ -11,7 +11,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class AttendanceRepository : BaseRepository<Attendance>, IAttendanceRepository
     {
-        public AttendanceRepository(EMSDbContext context, ILogger<AttendanceRepository> logger)
+        public AttendanceRepository(AppDbContext context, ILogger<AttendanceRepository> logger)
             : base(context, logger)
         {
         }

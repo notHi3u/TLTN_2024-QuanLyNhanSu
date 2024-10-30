@@ -11,7 +11,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class EmployeeRelativeRepository : BaseRepository<EmployeeRelative>, IEmployeeRelativeRepository
     {
-        public EmployeeRelativeRepository(EMSDbContext context, ILogger<EmployeeRelativeRepository> logger)
+        public EmployeeRelativeRepository(AppDbContext context, ILogger<EmployeeRelativeRepository> logger)
             : base(context, logger)
         {
         }

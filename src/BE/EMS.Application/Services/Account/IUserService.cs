@@ -1,5 +1,5 @@
 ﻿using Common.Dtos;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
 using EMS.Domain.Filters.Account;
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,7 @@ namespace EMS.Application.Services.Account
         Task<BaseResponse<bool>> AssignRolesToUserAsync(string userId, IEnumerable<string> roleNames);
 
         Task<BaseResponse<bool>> RemoveRoleFromUserAsync(string userId, string roleName);
+        Task<BaseResponse<bool>> RemoveRolesFromUserAsync(string userid, IEnumerable<string> roleNames);
         Task<BaseResponse<bool>> UpdateUserRolesAsync(string userId, IEnumerable<string> roleNames);
     }
 }

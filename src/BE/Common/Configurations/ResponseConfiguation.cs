@@ -15,10 +15,14 @@ namespace Common.Configurations
         {
             return builder
                 .Produces<BaseResponse<string>>(StatusCodes.Status200OK)
+                .Produces<BaseResponse<string>>(StatusCodes.Status201Created)
+                .Produces<BaseResponse<string>>(StatusCodes.Status202Accepted)
+                .Produces<BaseResponse<string>>(StatusCodes.Status204NoContent)
                 .Produces<BaseResponse<string>>(StatusCodes.Status400BadRequest)
-                .Produces<BaseResponse<string>>(StatusCodes.Status500InternalServerError)
                 .Produces<BaseResponse<string>>(StatusCodes.Status401Unauthorized)
-                .Produces<BaseResponse<string>>(StatusCodes.Status202Accepted);
+                .Produces<BaseResponse<string>>(StatusCodes.Status404NotFound)
+                .Produces<BaseResponse<string>>(StatusCodes.Status500InternalServerError);
+                
         }
     }
 

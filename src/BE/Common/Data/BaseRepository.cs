@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Common.Data
@@ -62,6 +63,17 @@ namespace Common.Data
             _dbSet.RemoveRange(entities);
             int count = await _context.SaveChangesAsync();
             return count;
+        }
+
+        /// <summary>
+        /// Check if an entity exists based on a given predicate.
+        /// </summary>
+        /// <param name="predicate">The condition to check for duplication.</param>
+        /// <returns>True if an entity exists, otherwise false.</returns>
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            _logger.LogInformation($"Checking for existence of entity of type {typeof(T).Name} with provided criteria.");
+            return await _dbSet.AnyAsync(predicate);
         }
     }
 }

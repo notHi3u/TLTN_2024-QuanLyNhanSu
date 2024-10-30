@@ -12,7 +12,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class SalaryHistoryRepository : BaseRepository<SalaryHistory>, ISalaryHistoryRepository
     {
-        public SalaryHistoryRepository(EMSDbContext context, ILogger<SalaryHistoryRepository> logger)
+        public SalaryHistoryRepository(AppDbContext context, ILogger<SalaryHistoryRepository> logger)
             : base(context, logger)
         {
         }

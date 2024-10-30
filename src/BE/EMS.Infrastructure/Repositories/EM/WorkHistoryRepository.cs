@@ -13,7 +13,7 @@ namespace EMS.Infrastructure.Repositories.EM
 {
     public class WorkHistoryRepository : BaseRepository<WorkHistory>, IWorkHistoryRepository
     {
-        public WorkHistoryRepository(EMSDbContext context, ILogger<WorkHistoryRepository> logger)
+        public WorkHistoryRepository(AppDbContext context, ILogger<WorkHistoryRepository> logger)
             : base(context, logger)
         {
         }

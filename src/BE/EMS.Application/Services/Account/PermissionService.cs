@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.Dtos;
-using EMS.Application.DTOs;
+using EMS.Application.DTOs.Account;
 using EMS.Domain.Filters.Account;
 using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
@@ -34,6 +34,15 @@ namespace EMS.Application.Services.Account
             }
 
             var permission = _mapper.Map<Permission>(permissionRequestDto);
+
+            // Check for existence of a permission with the same name
+            if (await _permissionRepository.ExistsAsync(p => p.Name == permission.Name))
+            {
+                // You can return null, throw an exception, or return a specific response
+                // Here, I'll return a null response and let the calling method handle it
+                throw new ArgumentException("Permission already exists"); // or create a specific response indicating a duplicate
+            }
+
             permission.Id = Guid.NewGuid().ToString();
             await _permissionRepository.AddAsync(permission);
             return _mapper.Map<PermissionResponseDto>(permission);
@@ -48,7 +57,7 @@ namespace EMS.Application.Services.Account
             var permission = await _permissionRepository.GetByIdAsync(id);
             if (permission == null)
             {
-                return false; // or throw an exception if preferred
+                throw new ArgumentNullException(nameof(permission));
             }
 
             await _permissionRepository.DeleteAsync(permission);
@@ -89,7 +98,7 @@ namespace EMS.Application.Services.Account
             var permission = await _permissionRepository.GetByIdAsync(id);
             if (permission == null)
             {
-                return null; // or throw an exception if preferred
+                throw new ArgumentNullException(nameof(permission));
             }
 
             return _mapper.Map<PermissionResponseDto>(permission);
@@ -113,6 +122,12 @@ namespace EMS.Application.Services.Account
             }
 
             _mapper.Map(permissionRequestDto, permission);
+
+            if(await _permissionRepository.ExistsAsync(p => p.Name == permissionRequestDto.Name))
+            {
+                throw new ArgumentException("Permission already exists");
+            }
+
             await _permissionRepository.UpdateAsync(permission);
             return _mapper.Map<PermissionResponseDto>(permission);
         }

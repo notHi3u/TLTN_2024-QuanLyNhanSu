@@ -14,7 +14,4 @@ namespace EMS.Domain.Models.EM
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual Employee Employee { get; set; }
     }
-
-    
-
 }
