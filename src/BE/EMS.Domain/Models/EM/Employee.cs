@@ -32,7 +32,6 @@ namespace EMS.Domain.Models.EM
         public virtual ICollection<LeaveBalance> LeaveBalances { get; set; }
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<EmployeeRelative> EmployeeRelatives { get; set; }
-        public virtual ICollection<Role> Roles { get; set; }
         public virtual Department Department { get; set; }
         public virtual Salary Salary { get; set; }
         public virtual ICollection<SalaryHistory> SalaryHistory { get; set; }

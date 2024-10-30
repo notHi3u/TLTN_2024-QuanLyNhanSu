@@ -1,4 +1,6 @@
 ﻿using Common.Enums;
+using EMS.Domain.Models.Account;
+using EMS.Domain.Models.EM;
 
 namespace EMS.Application.DTOs.EM
 {
@@ -23,10 +25,15 @@ namespace EMS.Application.DTOs.EM
         public string? TaxId { get; set; } // Mã số thuế
         public required string Email { get; set; } // Email
         public string? UserId { get; set; } // Tài khoản người dùng
-        public virtual ICollection<TimeCardResponseDto> TimeCards { get; set; } // List of time cards
-        public virtual ICollection<LeaveRequestResponseDto> LeaveRequests { get; set; } // List of leave requests
-        public virtual ICollection<AttendanceResponseDto> Attendances { get; set; } // List of attendance records
-        public virtual DepartmentResponseDto Department { get; set; } // Department details
-        // Additional collections can be added as needed
+        public virtual User User { get; set; }
+        public virtual ICollection<TimeCard> TimeCards { get; set; }
+        public virtual ICollection<LeaveRequest> LeaveRequests { get; set; }
+        public virtual ICollection<LeaveBalance> LeaveBalances { get; set; }
+        public virtual ICollection<Attendance> Attendances { get; set; }
+        public virtual ICollection<EmployeeRelative> EmployeeRelatives { get; set; }
+        public virtual Department Department { get; set; }
+        public virtual Salary Salary { get; set; }
+        public virtual ICollection<SalaryHistory> SalaryHistory { get; set; }
+        public virtual ICollection<WorkHistory> WorkHistories { get; set; }
     }
 }
