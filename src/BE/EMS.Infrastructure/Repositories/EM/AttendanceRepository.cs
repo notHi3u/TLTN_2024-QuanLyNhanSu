@@ -30,6 +30,11 @@ namespace EMS.Infrastructure.Repositories.EM
                 query = query.Where(a => a.EmployeeId == filter.EmployeeId);
             }
 
+            if (filter.TimeCardId != null)
+            {
+                query = query.Where(a => a.TimeCardId == filter.TimeCardId);
+            }
+
             // Filter by date range if provided
             if (filter.StartDate.HasValue)
             {
