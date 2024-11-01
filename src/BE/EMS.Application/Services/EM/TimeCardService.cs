@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Common.Dtos;
+using Common.Enums;
 using EMS.Application.DTOs.EM;
 using EMS.Domain.Filters.EMS;
 using EMS.Domain.Models.EM;
@@ -28,7 +29,7 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<TimeCardResponseDto>(timeCard);
         }
 
-        public async Task<bool> DeleteTimeCardAsync(string id)
+        public async Task<bool> DeleteTimeCardAsync(long id)
         {
             var timeCard = await _timeCardRepository.GetByIdAsync(id);
             if (timeCard == null)
@@ -38,7 +39,7 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<TimeCardResponseDto> GetTimeCardByIdAsync(string id)
+        public async Task<TimeCardResponseDto> GetTimeCardByIdAsync(long id)
         {
             var timeCard = await _timeCardRepository.GetByIdAsync(id);
             if (timeCard == null)
@@ -63,7 +64,7 @@ namespace EMS.Application.Services.EM
             );
         }
 
-        public async Task<TimeCardResponseDto> UpdateTimeCardAsync(string id, TimeCardRequestDto timeCardRequestDto)
+        public async Task<TimeCardResponseDto> UpdateTimeCardAsync(long id, TimeCardRequestDto timeCardRequestDto)
         {
             if (timeCardRequestDto == null)
                 throw new ArgumentNullException(nameof(timeCardRequestDto));
@@ -76,6 +77,20 @@ namespace EMS.Application.Services.EM
             await _timeCardRepository.UpdateAsync(timeCard);
 
             return _mapper.Map<TimeCardResponseDto>(timeCard);
+        }
+
+        public async Task<TimeCardStatus> ChangeTimeCardStatus(long id, TimeCardStatus timeCardStatus)
+        {
+            var timeCard = await _timeCardRepository.GetByIdAsync(id);
+            if (timeCard == null) 
+            {
+                throw new ArgumentNullException(nameof(timeCard));
+            }
+
+            timeCard.Status = timeCardStatus;
+            await _timeCardRepository.UpdateAsync(timeCard);
+
+            return (TimeCardStatus)timeCard.Status;
         }
     }
 }
