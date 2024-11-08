@@ -6,44 +6,29 @@ using EMS.Domain.Repositories.EM;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace EMS.Infrastructure.Repositories.EM
 {
-    public class AttendanceRepository : BaseRepository<Attendance>, IAttendanceRepository
+    public class SalaryRepository : BaseRepository<Salary>, ISalaryRepository
     {
-        public AttendanceRepository(AppDbContext context, ILogger<AttendanceRepository> logger)
+        public SalaryRepository(AppDbContext context, ILogger<SalaryRepository> logger)
             : base(context, logger)
         {
         }
 
-        public async Task<PagedDto<Attendance>> GetPagedAsync(AttendanceFilter filter)
+        public async Task<PagedDto<Salary>> GetPagedAsync(SalaryFilter filter)
         {
-            // Initialize filter defaults
-            filter.PageIndex = filter.PageIndex ?? 1;
-            filter.PageSize = filter.PageSize ?? 10;
+            // Set default values for pagination
+            filter.PageIndex ??= 1;
+            filter.PageSize ??= 10;
 
             var query = _dbSet.AsQueryable();
 
-            // Filter by employee ID if provided
+            // Filter by EmployeeId if provided
             if (!string.IsNullOrWhiteSpace(filter.EmployeeId))
             {
-                query = query.Where(a => a.EmployeeId == filter.EmployeeId);
-            }
-
-            if (filter.TimeCardId != null)
-            {
-                query = query.Where(a => a.TimeCardId == filter.TimeCardId);
-            }
-
-            // Filter by date range if provided
-            if (filter.StartDate.HasValue)
-            {
-                query = query.Where(a => a.Date >= filter.StartDate.Value);
-            }
-
-            if (filter.EndDate.HasValue)
-            {
-                query = query.Where(a => a.Date <= filter.EndDate.Value);
+                query = query.Where(s => s.EmployeeId == filter.EmployeeId);
             }
 
             // Apply sorting
@@ -63,7 +48,7 @@ namespace EMS.Infrastructure.Repositories.EM
                 .Take(filter.PageSize.Value)
                 .ToListAsync();
 
-            return new PagedDto<Attendance>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
+            return new PagedDto<Salary>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
         }
     }
 }

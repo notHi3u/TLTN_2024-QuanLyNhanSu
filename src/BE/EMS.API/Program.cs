@@ -2,13 +2,17 @@
 using Common.Configurations;
 using Common.Helpers;
 using EMS.API.Endpoints.Account;
+using EMS.API.Endpoints.EM;
 using EMS.Application.Automapper;
 using EMS.Application.Services.Account;
+using EMS.Application.Services.EM;
 using EMS.Domain.Models;
 using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
+using EMS.Domain.Repositories.EM;
 using EMS.Infrastructure.Contexts;
 using EMS.Infrastructure.Repositories.Account;
+using EMS.Infrastructure.Repositories.EM;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.RateLimiting;
@@ -116,6 +120,40 @@ builder.Services.AddScoped<IMailHelper, MailHelper>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+// Register EMS services and repositories
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+builder.Services.AddScoped<IEmployeeRelativeService, EmployeeRelativeService>();
+builder.Services.AddScoped<IEmployeeRelativeRepository, EmployeeRelativeRepository>();
+
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+builder.Services.AddScoped<IHolidayLeavePolicyService, HolidayLeavePolicyService>();
+builder.Services.AddScoped<IHolidayLeavePolicyRepository, HolidayLeavePolicyRepository>();
+
+builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
+builder.Services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
+
+builder.Services.AddScoped<ILeaveBalanceService, LeaveBalanceService>();
+builder.Services.AddScoped<ILeaveBalanceRepository, LeaveBalanceRepository>();
+
+builder.Services.AddScoped<ISalaryService, SalaryService>();
+builder.Services.AddScoped<ISalaryRepository, SalaryRepository>();
+
+builder.Services.AddScoped<ISalaryHistoryService, SalaryHistoryService>();
+builder.Services.AddScoped<ISalaryHistoryRepository, SalaryHistoryRepository>();
+
+builder.Services.AddScoped<ITimeCardService, TimeCardService>();
+builder.Services.AddScoped<ITimeCardRepository, TimeCardRepository>();
+
+builder.Services.AddScoped<IWorkHistoryService, WorkHistoryService>();
+builder.Services.AddScoped<IWorkHistoryRepository, WorkHistoryRepository>();
+
 // Add DbContext configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
            options.UseNpgsql(
@@ -187,6 +225,17 @@ IdentityEndpoints.MapIdentityApi<User>(app);
 UserEndpoints.Map(app);
 RoleEndpoints.Map(app);
 PermissionEndpoints.Map(app);
+AttendanceEndpoints.Map(app);
+DepartmentEndpoints.Map(app);
+EmployeeEndpoints.Map(app);
+EmployeeRelativeEndpoints.Map(app);
+HolidayLeavePolicyEndpoints.Map(app);
+LeaveBalanceEndpoints.Map(app);
+LeaveRequestEndpoints.Map(app);
+SalaryEndpoints.Map(app);
+SalaryHistoryEndpoints.Map(app);
+TimeCardEndpoints.Map(app);
+WorkHistoryEndpoints.Map(app);
 
 //IdentityEndpoints.MapCustomIdentityApi<User>(app);
 
