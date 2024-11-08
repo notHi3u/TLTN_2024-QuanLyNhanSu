@@ -35,7 +35,7 @@ namespace EMS.API.Endpoints.Account
 
             #region Get role by Id
             // Endpoint để lấy thông tin vai trò theo ID
-            userGroup.MapGet("/{id:guid}", async (IRoleService roleService, string id, bool? IsDeep = false) =>
+            userGroup.MapGet("/{id}", async (IRoleService roleService, string id, bool? IsDeep = false) =>
             {
                 var role = await roleService.GetRoleByIdAsync(id, (bool)IsDeep);
                 if (role == null)
@@ -62,7 +62,7 @@ namespace EMS.API.Endpoints.Account
 
             #region Update role
             // Endpoint để cập nhật thông tin vai trò theo ID
-            userGroup.MapPut("/{id:guid}", async (IRoleService roleService, string id, [FromBody] RoleRequestDto updateRoleDto) =>
+            userGroup.MapPut("/{id}", async (IRoleService roleService, string id, [FromBody] RoleRequestDto updateRoleDto) =>
             {
                 if (updateRoleDto == null)
                 {
@@ -80,7 +80,7 @@ namespace EMS.API.Endpoints.Account
 
             #region Delete role
             // Endpoint để xóa vai trò theo ID
-            userGroup.MapDelete("/{id:guid}", async (IRoleService roleService, string id) =>
+            userGroup.MapDelete("/{id}", async (IRoleService roleService, string id) =>
             {
                 var success = await roleService.DeleteRoleAsync(id);
                 if (!success)
@@ -92,7 +92,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Assign Permission
-            userGroup.MapPost("/{roleId:guid}/permission", async (IRolePermissionService rolePermissionService, string roleId, string permissisonId) =>
+            userGroup.MapPost("/{roleid}/permission", async (IRolePermissionService rolePermissionService, string roleId, string permissisonId) =>
             {
                 if (string.IsNullOrEmpty(permissisonId))
                     return Results.BadRequest("Permission ID is required.");
@@ -104,7 +104,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Revoke Permission
-            userGroup.MapDelete("/{roleId:guid}/permission", async (IRolePermissionService rolePermissionService, string roleId, string permissisonId) =>
+            userGroup.MapDelete("/{roleid}/permission", async (IRolePermissionService rolePermissionService, string roleId, string permissisonId) =>
             {
                 if (string.IsNullOrEmpty(permissisonId))
                     return Results.BadRequest("Permission ID is required.");
@@ -116,7 +116,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Assign Role To Multiple Users
-            userGroup.MapPost("/{roleId:guid}/users", async (IRoleService roleService, string roleId, [FromBody] IEnumerable<string> userIds) =>
+            userGroup.MapPost("/{roleid}/users", async (IRoleService roleService, string roleId, [FromBody] IEnumerable<string> userIds) =>
             {
                 try
                 {
@@ -143,7 +143,7 @@ namespace EMS.API.Endpoints.Account
 
             #region Get Users By Role
             // Endpoint to retrieve all users assigned to a specific role
-            userGroup.MapGet("/{roleId:guid}/users", async (IRoleService roleService, string roleId) =>
+            userGroup.MapGet("/{roleid}/users", async (IRoleService roleService, string roleId) =>
             {
                 try
                 {
@@ -164,7 +164,7 @@ namespace EMS.API.Endpoints.Account
 
             #region Remove Multiple Users From Role
             // Endpoint to remove multiple users from a specific role
-            userGroup.MapDelete("/{roleId:guid}/users", async (IRoleService roleService, string roleId, [FromBody] IEnumerable<string> userIds) =>
+            userGroup.MapDelete("/{roleid}/users", async (IRoleService roleService, string roleId, [FromBody] IEnumerable<string> userIds) =>
             {
                 if (userIds == null || !userIds.Any())
                 {

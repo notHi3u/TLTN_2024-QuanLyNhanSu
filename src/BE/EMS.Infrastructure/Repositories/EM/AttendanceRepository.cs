@@ -65,5 +65,26 @@ namespace EMS.Infrastructure.Repositories.EM
 
             return new PagedDto<Attendance>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
         }
+
+        public async Task<List<Attendance>?> GetByEmployeeIdAsync(string employeeId)
+        {
+            // Fetch all attendance records for the specified employee, ordered by date in descending order
+            var attendances = await _dbSet
+                .Where(a => a.EmployeeId == employeeId)
+                .OrderByDescending(a => a.Date) // Latest attendances first
+                .ToListAsync();
+
+            return attendances;
+        }
+
+        public async Task<List<Attendance>?> GetByTimeCardIdAsync(long timeCardId)
+        {
+            var attendances = await _dbSet
+                .Where(a => a.TimeCardId == timeCardId)
+                .OrderByDescending(a => a.Date) // Latest attendances first
+                .ToListAsync();
+
+            return attendances;
+        }
     }
 }

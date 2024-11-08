@@ -45,7 +45,7 @@ namespace EMS.Application.Services.EM
         #endregion
 
         #region Delete
-        public async Task<bool> DeleteAttendanceAsync(string id)
+        public async Task<bool> DeleteAttendanceAsync(long id)
         {
             var attendance = await _attendanceRepository.GetByIdAsync(id);
             if (attendance == null)
@@ -59,7 +59,7 @@ namespace EMS.Application.Services.EM
         #endregion
 
         #region Get by Id
-        public async Task<AttendanceResponseDto> GetAttendanceByIdAsync(string id)
+        public async Task<AttendanceResponseDto> GetAttendanceByIdAsync(long id)
         {
             var attendance = await _attendanceRepository.GetByIdAsync(id);
             if (attendance == null)
@@ -95,7 +95,7 @@ namespace EMS.Application.Services.EM
         #endregion
 
         #region Update
-        public async Task<AttendanceResponseDto> UpdateAttendanceAsync(string id, AttendanceRequestDto attendanceRequestDto)
+        public async Task<AttendanceResponseDto> UpdateAttendanceAsync(long id, AttendanceRequestDto attendanceRequestDto)
         {
             if (attendanceRequestDto == null)
             {
@@ -117,6 +117,55 @@ namespace EMS.Application.Services.EM
 
             await _attendanceRepository.UpdateAsync(attendance);
             return _mapper.Map<AttendanceResponseDto>(attendance);
+        }
+        #endregion
+
+        #region Get by EmployeeId
+        public async Task<List<AttendanceResponseDto>> GetAttendancesByEmployIdAsync(string employeeId)
+        {
+            var attendance = await _attendanceRepository.GetByEmployeeIdAsync(employeeId);
+
+            if (attendance == null)
+                throw new ArgumentNullException(nameof(attendance));
+
+            return _mapper.Map<List<AttendanceResponseDto>>(attendance);
+        }
+        #endregion
+
+        #region Get by TimeCardId
+        public async Task<List<AttendanceResponseDto>> GetAttendancesByTimeCardIdAsync(long timeCardId)
+        {
+            var attendance = await _attendanceRepository.GetByTimeCardIdAsync(timeCardId);
+
+            if (attendance == null)
+                throw new ArgumentNullException(nameof(attendance));
+
+            return _mapper.Map<List<AttendanceResponseDto>>(attendance);
+        }
+        #endregion
+
+        #region Delete Bulk
+        public async Task<int> DeleteBulkAsync(List<long> ids)
+        {
+            if (ids == null || !ids.Any())
+            {
+                throw new ArgumentException("No attendance IDs provided");
+            }
+
+            int deletedCount = 0;
+
+            // Iterate over each ID and fetch the corresponding attendance record
+            foreach (var id in ids)
+            {
+                var attendance = await _attendanceRepository.GetByIdAsync(id);
+                if (attendance != null)
+                {
+                    await _attendanceRepository.DeleteAsync(attendance);
+                    deletedCount++; // Increment the deleted count
+                }
+            }
+
+            return deletedCount; // Return the number of deleted records
         }
         #endregion
     }
