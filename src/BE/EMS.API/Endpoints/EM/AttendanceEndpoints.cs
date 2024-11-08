@@ -33,7 +33,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Attendance By Id
-            attendanceGroup.MapGet("/{id:guid}", async (IAttendanceService attendanceService, string id) =>
+            attendanceGroup.MapGet("/{id}", async (IAttendanceService attendanceService, long id) =>
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Update Attendance
-            attendanceGroup.MapPut("/{id:guid}", async (IAttendanceService attendanceService, string id, [FromBody] AttendanceRequestDto updateAttendanceDto) =>
+            attendanceGroup.MapPut("/{id}", async (IAttendanceService attendanceService, long id, [FromBody] AttendanceRequestDto updateAttendanceDto) =>
             {
                 if (updateAttendanceDto == null)
                 {
@@ -108,7 +108,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Delete Attendance
-            attendanceGroup.MapDelete("/{id:guid}", async (IAttendanceService attendanceService, string id) =>
+            attendanceGroup.MapDelete("/{id}", async (IAttendanceService attendanceService, long id) =>
             {
                 try
                 {
@@ -127,6 +127,80 @@ namespace EMS.API.Endpoints.EM
                 }
             }).ConfigureApiResponses();
             #endregion
+
+            #region Get by EmployeeId
+            attendanceGroup.MapGet("/employee/{employeeId}", async (IAttendanceService attendanceService, string employeeId) =>
+            {
+                try
+                {
+                    var attendances = await attendanceService.GetAttendancesByEmployIdAsync(employeeId);
+                    if (attendances == null || !attendances.Any())
+                    {
+                        var errorResponse = BaseResponse<List<AttendanceResponseDto>>.Failure("No attendances found for this employee.");
+                        return Results.NotFound(errorResponse);
+                    }
+                    return Results.Ok(BaseResponse<List<AttendanceResponseDto>>.Success(attendances));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<List<AttendanceResponseDto>>.Failure("An error occurred while retrieving the attendances for the employee.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+
+            #region Get by TimeCardId
+            attendanceGroup.MapGet("/timecard/{timeCardId:long}", async (IAttendanceService attendanceService, long timeCardId) =>
+            {
+                try
+                {
+                    var attendances = await attendanceService.GetAttendancesByTimeCardIdAsync(timeCardId);
+                    if (attendances == null || !attendances.Any())
+                    {
+                        var errorResponse = BaseResponse<List<AttendanceResponseDto>>.Failure("No attendances found for this timecard.");
+                        return Results.NotFound(errorResponse);
+                    }
+                    return Results.Ok(BaseResponse<List<AttendanceResponseDto>>.Success(attendances));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<List<AttendanceResponseDto>>.Failure("An error occurred while retrieving the attendances for the timecard.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+            #region Delete Bulk Endpoint
+            attendanceGroup.MapDelete("/bulk", async (IAttendanceService attendanceService, [FromBody] List<long> ids) =>
+            {
+                if (ids == null || !ids.Any())
+                {
+                    var errorResponse = BaseResponse<bool>.Failure("No attendance IDs provided.");
+                    return Results.BadRequest(errorResponse);
+                }
+
+                try
+                {
+                    // Call the DeleteBulkAsync method
+                    var deletedCount = await attendanceService.DeleteBulkAsync(ids);
+
+                    if (deletedCount == 0)
+                    {
+                        var errorResponse = BaseResponse<bool>.Failure("No attendances were deleted.");
+                        return Results.NotFound(errorResponse);
+                    }
+
+                    return Results.Ok(BaseResponse<int>.Success(deletedCount));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<bool>.Failure($"An error occurred while deleting attendances: {ex.Message}");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
         }
     }
 }

@@ -12,10 +12,13 @@ namespace EMS.Application.Services.EM
 {
     public interface IAttendanceService
     {
-        Task<AttendanceResponseDto> GetAttendanceByIdAsync(string id);
+        Task<AttendanceResponseDto> GetAttendanceByIdAsync(long id);
         Task<AttendanceResponseDto> CreateAttendanceAsync(AttendanceRequestDto attendanceRequestDto);
-        Task<AttendanceResponseDto> UpdateAttendanceAsync(string id, AttendanceRequestDto attendanceRequestDto);
-        Task<bool> DeleteAttendanceAsync(string id);
+        Task<AttendanceResponseDto> UpdateAttendanceAsync(long id, AttendanceRequestDto attendanceRequestDto);
+        Task<bool> DeleteAttendanceAsync(long id);
         Task<PagedDto<AttendanceResponseDto>> GetPagedAttendancesAsync(AttendanceFilter filter);
+        Task<List<AttendanceResponseDto>> GetAttendancesByEmployIdAsync(string employeeId);
+        Task<List<AttendanceResponseDto>> GetAttendancesByTimeCardIdAsync(long timeCardId);
+        Task<int> DeleteBulkAsync(List<long> ids);
     }
 }

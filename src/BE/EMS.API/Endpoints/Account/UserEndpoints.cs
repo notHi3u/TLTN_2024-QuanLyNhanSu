@@ -33,7 +33,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Get User By Id
-            userGroup.MapGet("/{id:guid}", async (IUserService userService, string id) =>
+            userGroup.MapGet("/{id}", async (IUserService userService, string id) =>
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Update User
-            userGroup.MapPut("/{id:guid}", async (IUserService userService, string id, [FromBody] UserRequestDto updateUserDto) =>
+            userGroup.MapPut("/{id}", async (IUserService userService, string id, [FromBody] UserRequestDto updateUserDto) =>
             {
                 if (updateUserDto == null)
                 {
@@ -108,7 +108,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Delete User
-            userGroup.MapDelete("/{id:guid}", async (IUserService userService, string id) =>
+            userGroup.MapDelete("/{id}", async (IUserService userService, string id) =>
             {
                 try
                 {
@@ -129,7 +129,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Assign Single Role to User
-            userGroup.MapPost("/{userId:guid}/role", async (IUserService userService, string userId, string roleName) =>
+            userGroup.MapPost("/{userid}/role", async (IUserService userService, string userId, string roleName) =>
             {
                 try
                 {
@@ -150,7 +150,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Assign Multiple Roles to User
-            userGroup.MapPost("/{userId:guid}/roles", async (IUserService userService, string userId, [FromBody] IEnumerable<string> roleNames) =>
+            userGroup.MapPost("/{userid}/roles", async (IUserService userService, string userId, [FromBody] IEnumerable<string> roleNames) =>
             {
                 try
                 {
@@ -171,7 +171,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Remove Role from User
-            userGroup.MapDelete("/{userId:guid}/role", async (IUserService userService, string userId, string roleName) =>
+            userGroup.MapDelete("/{userid}/role", async (IUserService userService, string userId, string roleName) =>
             {
                 try
                 {
@@ -192,7 +192,7 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Remove Multiple Roles from User
-            userGroup.MapDelete("/{userId:guid}/roles", async (IUserService userService, string userId, [FromBody] IEnumerable<string> roleNames) =>
+            userGroup.MapDelete("/{userid}/roles", async (IUserService userService, string userId, [FromBody] IEnumerable<string> roleNames) =>
             {
                 try
                 {

@@ -36,7 +36,7 @@ namespace EMS.API.Endpoints.Account
 
             #region Get permission by Id
             // Endpoint để lấy thông tin quyền theo ID
-            permissionGroup.MapGet("/{id:guid}", async (IPermissionService permissionService, string id) =>
+            permissionGroup.MapGet("/{id}", async (IPermissionService permissionService, string id) =>
             {
                 try
                 {
@@ -83,7 +83,7 @@ namespace EMS.API.Endpoints.Account
 
             #region Update Permission
             // Endpoint để cập nhật thông tin quyền theo ID
-            permissionGroup.MapPut("/{id:guid}", async (IPermissionService permissionService, string id, [FromBody] PermissionRequestDto updatePermissionDto) =>
+            permissionGroup.MapPut("/{id}", async (IPermissionService permissionService, string id, [FromBody] PermissionRequestDto updatePermissionDto) =>
             {
                 if (updatePermissionDto == null)
                 {
@@ -109,7 +109,7 @@ namespace EMS.API.Endpoints.Account
 
             #region Delete Permission
             // Endpoint để xóa quyền theo ID
-            permissionGroup.MapDelete("/{id:guid}", async (IPermissionService permissionService, string id) =>
+            permissionGroup.MapDelete("/{id}", async (IPermissionService permissionService, string id) =>
             {
                 try
                 {
