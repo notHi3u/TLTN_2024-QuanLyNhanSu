@@ -121,31 +121,31 @@ namespace EMS.Application.Services.EM
         #endregion
 
         #region Get by EmployeeId
-        public async Task<List<AttendanceResponseDto>> GetAttendancesByEmployIdAsync(string employeeId)
+        public async Task<IEnumerable<AttendanceResponseDto>> GetAttendancesByEmployIdAsync(string employeeId)
         {
             var attendance = await _attendanceRepository.GetByEmployeeIdAsync(employeeId);
 
             if (attendance == null)
                 throw new ArgumentNullException(nameof(attendance));
 
-            return _mapper.Map<List<AttendanceResponseDto>>(attendance);
+            return _mapper.Map<IEnumerable<AttendanceResponseDto>>(attendance);
         }
         #endregion
 
         #region Get by TimeCardId
-        public async Task<List<AttendanceResponseDto>> GetAttendancesByTimeCardIdAsync(long timeCardId)
+        public async Task<IEnumerable<AttendanceResponseDto>> GetAttendancesByTimeCardIdAsync(long timeCardId)
         {
             var attendance = await _attendanceRepository.GetByTimeCardIdAsync(timeCardId);
 
             if (attendance == null)
                 throw new ArgumentNullException(nameof(attendance));
 
-            return _mapper.Map<List<AttendanceResponseDto>>(attendance);
+            return _mapper.Map<IEnumerable<AttendanceResponseDto>>(attendance);
         }
         #endregion
 
         #region Delete Bulk
-        public async Task<int> DeleteBulkAsync(List<long> ids)
+        public async Task<int> DeleteBulkAsync(IEnumerable<long> ids)
         {
             if (ids == null || !ids.Any())
             {

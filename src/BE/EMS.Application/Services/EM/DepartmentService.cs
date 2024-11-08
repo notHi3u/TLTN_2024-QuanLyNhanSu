@@ -130,7 +130,7 @@ namespace EMS.Application.Services.EM
         #endregion
 
         #region Get Employees By Department
-        public async Task<List<EmployeeResponseDto>> GetEmployeesByDepartmentAsync(string departmentId)
+        public async Task<IEnumerable<EmployeeResponseDto>> GetEmployeesByDepartmentAsync(string departmentId)
         {
             var department = await _departmentRepository.GetByIdAsync(departmentId);
 
@@ -141,7 +141,7 @@ namespace EMS.Application.Services.EM
             var employees = await _employeeRepository.GetByDepartmentIdAsync(departmentId);
 
             // Map to response DTOs
-            return _mapper.Map<List<EmployeeResponseDto>>(employees);
+            return _mapper.Map<IEnumerable<EmployeeResponseDto>>(employees);
         }
         #endregion
 

@@ -4,6 +4,7 @@ using EMS.Application.DTOs.EM;
 using EMS.Application.Services.EM;
 using EMS.Domain.Filters.EMS;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace EMS.API.Endpoints.EM
 {
@@ -136,14 +137,14 @@ namespace EMS.API.Endpoints.EM
                     var attendances = await attendanceService.GetAttendancesByEmployIdAsync(employeeId);
                     if (attendances == null || !attendances.Any())
                     {
-                        var errorResponse = BaseResponse<List<AttendanceResponseDto>>.Failure("No attendances found for this employee.");
+                        var errorResponse = BaseResponse<IEnumerable<AttendanceResponseDto>>.Failure("No attendances found for this employee.");
                         return Results.NotFound(errorResponse);
                     }
-                    return Results.Ok(BaseResponse<List<AttendanceResponseDto>>.Success(attendances));
+                    return Results.Ok(BaseResponse<IEnumerable<AttendanceResponseDto>>.Success(attendances));
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<List<AttendanceResponseDto>>.Failure("An error occurred while retrieving the attendances for the employee.");
+                    var errorResponse = BaseResponse<IEnumerable<AttendanceResponseDto>>.Failure("An error occurred while retrieving the attendances for the employee.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
@@ -158,14 +159,14 @@ namespace EMS.API.Endpoints.EM
                     var attendances = await attendanceService.GetAttendancesByTimeCardIdAsync(timeCardId);
                     if (attendances == null || !attendances.Any())
                     {
-                        var errorResponse = BaseResponse<List<AttendanceResponseDto>>.Failure("No attendances found for this timecard.");
+                        var errorResponse = BaseResponse<IEnumerable<AttendanceResponseDto>>.Failure("No attendances found for this timecard.");
                         return Results.NotFound(errorResponse);
                     }
-                    return Results.Ok(BaseResponse<List<AttendanceResponseDto>>.Success(attendances));
+                    return Results.Ok(BaseResponse<IEnumerable<AttendanceResponseDto>>.Success(attendances));
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<List<AttendanceResponseDto>>.Failure("An error occurred while retrieving the attendances for the timecard.");
+                    var errorResponse = BaseResponse<IEnumerable<AttendanceResponseDto>>.Failure("An error occurred while retrieving the attendances for the timecard.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();

@@ -32,26 +32,26 @@ namespace EMS.API.Endpoints.EM
             }).ConfigureApiResponses();
             #endregion
 
-            //#region Get Employee Relative By Id
-            //relativeGroup.MapGet("/{id:guid}", async (IEmployeeRelativeService relativeService, string id) =>
-            //{
-            //    try
-            //    {
-            //        var relative = await relativeService.GetEmployeeRelativeByIdAsync(id);
-            //        if (relative == null)
-            //        {
-            //            var errorResponse = BaseResponse<EmployeeRelativeResponseDto>.Failure("Employee relative not found.");
-            //            return Results.NotFound(errorResponse);
-            //        }
-            //        return Results.Ok(BaseResponse<EmployeeRelativeResponseDto>.Success(relative));
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        var errorResponse = BaseResponse<EmployeeRelativeResponseDto>.Failure("An error occurred while retrieving the employee relative.");
-            //        return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
-            //    }
-            //}).ConfigureApiResponses();
-            //#endregion
+            #region Get Employee Relative By Id
+            relativeGroup.MapGet("/{id}", async (IEmployeeRelativeService relativeService, int id) =>
+            {
+                try
+                {
+                    var relative = await relativeService.GetEmployeeRelativeByIdAsync(id);
+                    if (relative == null)
+                    {
+                        var errorResponse = BaseResponse<EmployeeRelativeResponseDto>.Failure("Employee relative not found.");
+                        return Results.NotFound(errorResponse);
+                    }
+                    return Results.Ok(BaseResponse<EmployeeRelativeResponseDto>.Success(relative));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeRelativeResponseDto>.Failure("An error occurred while retrieving the employee relative.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
 
             #region Create Employee Relative
             relativeGroup.MapPost("/", async (IEmployeeRelativeService relativeService, [FromBody] EmployeeRelativeRequestDto createRelativeDto) =>
@@ -81,7 +81,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Update Employee Relative
-            relativeGroup.MapPut("/{id:guid}", async (IEmployeeRelativeService relativeService, string id, [FromBody] EmployeeRelativeRequestDto updateRelativeDto) =>
+            relativeGroup.MapPut("/{id}", async (IEmployeeRelativeService relativeService, int id, [FromBody] EmployeeRelativeRequestDto updateRelativeDto) =>
             {
                 if (updateRelativeDto == null)
                 {
@@ -108,7 +108,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Delete Employee Relative
-            relativeGroup.MapDelete("/{id:guid}", async (IEmployeeRelativeService relativeService, string id) =>
+            relativeGroup.MapDelete("/{id}", async (IEmployeeRelativeService relativeService, int id) =>
             {
                 try
                 {
@@ -123,6 +123,27 @@ namespace EMS.API.Endpoints.EM
                 catch (Exception ex)
                 {
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while deleting the employee relative.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+            #region Get Employee Relatives by EmployeeId
+            relativeGroup.MapGet("/employee/{employeeId}/relatives", async (IEmployeeRelativeService relativeService, string employeeId) =>
+            {
+                try
+                {
+                    var relatives = await relativeService.GetEmployeeRelativesByEmployeeIdAsync(employeeId);
+                    if (relatives == null || !relatives.Any())
+                    {
+                        var errorResponse = BaseResponse<List<EmployeeRelativeResponseDto>>.Failure("No relatives found for this employee.");
+                        return Results.NotFound(errorResponse);
+                    }
+                    return Results.Ok(BaseResponse<IEnumerable<EmployeeRelativeResponseDto>>.Success(relatives));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<List<EmployeeRelativeResponseDto>>.Failure("An error occurred while retrieving the employee's relatives.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();

@@ -50,5 +50,12 @@ namespace EMS.Infrastructure.Repositories.EM
 
             return new PagedDto<EmployeeRelative>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
         }
+
+        public async Task<IEnumerable<EmployeeRelative>> GetByEmployeeIdAsync(string employeeId)
+        {
+            return await _dbSet
+                .Where(r => r.EmployeeId == employeeId)
+                .ToListAsync();
+        }
     }
 }

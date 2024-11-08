@@ -12,7 +12,7 @@ namespace EMS.Application.Services.EM
         Task<bool> DeleteDepartmentAsync(string id);
         Task<PagedDto<DepartmentResponseDto>> GetPagedDepartmentsAsync(DepartmentFilter filter);
         Task<DepartmentResponseDto> AssignManagerAsync(string departmentId, string managerId);
-        Task<List<EmployeeResponseDto>> GetEmployeesByDepartmentAsync(string departmentId);
+        Task<IEnumerable<EmployeeResponseDto>> GetEmployeesByDepartmentAsync(string departmentId);
         Task<EmployeeResponseDto> GetDepartmentManagerAsync(string departmentId);
     }
 }

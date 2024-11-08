@@ -164,15 +164,15 @@ namespace EMS.API.Endpoints.EM
                     var employees = await departmentService.GetEmployeesByDepartmentAsync(id);
                     if (employees == null || !employees.Any())
                     {
-                        var errorResponse = BaseResponse<List<EmployeeResponseDto>>.Failure("No employees found in this department.");
+                        var errorResponse = BaseResponse<IEnumerable<EmployeeResponseDto>>.Failure("No employees found in this department.");
                         return Results.NotFound(errorResponse);
                     }
 
-                    return Results.Ok(BaseResponse<List<EmployeeResponseDto>>.Success(employees));
+                    return Results.Ok(BaseResponse<IEnumerable<EmployeeResponseDto>>.Success(employees));
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<List<EmployeeResponseDto>>.Failure("An error occurred while retrieving the employees.");
+                    var errorResponse = BaseResponse<IEnumerable<EmployeeResponseDto>>.Failure("An error occurred while retrieving the employees.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
