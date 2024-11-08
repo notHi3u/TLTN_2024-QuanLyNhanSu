@@ -4,7 +4,6 @@ namespace EMS.Application.DTOs.EM
 {
     public class EmployeeRequestDto
     {
-        public string Id { get; set; } // Mã nhân viên
         public required string LastName { get; set; } // Họ
         public required string FirstName { get; set; } // Tên
         public DateOnly? DateOfBirth { get; set; } // Ngày sinh
