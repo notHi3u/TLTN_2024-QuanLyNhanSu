@@ -9,5 +9,7 @@ namespace EMS.Domain.Filters.EMS
 {
     public class SalaryFilter: FilterBase
     {
+        public string EmployeeId;
+
     }
 }
