@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace EMS.Infrastructure.Repositories.EM
 {
-    public class SalaryHistoryRepository : BaseRepository<SalaryHistory>, ISalaryHistoryRepository
+    public class SalaryHistoryRepository : BaseRepository<SalaryRecord>, ISalaryRecordRepository
     {
         public SalaryHistoryRepository(AppDbContext context, ILogger<SalaryHistoryRepository> logger)
             : base(context, logger)
         {
         }
 
-        public async Task<PagedDto<SalaryHistory>> GetPagedAsync(SalaryHistoryFilter filter)
+        public async Task<PagedDto<SalaryRecord>> GetPagedAsync(SalaryRecordFilter filter)
         {
             // Initialize default values for the filter if necessary
             filter.PageIndex ??= 1;
@@ -50,7 +50,7 @@ namespace EMS.Infrastructure.Repositories.EM
                 .Take(filter.PageSize.Value)
                 .ToListAsync();
 
-            return new PagedDto<SalaryHistory>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
+            return new PagedDto<SalaryRecord>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
         }
     }
 }

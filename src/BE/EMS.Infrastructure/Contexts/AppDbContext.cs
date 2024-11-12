@@ -29,10 +29,9 @@ namespace EMS.Infrastructure.Contexts
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
         public DbSet<LeaveBalance> LeaveBalances { get; set; }
         public DbSet<EmployeeRelative> EmployeeRelatives { get; set; }
-        public DbSet<Salary> Salaries { get; set; }
-        public DbSet<SalaryHistory> SalaryHistories { get; set; }
+        public DbSet<SalaryRecord> SalaryRecords { get; set; }
         public DbSet<TimeCard> TimeCards { get; set; }
-        public DbSet<WorkHistory> WorkHistories { get; set; }
+        public DbSet<WorkRecord> WorkHistories { get; set; }
         public DbSet<HolidayLeavePolicy> HolidayLeavePolicies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -121,15 +120,10 @@ namespace EMS.Infrastructure.Contexts
                 .WithOne(er => er.Employee)
                 .HasForeignKey(er => er.EmployeeId);
 
-            // Configure Employee and Salary relationship (1-1)
-            builder.Entity<Employee>()
-                .HasOne(e => e.Salary)
-                .WithOne(s => s.Employee)
-                .HasForeignKey<Salary>(s => s.EmployeeId);
 
             // Configure Employee and SalaryHistory relationship (1-n)
             builder.Entity<Employee>()
-                .HasMany(e => e.SalaryHistory)
+                .HasMany(e => e.SalaryRecords)
                 .WithOne(sh => sh.Employee)
                 .HasForeignKey(sh => sh.EmployeeId);
 
@@ -141,7 +135,7 @@ namespace EMS.Infrastructure.Contexts
 
             // Configure Employee and WorkHistory relationship (1-n)
             builder.Entity<Employee>()
-                .HasMany(e => e.WorkHistories)
+                .HasMany(e => e.WorkRecord)
                 .WithOne(wh => wh.Employee)
                 .HasForeignKey(wh => wh.EmployeeId);
 

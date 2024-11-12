@@ -53,9 +53,8 @@ namespace EMS.Application.Automapper
                 .ForMember(dest => dest.EmployeeRelatives, opt => opt.MapFrom(src => src.EmployeeRelatives)) // Mapping for EmployeeRelatives
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department)) // Mapping for Department
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User)) // Mapping for User
-                .ForMember(dest => dest.Salary, opt => opt.MapFrom(src => src.Salary)) // Mapping for Salary
-                .ForMember(dest => dest.SalaryHistory, opt => opt.MapFrom(src => src.SalaryHistory)) // Mapping for SalaryHistory
-                .ForMember(dest => dest.WorkHistories, opt => opt.MapFrom(src => src.WorkHistories)); // Mapping for WorkHistories
+                .ForMember(dest => dest.SalaryRecords, opt => opt.MapFrom(src => src.SalaryRecords)) // Mapping for SalaryHistory
+                .ForMember(dest => dest.WorkRecords, opt => opt.MapFrom(src => src.WorkRecord)); // Mapping for WorkHistories
             #endregion
 
             #region LeaveRequest
@@ -68,14 +67,9 @@ namespace EMS.Application.Automapper
             CreateMap<LeaveBalance, LeaveBalanceResponseDto>();
             #endregion
 
-            #region Salary
-            CreateMap<SalaryRequestDto, Salary>();
-            CreateMap<Salary, SalaryResponseDto>();
-            #endregion
-
-            #region SalaryHistory
-            CreateMap<SalaryHistoryRequestDto, SalaryHistory>();
-            CreateMap<SalaryHistory, SalaryHistoryResponseDto>();
+            #region SalaryRecord
+            CreateMap<SalaryRecordRequestDto, SalaryRecord>();
+            CreateMap<SalaryRecord, SalaryRecordResponseDto>();
             #endregion
 
             #region TimeCard
@@ -85,8 +79,8 @@ namespace EMS.Application.Automapper
             #endregion
 
             #region WorkHistory
-            CreateMap<WorkHistoryRequestDto, WorkHistory>();
-            CreateMap<WorkHistory, WorkHistoryResponseDto>();
+            CreateMap<WorkHistoryRequestDto, WorkRecord>();
+            CreateMap<WorkRecord, WorkHistoryResponseDto>();
             #endregion
 
             #region Department

@@ -10,6 +10,6 @@ namespace EMS.Application.Services.EM
         Task<WorkHistoryResponseDto> CreateWorkHistoryAsync(WorkHistoryRequestDto workHistoryRequestDto);
         Task<WorkHistoryResponseDto> UpdateWorkHistoryAsync(string id, WorkHistoryRequestDto workHistoryRequestDto);
         Task<bool> DeleteWorkHistoryAsync(string id);
-        Task<PagedDto<WorkHistoryResponseDto>> GetPagedWorkHistoriesAsync(WorkHistoryFilter filter);
+        Task<PagedDto<WorkHistoryResponseDto>> GetPagedWorkHistoriesAsync(WorkRecordFilter filter);
     }
 }

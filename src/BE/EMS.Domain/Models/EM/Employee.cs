@@ -72,10 +72,24 @@ namespace EMS.Domain.Models.EM
         public virtual ICollection<LeaveBalance> LeaveBalances { get; set; }
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<EmployeeRelative> EmployeeRelatives { get; set; }
+        public virtual ICollection<WorkRecord> WorkRecord { get; set; }
         public virtual Department Department { get; set; }
         public virtual Department ManagedDepartment { get; set; }
-        public virtual Salary Salary { get; set; }
-        public virtual ICollection<SalaryHistory> SalaryHistory { get; set; }
-        public virtual ICollection<WorkHistory> WorkHistories { get; set; }
+
+        // Merged Salary Information
+        [Range(0, double.MaxValue, ErrorMessage = "Base salary must be a positive value.")]
+        public decimal BaseSalary { get; set; } // Base salary must be a positive value
+
+        [Range(0, 100, ErrorMessage = "Percent bonus must be between 0 and 100.")]
+        public decimal PercentBonus { get; set; } // Percent bonus should be between 0 and 100
+
+        [Range(0, double.MaxValue, ErrorMessage = "Flat bonus must be a positive value.")]
+        public decimal FlatBonus { get; set; } // Flat bonus must be a positive value
+
+        [Range(0, double.MaxValue, ErrorMessage = "Deductions must be a positive value.")]
+        public decimal Deductions { get; set; } // Deductions must be a positive value
+
+        // Navigation property for salary history
+        public virtual ICollection<SalaryRecord> SalaryRecords { get; set; } // Historical salary data
     }
 }
