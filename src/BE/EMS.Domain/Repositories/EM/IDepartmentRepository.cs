@@ -13,5 +13,6 @@ namespace EMS.Domain.Repositories.EM
     public interface IDepartmentRepository: IBaseRepository<Department>
     {
         Task<PagedDto<Department>> GetPagedAsync(DepartmentFilter filter);
+        Task<Department> GetByIdAsync(string id, bool? isDeep);
     }
 }

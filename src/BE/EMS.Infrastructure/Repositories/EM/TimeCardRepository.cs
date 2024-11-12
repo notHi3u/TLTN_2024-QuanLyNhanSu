@@ -25,9 +25,15 @@ namespace EMS.Infrastructure.Repositories.EM
             filter.PageIndex ??= 1;
             filter.PageSize ??= 10;
 
-            var query = _dbSet.AsQueryable()
-                .Include(tc => tc.Attendances) // Include related Attendance records if necessary
-                .Include(tc => tc.Employee); // Include related Employee if necessary
+            var query = _dbSet.AsQueryable();
+
+            if (filter.IsDeep.HasValue && filter.IsDeep.Value)
+            {
+                query = query
+                    .Include(tc => tc.Attendances) // Include related Attendance records if necessary
+                    .Include(tc => tc.Employee); // Include related Employee if necessary
+            }
+                
 
             // Apply filtering based on filter properties
             if (!string.IsNullOrWhiteSpace(filter.EmployeeId))
@@ -50,6 +56,25 @@ namespace EMS.Infrastructure.Repositories.EM
                 .ToListAsync();
 
             return new PagedDto<TimeCard>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
+        }
+
+        public async Task<TimeCard>GetByIdAsync(long id, bool? isDeep)
+        {
+            var query = _dbSet.AsQueryable();
+
+            // Fetch the user by Id
+            var timeCardQuery = query.Where(u => u.Id == id);
+
+            if (isDeep.HasValue && isDeep.Value)
+            {
+                timeCardQuery = timeCardQuery
+                    .Include(tc => tc.Attendances)
+                    .Include(tc => tc.Employee);
+            }
+
+            var timecard = await timeCardQuery.FirstOrDefaultAsync();
+
+            return timecard;
         }
     }
 }
