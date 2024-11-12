@@ -7,25 +7,25 @@ using EMS.Domain.Repositories.EM;
 
 namespace EMS.Application.Services.EM
 {
-    public class SalaryHistoryService : ISalaryHistoryService
+    public class SalaryRecordService : ISalaryRecordService
     {
-        private readonly ISalaryHistoryRepository _salaryHistoryRepository;
+        private readonly ISalaryRecordRepository _salaryHistoryRepository;
         private readonly IMapper _mapper;
 
-        public SalaryHistoryService(ISalaryHistoryRepository salaryHistoryRepository, IMapper mapper)
+        public SalaryRecordService(ISalaryRecordRepository salaryHistoryRepository, IMapper mapper)
         {
             _salaryHistoryRepository = salaryHistoryRepository ?? throw new ArgumentNullException(nameof(salaryHistoryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<SalaryHistoryResponseDto> CreateSalaryHistoryAsync(SalaryHistoryRequestDto salaryHistoryRequestDto)
+        public async Task<SalaryRecordResponseDto> CreateSalaryHistoryAsync(SalaryRecordRequestDto salaryHistoryRequestDto)
         {
             if (salaryHistoryRequestDto == null)
                 throw new ArgumentNullException(nameof(salaryHistoryRequestDto));
 
-            SalaryHistory salaryHistory = _mapper.Map<SalaryHistory>(salaryHistoryRequestDto);
-            await _salaryHistoryRepository.AddAsync(salaryHistory);
-            return _mapper.Map<SalaryHistoryResponseDto>(salaryHistory);
+            SalaryRecord salaryRecord = _mapper.Map<SalaryRecord>(salaryHistoryRequestDto);
+            await _salaryHistoryRepository.AddAsync(salaryRecord);
+            return _mapper.Map<SalaryRecordResponseDto>(salaryRecord);
         }
 
         public async Task<bool> DeleteSalaryHistoryAsync(string id)
@@ -38,24 +38,24 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<SalaryHistoryResponseDto> GetSalaryHistoryByIdAsync(string id)
+        public async Task<SalaryRecordResponseDto> GetSalaryHistoryByIdAsync(string id)
         {
             var salaryHistory = await _salaryHistoryRepository.GetByIdAsync(id);
             if (salaryHistory == null)
                 throw new ArgumentNullException(nameof(salaryHistory));
 
-            return _mapper.Map<SalaryHistoryResponseDto>(salaryHistory);
+            return _mapper.Map<SalaryRecordResponseDto>(salaryHistory);
         }
 
-        public async Task<PagedDto<SalaryHistoryResponseDto>> GetPagedSalaryHistoriesAsync(SalaryHistoryFilter filter)
+        public async Task<PagedDto<SalaryRecordResponseDto>> GetPagedSalaryHistoriesAsync(SalaryRecordFilter filter)
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
 
             var pagedHistories = await _salaryHistoryRepository.GetPagedAsync(filter);
-            var historyDtos = _mapper.Map<IEnumerable<SalaryHistoryResponseDto>>(pagedHistories.Items);
+            var historyDtos = _mapper.Map<IEnumerable<SalaryRecordResponseDto>>(pagedHistories.Items);
 
-            return new PagedDto<SalaryHistoryResponseDto>(
+            return new PagedDto<SalaryRecordResponseDto>(
                 historyDtos,
                 pagedHistories.TotalCount,
                 pagedHistories.PageIndex,
@@ -63,7 +63,7 @@ namespace EMS.Application.Services.EM
             );
         }
 
-        public async Task<SalaryHistoryResponseDto> UpdateSalaryHistoryAsync(string id, SalaryHistoryRequestDto salaryHistoryRequestDto)
+        public async Task<SalaryRecordResponseDto> UpdateSalaryHistoryAsync(string id, SalaryRecordRequestDto salaryHistoryRequestDto)
         {
             if (salaryHistoryRequestDto == null)
                 throw new ArgumentNullException(nameof(salaryHistoryRequestDto));
@@ -75,7 +75,7 @@ namespace EMS.Application.Services.EM
             _mapper.Map(salaryHistoryRequestDto, salaryHistory);
             await _salaryHistoryRepository.UpdateAsync(salaryHistory);
 
-            return _mapper.Map<SalaryHistoryResponseDto>(salaryHistory);
+            return _mapper.Map<SalaryRecordResponseDto>(salaryHistory);
         }
     }
 }

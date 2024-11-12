@@ -32,8 +32,7 @@ namespace EMS.Application.DTOs.EM
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<EmployeeRelative> EmployeeRelatives { get; set; }
         public virtual Department Department { get; set; }
-        public virtual Salary Salary { get; set; }
-        public virtual ICollection<SalaryHistory> SalaryHistory { get; set; }
-        public virtual ICollection<WorkHistory> WorkHistories { get; set; }
+        public virtual ICollection<SalaryRecord> SalaryRecords { get; set; }
+        public virtual ICollection<WorkRecord> WorkRecords { get; set; }
     }
 }

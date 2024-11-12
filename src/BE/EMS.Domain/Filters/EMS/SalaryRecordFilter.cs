@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace EMS.Domain.Filters.EMS
 {
-    public class SalaryFilter: FilterBase
+    public class SalaryRecordFilter: FilterBase
     {
-        public string EmployeeId;
-
+        public string? EmployeeId { get; set; }
+        public int? Month { get; set; }
+        public int? Year { get; set; }
     }
 }

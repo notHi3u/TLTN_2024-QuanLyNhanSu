@@ -10,8 +10,8 @@ namespace EMS.API.Endpoints.EM
     {
         public static void Map(WebApplication app)
         {
-            var salaryHistoryGroup = app.MapGroup("/salary-history")
-                .WithTags("SalaryHistory");
+            var salaryHistoryGroup = app.MapGroup("/salary-record")
+                .WithTags("SalaryRecord");
 
             //#region Get Salary History By Employee Id
             //salaryHistoryGroup.MapGet("/employee/{employeeId:guid}", async (ISalaryHistoryService salaryHistoryService, string employeeId, DateTime? startDate, DateTime? endDate) =>
@@ -35,27 +35,27 @@ namespace EMS.API.Endpoints.EM
             //#endregion
 
             #region Add New Salary Record
-            salaryHistoryGroup.MapPost("/", async (ISalaryHistoryService salaryHistoryService, [FromBody] SalaryHistoryRequestDto newSalaryDto) =>
+            salaryHistoryGroup.MapPost("/", async (ISalaryRecordService salaryHistoryService, [FromBody] SalaryRecordRequestDto newSalaryDto) =>
             {
                 if (newSalaryDto == null)
                 {
-                    var errorResponse = BaseResponse<SalaryHistoryResponseDto>.Failure("Salary data is required.");
+                    var errorResponse = BaseResponse<SalaryRecordResponseDto>.Failure("Salary data is required.");
                     return Results.BadRequest(errorResponse);
                 }
 
                 try
                 {
                     var salaryHistoryEntry = await salaryHistoryService.CreateSalaryHistoryAsync(newSalaryDto);
-                    return Results.Ok(BaseResponse<SalaryHistoryResponseDto>.Success(salaryHistoryEntry));
+                    return Results.Ok(BaseResponse<SalaryRecordResponseDto>.Success(salaryHistoryEntry));
                 }
                 catch (ArgumentException ex)
                 {
-                    var errorResponse = BaseResponse<SalaryHistoryResponseDto>.Failure(ex.Message);
+                    var errorResponse = BaseResponse<SalaryRecordResponseDto>.Failure(ex.Message);
                     return Results.BadRequest(errorResponse);
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<SalaryHistoryResponseDto>.Failure("An error occurred while adding the salary record.");
+                    var errorResponse = BaseResponse<SalaryRecordResponseDto>.Failure("An error occurred while adding the salary record.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();

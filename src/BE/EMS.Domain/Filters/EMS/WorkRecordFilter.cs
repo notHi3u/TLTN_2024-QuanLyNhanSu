@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EMS.Domain.Filters.EMS
 {
-    public class WorkHistoryFilter: FilterBase
+    public class WorkRecordFilter: FilterBase
     {
         public string? EmployeeId { get; set; }
         public string? Position { get; set; }

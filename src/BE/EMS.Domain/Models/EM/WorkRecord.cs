@@ -2,7 +2,7 @@
 
 namespace EMS.Domain.Models.EM
 {
-    public class WorkHistory
+    public class WorkRecord
     {
         [Key] // Marks Id as the primary key
         public long Id { get; set; } // Mã bản lưu

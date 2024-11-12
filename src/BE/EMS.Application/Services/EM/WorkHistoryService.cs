@@ -9,10 +9,10 @@ namespace EMS.Application.Services.EM
 {
     public class WorkHistoryService : IWorkHistoryService
     {
-        private readonly IWorkHistoryRepository _workHistoryRepository;
+        private readonly IWorkRecordRepository _workHistoryRepository;
         private readonly IMapper _mapper;
 
-        public WorkHistoryService(IWorkHistoryRepository workHistoryRepository, IMapper mapper)
+        public WorkHistoryService(IWorkRecordRepository workHistoryRepository, IMapper mapper)
         {
             _workHistoryRepository = workHistoryRepository ?? throw new ArgumentNullException(nameof(workHistoryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -23,7 +23,7 @@ namespace EMS.Application.Services.EM
             if (workHistoryRequestDto == null)
                 throw new ArgumentNullException(nameof(workHistoryRequestDto));
 
-            WorkHistory workHistory = _mapper.Map<WorkHistory>(workHistoryRequestDto);
+            WorkRecord workHistory = _mapper.Map<WorkRecord>(workHistoryRequestDto);
             await _workHistoryRepository.AddAsync(workHistory);
             return _mapper.Map<WorkHistoryResponseDto>(workHistory);
         }
@@ -47,7 +47,7 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<WorkHistoryResponseDto>(workHistory);
         }
 
-        public async Task<PagedDto<WorkHistoryResponseDto>> GetPagedWorkHistoriesAsync(WorkHistoryFilter filter)
+        public async Task<PagedDto<WorkHistoryResponseDto>> GetPagedWorkHistoriesAsync(WorkRecordFilter filter)
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));

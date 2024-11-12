@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace EMS.Domain.Repositories.EM
 {
-    public interface ISalaryHistoryRepository: IBaseRepository<SalaryHistory>
+    public interface ISalaryRecordRepository: IBaseRepository<SalaryRecord>
     {
-        Task<PagedDto<SalaryHistory>> GetPagedAsync(SalaryHistoryFilter filter);
+        Task<PagedDto<SalaryRecord>> GetPagedAsync(SalaryRecordFilter filter);
     }
 }
