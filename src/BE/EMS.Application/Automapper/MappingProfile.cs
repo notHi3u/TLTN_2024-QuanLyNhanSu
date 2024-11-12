@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Enums;
 using EMS.Application.DTOs.Account;
 using EMS.Application.DTOs.EM;
 using EMS.Domain.Models.Account;
@@ -38,7 +39,12 @@ namespace EMS.Application.Automapper
             #endregion
 
             #region Employee
-            CreateMap<EmployeeRequestDto, Employee>();
+            CreateMap<EmployeeRequestDto, Employee>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString())) // Set EmployeeId to a new GUID
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? EmployeeStatus.Active)) // Set default status if null
+            // Add other mappings as needed for other properties, e.g.:
+            // .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
+            ;
             CreateMap<Employee, EmployeeResponseDto>()
                 .ForMember(dest => dest.TimeCards, opt => opt.MapFrom(src => src.TimeCards)) // Mapping for TimeCards
                 .ForMember(dest => dest.LeaveRequests, opt => opt.MapFrom(src => src.LeaveRequests)) // Mapping for LeaveRequests

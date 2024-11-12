@@ -7,7 +7,7 @@ namespace EMS.Domain.Models.EM
     public class Employee
     {
         [Key] // Marks Id as the primary key
-        public string Id { get; set; } = new Guid().ToString(); // Mã nhân viên (Primary Key)
+        public string Id { get; set; } = Guid.NewGuid().ToString(); // Mã nhân viên (Primary Key)
 
         [Required] // Ensures LastName is always provided
         [MaxLength(100)] // Limits the LastName to 100 characters

@@ -12,7 +12,6 @@ namespace EMS.Application.DTOs.EM
         public string? Address { get; set; } // Địa chỉ
         public string? PhoneNumber { get; set; } // Số điện thoại 
         public DateOnly HireDate { get; set; } // Ngày vào làm
-        public DateOnly? FiredDate { get; set; } // Ngày rời cty
         public string? Position { get; set; } // Vị trí công việc
         public EmployeeStatus? Status { get; set; } // Tình trạng hoạt động
         public string? MaritalStatus { get; set; } // Tình trạng hôn nhân
