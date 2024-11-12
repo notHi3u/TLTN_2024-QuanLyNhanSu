@@ -24,6 +24,13 @@ namespace EMS.Infrastructure.Repositories.EM
 
             var query = _dbSet.AsQueryable();
 
+            if (filter.IsDeep.HasValue && filter.IsDeep.Value)
+            {
+                query = query
+                    .Include(d => d.Employees)
+                    .Include(d => d.Manager);
+            }
+
             // Apply filtering based on department name or any other property in filter
             if (!string.IsNullOrWhiteSpace(filter.Keyword))
             {
@@ -49,5 +56,24 @@ namespace EMS.Infrastructure.Repositories.EM
 
             return new PagedDto<Department>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
         }
+
+        public async Task<Department> GetByIdAsync(string id, bool? isDeep = false)
+        {
+            var query = _dbSet.AsQueryable();
+
+            // Include related data if isDeep is true
+            if (isDeep.HasValue && isDeep.Value)
+            {
+                query = query
+                    .Include(d => d.Employees)  // Include employees in the department
+                    .Include(d => d.Manager);   // Include the manager of the department
+            }
+
+            // Retrieve the department by ID
+            var department = await query.FirstOrDefaultAsync(d => d.Id == id);
+
+            return department;
+        }
+
     }
 }

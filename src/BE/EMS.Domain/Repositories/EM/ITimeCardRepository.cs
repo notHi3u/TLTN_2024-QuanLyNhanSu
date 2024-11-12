@@ -13,5 +13,6 @@ namespace EMS.Domain.Repositories.EM
     public interface ITimeCardRepository: IBaseRepository<TimeCard>
     {
         Task<PagedDto<TimeCard>> GetPagedAsync(TimeCardFilter filter);
+        Task<TimeCard> GetByIdAsync(long id, bool? isDeep);
     }
 }
