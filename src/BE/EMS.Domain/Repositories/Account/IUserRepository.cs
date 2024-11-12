@@ -8,5 +8,6 @@ namespace EMS.Domain.Repositories.Account
     public interface IUserRepository : IBaseRepository<User>
     {
         Task<PagedDto<User>> GetPagedAsync(UserFilter filter);
+        Task<User> GetByIdAsync(string id, bool? isDeep);
     }
 }

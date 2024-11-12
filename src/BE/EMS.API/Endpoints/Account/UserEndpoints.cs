@@ -26,6 +26,7 @@ namespace EMS.API.Endpoints.Account
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
                     var errorResponse = BaseResponse<PagedDto<UserResponseDto>>.Failure("An error occurred while retrieving users.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
@@ -33,11 +34,11 @@ namespace EMS.API.Endpoints.Account
             #endregion
 
             #region Get User By Id
-            userGroup.MapGet("/{id}", async (IUserService userService, string id) =>
+            userGroup.MapGet("/{id}", async (IUserService userService, string id, bool? isDeep) =>
             {
                 try
                 {
-                    var userResponse = await userService.GetUserByIdAsync(id);
+                    var userResponse = await userService.GetUserByIdAsync(id, isDeep);
                     if (!userResponse.IsSuccess)
                     {
                         var errorResponse = BaseResponse<UserResponseDto>.Failure("User not found.");

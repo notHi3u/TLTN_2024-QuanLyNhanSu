@@ -1,31 +1,71 @@
-﻿using Common.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Common.Enums;
 using EMS.Domain.Models.Account;
 
 namespace EMS.Domain.Models.EM
 {
     public class Employee
     {
+        [Key] // Marks Id as the primary key
         public string Id { get; set; } = new Guid().ToString(); // Mã nhân viên (Primary Key)
-        public required string LastName { get; set; }// Họ
-        public required string FirstName { get; set; }// Tên
-        public DateOnly? DateOfBirth { get; set; }// Ngày sinh
-        public required string Gender { get; set; }// Giới tính
-        public required string Nationality { get; set; }// Quốc tịch
-        public string? Address { get; set; }// Địa chỉ
-        public string? PhoneNumber { get; set; }// Số điện thoại 
-        public DateOnly HireDate { get; set; }// Ngày vào làm
-        public DateOnly? FiredDate { get; set; }// Ngày rời cty (nullable)
-        public string? Position { get; set; }// Vị trí công việc của nhân viên
-        public EmployeeStatus? Status { get; set; }// Tình trạng hoạt động
-        public string? MaritalStatus { get; set; }// Tình trạng hôn nhân
-        public string? EducationLevel { get; set; }// Trình độ học vấn cao nhất
-        public string? IdNumber { get; set; }// Mã số CCCD hoặc Passport
-        public string? DepartmentId { get; set; }// Mã phòng ban (Foreign Key)
-        public string? TaxId { get; set; }// Mã số thuế thu nhập cá nhân
-        public required string Email { get; set; }// Email
 
-        public string? UserId { get; set; }//Tk đc tạo sau nv, có thể đổi tk cho nv nếu mất tk
+        [Required] // Ensures LastName is always provided
+        [MaxLength(100)] // Limits the LastName to 100 characters
+        public required string LastName { get; set; } // Họ
 
+        [Required] // Ensures FirstName is always provided
+        [MaxLength(100)] // Limits the FirstName to 100 characters
+        public required string FirstName { get; set; } // Tên
+
+        public DateOnly? DateOfBirth { get; set; } // Ngày sinh
+
+        [Required] // Ensures Gender is always provided
+        [MaxLength(10)] // Limits Gender to a maximum of 10 characters
+        public required string Gender { get; set; } // Giới tính
+
+        [Required] // Ensures Nationality is always provided
+        [MaxLength(50)] // Limits Nationality to 50 characters
+        public required string Nationality { get; set; } // Quốc tịch
+
+        [MaxLength(250)] // Optional: Limits Address to 250 characters
+        public string? Address { get; set; } // Địa chỉ
+
+        [Phone] // Validates that PhoneNumber is in the correct format
+        [MaxLength(15)] // Optional: Limits PhoneNumber to 15 characters
+        public string? PhoneNumber { get; set; } // Số điện thoại 
+
+        [Required] // Ensures HireDate is always provided
+        public DateOnly HireDate { get; set; } // Ngày vào làm
+
+        public DateOnly? FiredDate { get; set; } // Ngày rời cty (nullable)
+
+        [MaxLength(100)] // Limits Position to 100 characters
+        public string? Position { get; set; } // Vị trí công việc của nhân viên
+
+        public EmployeeStatus? Status { get; set; } // Tình trạng hoạt động
+
+        [MaxLength(50)] // Optional: Limits MaritalStatus to 50 characters
+        public string? MaritalStatus { get; set; } // Tình trạng hôn nhân
+
+        [MaxLength(100)] // Limits EducationLevel to 100 characters
+        public string? EducationLevel { get; set; } // Trình độ học vấn cao nhất
+
+        [MaxLength(20)] // Limits IdNumber to 20 characters
+        public string? IdNumber { get; set; } // Mã số CCCD hoặc Passport
+
+        public string? DepartmentId { get; set; } // Mã phòng ban (Foreign Key)
+
+        [MaxLength(15)] // Limits TaxId to 15 characters
+        public string? TaxId { get; set; } // Mã số thuế thu nhập cá nhân
+
+        [Required] // Ensures Email is always provided
+        [EmailAddress] // Ensures Email is in a valid format
+        [MaxLength(100)] // Limits Email to 100 characters
+        public required string Email { get; set; } // Email
+
+        public string? UserId { get; set; } // Tk đc tạo sau nv, có thể đổi tk cho nv nếu mất tk
+
+        // Navigation properties
         public virtual User User { get; set; }
         public virtual ICollection<TimeCard> TimeCards { get; set; }
         public virtual ICollection<LeaveRequest> LeaveRequests { get; set; }
@@ -33,10 +73,9 @@ namespace EMS.Domain.Models.EM
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<EmployeeRelative> EmployeeRelatives { get; set; }
         public virtual Department Department { get; set; }
+        public virtual Department ManagedDepartment { get; set; }
         public virtual Salary Salary { get; set; }
         public virtual ICollection<SalaryHistory> SalaryHistory { get; set; }
         public virtual ICollection<WorkHistory> WorkHistories { get; set; }
-
     }
-    
 }

@@ -13,15 +13,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241025042636_Employee.Status")]
-    partial class EmployeeStatus
+    [Migration("20241112055048_dataAnno3")]
+    partial class dataAnno3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("EMS")
                 .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -33,11 +32,13 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("RoleId")
                         .HasColumnType("text");
@@ -51,7 +52,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Permissions", "EMS");
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.RefreshToken", b =>
@@ -67,7 +68,8 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.Property<string>("TokenCode")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -75,7 +77,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RefreshTokens", "EMS");
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.Role", b =>
@@ -89,11 +91,8 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<string>("EmployeeId")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -105,13 +104,11 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
-
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", "EMS");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.RolePermission", b =>
@@ -126,7 +123,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RolePermissions", "EMS");
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.User", b =>
@@ -166,8 +163,7 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
@@ -191,7 +187,7 @@ namespace EMS.PostgresMigrations.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", "EMS");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.UserRole", b =>
@@ -206,7 +202,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", "EMS");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Attendance", b =>
@@ -218,7 +214,8 @@ namespace EMS.PostgresMigrations.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("AbsentReasons")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
@@ -242,7 +239,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("TimeCardId");
 
-                    b.ToTable("Attendances", "EMS");
+                    b.ToTable("Attendances");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
@@ -251,17 +248,17 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("DepartmentManagerId")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("DepartmentName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentManagerId");
-
-                    b.ToTable("Departments", "EMS");
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
@@ -270,7 +267,8 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Address")
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
@@ -278,54 +276,66 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Property<string>("DepartmentId")
                         .HasColumnType("text");
 
-                    b.Property<string>("EducationLevel")
+                    b.Property<string>("DepartmentId1")
                         .HasColumnType("text");
+
+                    b.Property<string>("EducationLevel")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateOnly?>("FiredDate")
                         .HasColumnType("date");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<DateOnly>("HireDate")
                         .HasColumnType("date");
 
                     b.Property<string>("IdNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("MaritalStatus")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Nationality")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<string>("Position")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int?>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
+                        .HasColumnType("integer");
 
                     b.Property<string>("TaxId")
-                        .HasColumnType("text");
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -334,7 +344,13 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees", "EMS");
+                    b.HasIndex("DepartmentId1")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.EmployeeRelative", b =>
@@ -346,7 +362,8 @@ namespace EMS.PostgresMigrations.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Adress")
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<bool>("EmergencyContact")
                         .HasColumnType("boolean");
@@ -356,10 +373,12 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -368,13 +387,14 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.Property<string>("Relationship")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("EmployeeRelatives", "EMS");
+                    b.ToTable("EmployeeRelatives");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.HolidayLeavePolicy", b =>
@@ -396,7 +416,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HolidayLeavePolicies", "EMS");
+                    b.ToTable("HolidayLeavePolicies");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.LeaveBalance", b =>
@@ -424,7 +444,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("LeaveBalances", "EMS");
+                    b.ToTable("LeaveBalances");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.LeaveRequest", b =>
@@ -453,19 +473,19 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("LeaveRequests", "EMS");
+                    b.ToTable("LeaveRequests");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Salary", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<decimal>("BaseSalary")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<string>("EmployeeId")
                         .IsRequired()
@@ -482,7 +502,7 @@ namespace EMS.PostgresMigrations.Migrations
                     b.HasIndex("EmployeeId")
                         .IsUnique();
 
-                    b.ToTable("Salaries", "EMS");
+                    b.ToTable("Salaries");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.SalaryHistory", b =>
@@ -494,7 +514,7 @@ namespace EMS.PostgresMigrations.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<decimal>("BaseSalary")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("Bonus")
                         .HasColumnType("numeric");
@@ -519,7 +539,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("SalaryHistories", "EMS");
+                    b.ToTable("SalaryHistories");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.TimeCard", b =>
@@ -538,9 +558,7 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("text");
 
                     b.Property<int?>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("timestamp with time zone");
@@ -552,7 +570,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("TimeCards", "EMS");
+                    b.ToTable("TimeCards");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.WorkHistory", b =>
@@ -585,7 +603,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("WorkHistories", "EMS");
+                    b.ToTable("WorkHistories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -610,7 +628,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", "EMS");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -635,7 +653,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", "EMS");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -657,7 +675,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", "EMS");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -676,7 +694,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", "EMS");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.Permission", b =>
@@ -688,13 +706,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.HasOne("EMS.Domain.Models.Account.User", null)
                         .WithMany("Permissions")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("EMS.Domain.Models.Account.Role", b =>
-                {
-                    b.HasOne("EMS.Domain.Models.EM.Employee", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("EmployeeId");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.Account.RolePermission", b =>
@@ -754,26 +765,20 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("TimeCard");
                 });
 
-            modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
-                {
-                    b.HasOne("EMS.Domain.Models.EM.Employee", "Manager")
-                        .WithMany()
-                        .HasForeignKey("DepartmentManagerId");
-
-                    b.Navigation("Manager");
-                });
-
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
                 {
                     b.HasOne("EMS.Domain.Models.EM.Department", "Department")
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId");
 
+                    b.HasOne("EMS.Domain.Models.EM.Department", null)
+                        .WithOne("Manager")
+                        .HasForeignKey("EMS.Domain.Models.EM.Employee", "DepartmentId1");
+
                     b.HasOne("EMS.Domain.Models.Account.User", "User")
                         .WithOne("Employee")
-                        .HasForeignKey("EMS.Domain.Models.EM.Employee", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EMS.Domain.Models.EM.Employee", "UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Department");
 
@@ -920,6 +925,9 @@ namespace EMS.PostgresMigrations.Migrations
             modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("Manager")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
@@ -931,8 +939,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("LeaveBalances");
 
                     b.Navigation("LeaveRequests");
-
-                    b.Navigation("Roles");
 
                     b.Navigation("Salary")
                         .IsRequired();

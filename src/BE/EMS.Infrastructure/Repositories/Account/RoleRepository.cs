@@ -36,8 +36,6 @@ namespace EMS.Infrastructure.Repositories.Account
             // Đảm bảo filter không phải là null và khởi tạo giá trị mặc định nếu cần
             filter.PageIndex = filter.PageIndex ?? 1;
             filter.PageSize = filter.PageSize ?? 10;
-            if (!filter.IsDeep.HasValue)
-                filter.IsDeep = false;
 
             var query = _dbSet.AsQueryable();
 

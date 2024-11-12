@@ -45,10 +45,23 @@ namespace EMS.Application.Services.Account
                 throw new ArgumentNullException(nameof(roleRequestDto));
             }
 
+            // Check if a role with the same name already exists using ExistsAsync
+            bool roleExists = await _roleRepository.ExistsAsync(r => r.Name == roleRequestDto.Name);
+
+            if (roleExists)
+            {
+                throw new InvalidOperationException($"Role with name '{roleRequestDto.Name}' already exists.");
+            }
+
+            // Map the DTO to the entity and set the normalized name
             var role = _mapper.Map<Role>(roleRequestDto);
             role.NormalizedName = role.Name.ToUpper();
             role.Id = Guid.NewGuid().ToString();
+
+            // Add the new role to the repository
             await _roleRepository.AddAsync(role);
+
+            // Return the mapped RoleResponseDto
             return _mapper.Map<RoleResponseDto>(role);
         }
 

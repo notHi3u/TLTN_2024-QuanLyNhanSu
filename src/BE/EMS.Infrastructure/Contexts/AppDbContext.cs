@@ -39,37 +39,30 @@ namespace EMS.Infrastructure.Contexts
         {
             base.OnModelCreating(builder);
 
-            #region Account-related entity configurations
+            #region Account Entity Configurations
 
-            builder.Entity<User>(b =>
-            {
-                b.Property(e => e.PhoneNumber)
-                    .HasMaxLength(20);
-                b.HasMany(e => e.UserRoles)
-                    .WithOne(e => e.User)
-                    .HasForeignKey(ur => ur.UserId)
-                    .IsRequired();
-            });
-
-            // User and Employee (1-1)
+            // Configure User and Employee relationship (1-1)
             builder.Entity<User>()
                 .HasOne(u => u.Employee)
                 .WithOne(e => e.User)
-                .HasForeignKey<Employee>(e => e.Id) // Assuming Employee.Id matches User.Id
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey<Employee>(e => e.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Entity<Role>(b =>
-            {
-                b.Property(r => r.Description)
-                    .HasMaxLength(250);
-                b.HasMany(e => e.UserRoles)
-                    .WithOne(e => e.Role)
-                    .HasForeignKey(ur => ur.RoleId)
-                    .IsRequired();
-            });
+            // Configure Role and UserRole relationship (1-n)
+            builder.Entity<Role>()
+                .HasMany(r => r.UserRoles)
+                .WithOne(ur => ur.Role)
+                .HasForeignKey(ur => ur.RoleId);
 
+            // Configure User and UserRole relationship (1-n)
+            builder.Entity<User>()
+                .HasMany(u => u.UserRoles)
+                .WithOne(ur => ur.User)
+                .HasForeignKey(ur => ur.UserId);
+
+            // Configure Role and Permission relationship (n-m via RolePermission)
             builder.Entity<RolePermission>()
-                .HasKey(rp => new { rp.RoleId, rp.PermissionId }); // Composite primary key
+                .HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
             builder.Entity<RolePermission>()
                 .HasOne(rp => rp.Role)
@@ -83,183 +76,79 @@ namespace EMS.Infrastructure.Contexts
                 .HasForeignKey(rp => rp.PermissionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<RefreshToken>().HasKey(t => t.Id);
+            // Configure RefreshToken entity
+            builder.Entity<RefreshToken>()
+                .HasKey(rt => rt.Id);
 
             #endregion
 
-            #region Employee Management-related entity configurations
+            #region Employee Management (EM) Entity Configurations
 
-            // Department and Employee (1-n)
-            builder.Entity<Department>()
-                .HasMany(d => d.Employees)
-                .WithOne(e => e.Department)
+            // Configure Employee and Department relationship (n-1)
+            builder.Entity<Employee>()
+                .HasOne(e => e.Department)
+                .WithMany(d => d.Employees)
                 .HasForeignKey(e => e.DepartmentId);
 
-            // Department and Manager (1-1)
             builder.Entity<Department>()
-                .HasOne(d => d.Manager)
-                .WithMany() // The Manager is not related back to the department in this context
-                .HasForeignKey(d => d.DepartmentManagerId); // Foreign key in Department
+                .HasOne(d=> d.Manager)  // A department has one manager (employee)
+                .WithOne(e => e.ManagedDepartment)  // The employee has exactly one department manager (1-1)
+                .HasForeignKey<Department>(d => d.DepartmentManagerId);  // The DepartmentManagerId in Department is the FK
 
-            // Employee and Attendance (1-n)
+
+
+            // Configure Employee and Attendance relationship (1-n)
             builder.Entity<Employee>()
                 .HasMany(e => e.Attendances)
                 .WithOne(a => a.Employee)
                 .HasForeignKey(a => a.EmployeeId);
 
-            // Employee and LeaveRequest (1-n)
+            // Configure Employee and LeaveRequest relationship (1-n)
             builder.Entity<Employee>()
                 .HasMany(e => e.LeaveRequests)
-                .WithOne(l => l.Employee)
-                .HasForeignKey(l => l.EmployeeId);
+                .WithOne(lr => lr.Employee)
+                .HasForeignKey(lr => lr.EmployeeId);
 
-            // Employee and LeaveBalance (1-n)
+            // Configure Employee and LeaveBalance relationship (1-n)
             builder.Entity<Employee>()
                 .HasMany(e => e.LeaveBalances)
                 .WithOne(lb => lb.Employee)
                 .HasForeignKey(lb => lb.EmployeeId);
 
-            // Employee and EmployeeRelative (1-n)
+            // Configure Employee and EmployeeRelative relationship (1-n)
             builder.Entity<Employee>()
                 .HasMany(e => e.EmployeeRelatives)
                 .WithOne(er => er.Employee)
                 .HasForeignKey(er => er.EmployeeId);
 
-            // Employee and Salary (1-1)
+            // Configure Employee and Salary relationship (1-1)
             builder.Entity<Employee>()
                 .HasOne(e => e.Salary)
                 .WithOne(s => s.Employee)
                 .HasForeignKey<Salary>(s => s.EmployeeId);
 
-            // Employee and SalaryHistory (1-n)
+            // Configure Employee and SalaryHistory relationship (1-n)
             builder.Entity<Employee>()
                 .HasMany(e => e.SalaryHistory)
                 .WithOne(sh => sh.Employee)
                 .HasForeignKey(sh => sh.EmployeeId);
 
-            // Employee and TimeCard (1-n)
+            // Configure Employee and TimeCard relationship (1-n)
             builder.Entity<Employee>()
                 .HasMany(e => e.TimeCards)
                 .WithOne(tc => tc.Employee)
                 .HasForeignKey(tc => tc.EmployeeId);
 
-            // Employee and WorkHistory (1-n)
+            // Configure Employee and WorkHistory relationship (1-n)
             builder.Entity<Employee>()
                 .HasMany(e => e.WorkHistories)
                 .WithOne(wh => wh.Employee)
                 .HasForeignKey(wh => wh.EmployeeId);
 
-            // TimeCard and Attendance (1-n)
-            builder.Entity<TimeCard>()
-                .HasMany(tc => tc.Attendances) // A TimeCard can have many Attendances
-                .WithOne(a => a.TimeCard) // Each Attendance is associated with one TimeCard
-                .HasForeignKey(a => a.TimeCardId);
-
-            // Additional configurations for entities
-            builder.Entity<Attendance>()
-                .HasKey(a => a.Id);
-
-            builder.Entity<Attendance>()
-                .Property(a => a.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<Department>()
-                .HasKey(d => d.Id);
-
-            builder.Entity<Department>()
-                .Property(a => a.Id)
-                .ValueGeneratedOnAdd();
-
-
-            builder.Entity<Employee>()
-                .HasKey(e => e.Id);
-
-            builder.Entity<Employee>()
-                .Property(tc => tc.Status)
-                .HasConversion<int>()
-                .HasDefaultValue(EmployeeStatus.Inactive);
-
-            builder.Entity<EmployeeRelative>()
-                .HasKey(er => er.Id);
-
-            builder.Entity<EmployeeRelative>()
-                .Property(er =>er.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<EmployeeRelative>()
-                .Property(er => er.PhoneNumber)
-                .HasMaxLength(15); // Example constraint
-
-            builder.Entity<Salary>()
-                .HasKey(s => s.Id);
-
-            builder.Entity<Salary>()
-                .Property(s => s.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<Salary>()
-                .Property(s => s.BaseSalary)
-                .HasColumnType("decimal(18,2)"); // Specify decimal precision
-
-            builder.Entity<SalaryHistory>()
-                .HasKey(e => e.Id);
-
-            builder.Entity<SalaryHistory>()
-                .Property(sh => sh.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<SalaryHistory>()
-                .Property(sh => sh.BaseSalary)
-                .HasColumnType("decimal(18,2)"); // Specify decimal precision
-
-            builder.Entity<TimeCard>()
-                .HasKey(e => e.Id);
-
-            builder.Entity<TimeCard>()
-                .Property(tc => tc.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<TimeCard>()
-                .Property(tc => tc.Status)
-                .HasConversion<int>()
-                .HasDefaultValue(TimeCardStatus.Pending); // Default status
-
-            // HolidayLeavePolicy configuration
-            builder.Entity<HolidayLeavePolicy>()
-                .Property(hp => hp.HolidayCount)
-                .IsRequired(); // Make this field required
-
-            builder.Entity<HolidayLeavePolicy>()
-                .Property(hp => hp.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<LeaveBalance>()
-                .HasKey(lb => lb.Id);
-
-            builder.Entity<LeaveBalance>()
-                .Property(lb => lb.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<LeaveRequest>()
-                .HasKey(lr => lr.Id);
-
-            builder.Entity<LeaveRequest>()
-                .Property(lr => lr.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<WorkHistory>()
-                .HasKey(wh => wh.Id);
-
-            builder.Entity<WorkHistory>()
-                .Property(wh => wh.Id)
-                .ValueGeneratedOnAdd();
-
-            builder.HasDefaultSchema("EMS"); // Default schema for employee management entities
-
             #endregion
 
             #region Seeding
-            
+
             #endregion
         }
     }
