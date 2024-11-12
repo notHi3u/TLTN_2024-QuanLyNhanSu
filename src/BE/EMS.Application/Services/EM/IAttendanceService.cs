@@ -17,8 +17,8 @@ namespace EMS.Application.Services.EM
         Task<AttendanceResponseDto> UpdateAttendanceAsync(long id, AttendanceRequestDto attendanceRequestDto);
         Task<bool> DeleteAttendanceAsync(long id);
         Task<PagedDto<AttendanceResponseDto>> GetPagedAttendancesAsync(AttendanceFilter filter);
-        Task<List<AttendanceResponseDto>> GetAttendancesByEmployIdAsync(string employeeId);
-        Task<List<AttendanceResponseDto>> GetAttendancesByTimeCardIdAsync(long timeCardId);
-        Task<int> DeleteBulkAsync(List<long> ids);
+        Task<IEnumerable<AttendanceResponseDto>> GetAttendancesByEmployIdAsync(string employeeId);
+        Task<IEnumerable<AttendanceResponseDto>> GetAttendancesByTimeCardIdAsync(long timeCardId);
+        Task<int> DeleteBulkAsync(IEnumerable<long> ids);
     }
 }

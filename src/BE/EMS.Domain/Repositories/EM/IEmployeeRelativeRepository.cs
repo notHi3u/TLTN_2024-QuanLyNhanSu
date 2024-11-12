@@ -13,5 +13,6 @@ namespace EMS.Domain.Repositories.EM
     public interface IEmployeeRelativeRepository: IBaseRepository<EmployeeRelative>
     {
         Task<PagedDto<EmployeeRelative>> GetPagedAsync(EmployeeRelativeFilter filter);
+        Task<IEnumerable<EmployeeRelative>> GetByEmployeeIdAsync(string employeeId);
     }
 }

@@ -41,14 +41,14 @@ namespace EMS.Application.Services.Account
 
         #region Get User by Id
 
-        public async Task<BaseResponse<UserResponseDto>> GetUserByIdAsync(string id)
+        public async Task<BaseResponse<UserResponseDto>> GetUserByIdAsync(string id, bool? isDeep = false)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
                 return BaseResponse<UserResponseDto>.Failure("User ID cannot be null or empty.");
             }
 
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id, isDeep);
             if (user == null)
             {
                 return BaseResponse<UserResponseDto>.Failure("User not found.");

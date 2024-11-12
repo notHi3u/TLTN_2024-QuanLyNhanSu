@@ -67,5 +67,16 @@ namespace EMS.Infrastructure.Repositories.EM
             }
             return false;
         }
+
+        public async Task<IEnumerable<Employee>> GetByDepartmentIdAsync(string departmentId)
+        {
+            // Query the Employees table to get employees that belong to the given departmentId
+            var employees = await _dbSet
+                .Where(e => e.DepartmentId == departmentId) // Filter by departmentId
+                .ToListAsync(); // Execute the query asynchronously and return a list of employees
+
+            return employees;
+        }
+
     }
 }

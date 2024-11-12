@@ -1,10 +1,19 @@
-﻿namespace EMS.Domain.Models.EM
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EMS.Domain.Models.EM
 {
     public class HolidayLeavePolicy
     {
-        public int Id { get; set; } // Mã quy định
-        public int EffectiveYear { get; set; } // Năm áp dụng
-        public List<DateOnly>? Holidays { get; set; } // Những ngày nghỉ
-        public int HolidayCount { get; set; } // Số ngày nghỉ
+        [Key] // Marks Id as the primary key
+        public int Id { get; set; }
+
+        [Required] // Ensures EffectiveYear is always provided
+        public int EffectiveYear { get; set; }
+
+        // No data annotation is necessary for List<DateOnly>, but you may want to add validations on the list itself if required
+        public List<DateOnly>? Holidays { get; set; }
+
+        [Range(0, int.MaxValue)] // Ensures HolidayCount is a non-negative number
+        public int HolidayCount { get; set; }
     }
 }

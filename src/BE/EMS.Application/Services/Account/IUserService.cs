@@ -11,7 +11,7 @@ namespace EMS.Application.Services.Account
 {
     public interface IUserService
     {
-        Task<BaseResponse<UserResponseDto>> GetUserByIdAsync(string id);
+        Task<BaseResponse<UserResponseDto>> GetUserByIdAsync(string id, bool? isDeep);
         Task<BaseResponse<UserResponseDto>> CreateUserAsync(UserRequestDto userRequestDto);
         Task<BaseResponse<UserResponseDto>> UpdateUserAsync(string id, UserRequestDto userRequestDto);
         Task<BaseResponse<bool>> DeleteUserAsync(string id);

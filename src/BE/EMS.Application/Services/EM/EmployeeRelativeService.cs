@@ -28,7 +28,7 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<EmployeeRelativeResponseDto>(relative);
         }
 
-        public async Task<bool> DeleteEmployeeRelativeAsync(string id)
+        public async Task<bool> DeleteEmployeeRelativeAsync(int id)
         {
             var relative = await _employeeRelativeRepository.GetByIdAsync(id);
             if (relative == null)
@@ -38,7 +38,7 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<EmployeeRelativeResponseDto> GetEmployeeRelativeByIdAsync(string id)
+        public async Task<EmployeeRelativeResponseDto> GetEmployeeRelativeByIdAsync(int id)
         {
             var relative = await _employeeRelativeRepository.GetByIdAsync(id);
             if (relative == null)
@@ -63,7 +63,7 @@ namespace EMS.Application.Services.EM
             );
         }
 
-        public async Task<EmployeeRelativeResponseDto> UpdateEmployeeRelativeAsync(string id, EmployeeRelativeRequestDto employeeRelativeRequestDto)
+        public async Task<EmployeeRelativeResponseDto> UpdateEmployeeRelativeAsync(int id, EmployeeRelativeRequestDto employeeRelativeRequestDto)
         {
             if (employeeRelativeRequestDto == null)
                 throw new ArgumentNullException(nameof(employeeRelativeRequestDto));
@@ -76,6 +76,16 @@ namespace EMS.Application.Services.EM
             await _employeeRelativeRepository.UpdateAsync(relative);
 
             return _mapper.Map<EmployeeRelativeResponseDto>(relative);
+        }
+
+        public async Task<IEnumerable<EmployeeRelativeResponseDto>> GetEmployeeRelativesByEmployeeIdAsync (string employeeId)
+        {
+            var relative = await _employeeRelativeRepository.GetByEmployeeIdAsync(employeeId);
+
+            if (relative == null)
+                throw new ArgumentNullException(nameof(relative));
+
+            return _mapper.Map<IEnumerable<EmployeeRelativeResponseDto>>(relative);
         }
     }
 }

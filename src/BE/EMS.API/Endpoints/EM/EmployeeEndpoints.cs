@@ -33,7 +33,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Employee By Id
-            employeeGroup.MapGet("/{id:guid}", async (IEmployeeService employeeService, string id) =>
+            employeeGroup.MapGet("/{id}", async (IEmployeeService employeeService, string id) =>
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Update Employee
-            employeeGroup.MapPut("/{id:guid}", async (IEmployeeService employeeService, string id, [FromBody] EmployeeRequestDto updateEmployeeDto) =>
+            employeeGroup.MapPut("/{id}", async (IEmployeeService employeeService, string id, [FromBody] EmployeeRequestDto updateEmployeeDto) =>
             {
                 if (updateEmployeeDto == null)
                 {
@@ -108,7 +108,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Delete Employee
-            employeeGroup.MapDelete("/{id:guid}", async (IEmployeeService employeeService, string id) =>
+            employeeGroup.MapDelete("/{id}", async (IEmployeeService employeeService, string id) =>
             {
                 try
                 {

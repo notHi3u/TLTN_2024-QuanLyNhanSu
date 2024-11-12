@@ -13,5 +13,6 @@ namespace EMS.Domain.Repositories.EM
 
         // Task to link employee to a user
         Task<bool> LinkEmployeeToUserAsync(string employeeId, string userId);
+        Task<IEnumerable<Employee>> GetByDepartmentIdAsync(string departmentId);
     }
 }

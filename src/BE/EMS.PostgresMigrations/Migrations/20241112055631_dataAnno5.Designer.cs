@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241112055631_dataAnno5")]
+    partial class dataAnno5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,9 +258,6 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentManagerId")
-                        .IsUnique();
-
                     b.ToTable("Departments");
                 });
 
@@ -274,6 +274,9 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("DepartmentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DepartmentId1")
                         .HasColumnType("text");
 
                     b.Property<string>("EducationLevel")
@@ -340,6 +343,9 @@ namespace EMS.PostgresMigrations.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("DepartmentId1")
+                        .IsUnique();
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -759,20 +765,15 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("TimeCard");
                 });
 
-            modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
-                {
-                    b.HasOne("EMS.Domain.Models.EM.Employee", "Manager")
-                        .WithOne("ManagedDepartment")
-                        .HasForeignKey("EMS.Domain.Models.EM.Department", "DepartmentManagerId");
-
-                    b.Navigation("Manager");
-                });
-
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
                 {
                     b.HasOne("EMS.Domain.Models.EM.Department", "Department")
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId");
+
+                    b.HasOne("EMS.Domain.Models.EM.Department", null)
+                        .WithOne("Manager")
+                        .HasForeignKey("EMS.Domain.Models.EM.Employee", "DepartmentId1");
 
                     b.HasOne("EMS.Domain.Models.Account.User", "User")
                         .WithOne("Employee")
@@ -924,6 +925,9 @@ namespace EMS.PostgresMigrations.Migrations
             modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("Manager")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
@@ -935,9 +939,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("LeaveBalances");
 
                     b.Navigation("LeaveRequests");
-
-                    b.Navigation("ManagedDepartment")
-                        .IsRequired();
 
                     b.Navigation("Salary")
                         .IsRequired();
