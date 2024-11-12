@@ -19,10 +19,10 @@ namespace EMS.Infrastructure.Repositories.Account
         {
         }
 
-        public async Task<Role?> GetByIdAsync(string id, bool IsDeep)
+        public async Task<Role?> GetByIdAsync(string id, bool? isDeep)
         {
             // Retrieve the role from the database using the provided ID
-            if (!IsDeep)
+            if (isDeep.HasValue && isDeep.Value)
                 return await _dbSet.FindAsync(id);
             return await _dbSet
                 .AsNoTracking()
@@ -40,7 +40,7 @@ namespace EMS.Infrastructure.Repositories.Account
             var query = _dbSet.AsQueryable();
 
             // Nạp dữ liệu liên quan nếu IsDeep là true
-            if ((bool)filter.IsDeep)
+            if (filter.IsDeep.HasValue && filter.IsDeep.Value)
             {
                 query = query
                     .Include(r => r.RolePermissions)
