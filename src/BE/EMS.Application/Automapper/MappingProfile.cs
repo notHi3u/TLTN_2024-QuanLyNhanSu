@@ -79,8 +79,8 @@ namespace EMS.Application.Automapper
             #endregion
 
             #region WorkHistory
-            CreateMap<WorkHistoryRequestDto, WorkRecord>();
-            CreateMap<WorkRecord, WorkHistoryResponseDto>();
+            CreateMap<WorkRecordRequestDto, WorkRecord>();
+            CreateMap<WorkRecord, WorkRecordResponseDto>();
             #endregion
 
             #region Department

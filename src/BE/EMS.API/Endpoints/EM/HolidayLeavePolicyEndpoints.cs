@@ -33,7 +33,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Holiday Leave Policy By Id
-            policyGroup.MapGet("/{id:guid}", async (IHolidayLeavePolicyService policyService, string id) =>
+            policyGroup.MapGet("/{id}", async (IHolidayLeavePolicyService policyService, int id) =>
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Update Holiday Leave Policy
-            policyGroup.MapPut("/{id:guid}", async (IHolidayLeavePolicyService policyService, string id, [FromBody] HolidayLeavePolicyRequestDto updatePolicyDto) =>
+            policyGroup.MapPut("/{id}", async (IHolidayLeavePolicyService policyService, int id, [FromBody] HolidayLeavePolicyRequestDto updatePolicyDto) =>
             {
                 if (updatePolicyDto == null)
                 {
@@ -108,7 +108,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Delete Holiday Leave Policy
-            policyGroup.MapDelete("/{id:guid}", async (IHolidayLeavePolicyService policyService, string id) =>
+            policyGroup.MapDelete("/{id}", async (IHolidayLeavePolicyService policyService, int id) =>
             {
                 try
                 {

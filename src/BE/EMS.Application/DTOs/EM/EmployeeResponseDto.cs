@@ -1,4 +1,5 @@
 ﻿using Common.Enums;
+using EMS.Application.DTOs.Account;
 using EMS.Domain.Models.Account;
 using EMS.Domain.Models.EM;
 
@@ -6,33 +7,42 @@ namespace EMS.Application.DTOs.EM
 {
     public class EmployeeResponseDto
     {
-        public string Id { get; set; } // Mã nhân viên
-        public required string LastName { get; set; } // Họ
-        public required string FirstName { get; set; } // Tên
-        public DateOnly? DateOfBirth { get; set; } // Ngày sinh
-        public required string Gender { get; set; } // Giới tính
-        public required string Nationality { get; set; } // Quốc tịch
-        public string? Address { get; set; } // Địa chỉ
-        public string? PhoneNumber { get; set; } // Số điện thoại 
-        public DateOnly HireDate { get; set; } // Ngày vào làm
-        public DateOnly? FiredDate { get; set; } // Ngày rời cty
-        public string? Position { get; set; } // Vị trí công việc
-        public EmployeeStatus? Status { get; set; } // Tình trạng hoạt động
-        public string? MaritalStatus { get; set; } // Tình trạng hôn nhân
-        public string? EducationLevel { get; set; } // Trình độ học vấn
-        public string? IdNumber { get; set; } // Mã số CCCD hoặc Passport
-        public string? DepartmentId { get; set; } // Mã phòng ban
-        public string? TaxId { get; set; } // Mã số thuế
-        public required string Email { get; set; } // Email
-        public string? UserId { get; set; } // Tài khoản người dùng
-        public virtual User User { get; set; }
-        public virtual ICollection<TimeCard> TimeCards { get; set; }
-        public virtual ICollection<LeaveRequest> LeaveRequests { get; set; }
-        public virtual ICollection<LeaveBalance> LeaveBalances { get; set; }
-        public virtual ICollection<Attendance> Attendances { get; set; }
-        public virtual ICollection<EmployeeRelative> EmployeeRelatives { get; set; }
-        public virtual Department Department { get; set; }
-        public virtual ICollection<SalaryRecord> SalaryRecords { get; set; }
-        public virtual ICollection<WorkRecord> WorkRecords { get; set; }
+        public string Id { get; set; }
+        public string? LastName { get; set; }
+        public string? FirstName { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
+        public Gender? Gender { get; set; }
+        public string? Nationality { get; set; }
+        public string? Address { get; set; }
+        public string? PhoneNumber { get; set; }
+        public DateOnly? HireDate { get; set; }
+        public DateOnly? FiredDate { get; set; }
+        public string? Position { get; set; }
+        public EmployeeStatus? Status { get; set; }
+        public string? MaritalStatus { get; set; }
+        public string? EducationLevel { get; set; }
+        public string? IdNumber { get; set; }
+        public string? DepartmentId { get; set; }
+        public string? TaxId { get; set; }
+        public string? Email { get; set; }
+        public string? UserId { get; set; }
+
+        // Salary Information
+        public decimal? BaseSalary { get; set; }
+        public decimal? PercentBonus { get; set; }
+        public decimal? FlatBonus { get; set; }
+        public decimal? Deductions { get; set; }
+
+        // Collections for related data
+        public ICollection<TimeCardResponseDto> TimeCards { get; set; }
+        public ICollection<LeaveRequestResponseDto> LeaveRequests { get; set; }
+        public ICollection<LeaveBalanceResponseDto> LeaveBalances { get; set; }
+        public ICollection<AttendanceResponseDto> Attendances { get; set; }
+        public ICollection<EmployeeRelativeResponseDto> EmployeeRelatives { get; set; }
+        public ICollection<WorkRecordResponseDto> WorkRecords { get; set; }
+        public ICollection<SalaryRecordResponseDto> SalaryRecords { get; set; }
+        public DepartmentResponseDto Department {  get; set; } 
+        public UserResponseDto User { get; set; }
     }
+
 }

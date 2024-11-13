@@ -148,8 +148,8 @@ builder.Services.AddScoped<ISalaryRecordRepository, SalaryHistoryRepository>();
 builder.Services.AddScoped<ITimeCardService, TimeCardService>();
 builder.Services.AddScoped<ITimeCardRepository, TimeCardRepository>();
 
-builder.Services.AddScoped<IWorkHistoryService, WorkHistoryService>();
-builder.Services.AddScoped<IWorkRecordRepository, WorkHistoryRepository>();
+builder.Services.AddScoped<IWorkRecordService, WorkRecordService>();
+builder.Services.AddScoped<IWorkRecordRepository, WorkRecordRepository>();
 
 // Add DbContext configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -229,9 +229,9 @@ EmployeeRelativeEndpoints.Map(app);
 HolidayLeavePolicyEndpoints.Map(app);
 LeaveBalanceEndpoints.Map(app);
 LeaveRequestEndpoints.Map(app);
-SalaryHistoryEndpoints.Map(app);
+SalaryRecordEndpoints.Map(app);
 TimeCardEndpoints.Map(app);
-WorkHistoryEndpoints.Map(app);
+WorkRecordEndpoints.Map(app);
 
 //IdentityEndpoints.MapCustomIdentityApi<User>(app);
 

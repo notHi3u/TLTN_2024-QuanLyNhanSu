@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     /// <inheritdoc />
-    public partial class dataAnno : Migration
+    public partial class genderEnum : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,19 +51,6 @@ namespace EMS.PostgresMigrations.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Departments",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    DepartmentName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DepartmentManagerId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -228,52 +215,6 @@ namespace EMS.PostgresMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true),
-                    Gender = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Nationality = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
-                    PhoneNumber = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
-                    HireDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    FiredDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    Position = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: true),
-                    MaritalStatus = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    EducationLevel = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    IdNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    DepartmentId = table.Column<string>(type: "text", nullable: true),
-                    TaxId = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
-                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    DepartmentId1 = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Employees_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Employees_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Employees_Departments_DepartmentId1",
-                        column: x => x.DepartmentId1,
-                        principalTable: "Departments",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RolePermissions",
                 columns: table => new
                 {
@@ -295,6 +236,81 @@ namespace EMS.PostgresMigrations.Migrations
                         principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Attendances",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EmployeeId = table.Column<string>(type: "text", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    WorkStatus = table.Column<bool>(type: "boolean", nullable: false),
+                    AbsentReasons = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Status = table.Column<bool>(type: "boolean", nullable: false),
+                    TimeCardId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attendances", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    DepartmentName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DepartmentManagerId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true),
+                    Gender = table.Column<int>(type: "integer", nullable: false),
+                    Nationality = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Address = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
+                    HireDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    FiredDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    Position = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: true),
+                    MaritalStatus = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    EducationLevel = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    IdNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    DepartmentId = table.Column<string>(type: "text", nullable: true),
+                    TaxId = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    BaseSalary = table.Column<decimal>(type: "numeric", nullable: true),
+                    PercentBonus = table.Column<decimal>(type: "numeric", nullable: true),
+                    FlatBonus = table.Column<decimal>(type: "numeric", nullable: true),
+                    Deductions = table.Column<decimal>(type: "numeric", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employees_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Employees_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -367,29 +383,7 @@ namespace EMS.PostgresMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Salaries",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EmployeeId = table.Column<string>(type: "text", nullable: false),
-                    BaseSalary = table.Column<decimal>(type: "numeric", nullable: false),
-                    PercentBonus = table.Column<decimal>(type: "numeric", nullable: false),
-                    FlatBonus = table.Column<decimal>(type: "numeric", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Salaries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Salaries_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SalaryHistories",
+                name: "SalaryRecords",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -398,15 +392,16 @@ namespace EMS.PostgresMigrations.Migrations
                     Month = table.Column<int>(type: "integer", nullable: false),
                     Year = table.Column<int>(type: "integer", nullable: false),
                     BaseSalary = table.Column<decimal>(type: "numeric", nullable: false),
-                    Bonus = table.Column<decimal>(type: "numeric", nullable: false),
+                    PercentBonus = table.Column<decimal>(type: "numeric", nullable: false),
+                    FlatBonus = table.Column<decimal>(type: "numeric", nullable: false),
                     Deductions = table.Column<decimal>(type: "numeric", nullable: false),
                     NetSalary = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SalaryHistories", x => x.Id);
+                    table.PrimaryKey("PK_SalaryRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SalaryHistories_Employees_EmployeeId",
+                        name: "FK_SalaryRecords_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
@@ -459,36 +454,6 @@ namespace EMS.PostgresMigrations.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Attendances",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EmployeeId = table.Column<string>(type: "text", nullable: false),
-                    Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    WorkStatus = table.Column<bool>(type: "boolean", nullable: false),
-                    AbsentReasons = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Status = table.Column<bool>(type: "boolean", nullable: false),
-                    TimeCardId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Attendances", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Attendances_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Attendances_TimeCards_TimeCardId",
-                        column: x => x.TimeCardId,
-                        principalTable: "TimeCards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -537,6 +502,12 @@ namespace EMS.PostgresMigrations.Migrations
                 column: "TimeCardId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Departments_DepartmentManagerId",
+                table: "Departments",
+                column: "DepartmentManagerId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EmployeeRelatives_EmployeeId",
                 table: "EmployeeRelatives",
                 column: "EmployeeId");
@@ -545,12 +516,6 @@ namespace EMS.PostgresMigrations.Migrations
                 name: "IX_Employees_DepartmentId",
                 table: "Employees",
                 column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_DepartmentId1",
-                table: "Employees",
-                column: "DepartmentId1",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_UserId",
@@ -584,14 +549,8 @@ namespace EMS.PostgresMigrations.Migrations
                 column: "PermissionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Salaries_EmployeeId",
-                table: "Salaries",
-                column: "EmployeeId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SalaryHistories_EmployeeId",
-                table: "SalaryHistories",
+                name: "IX_SalaryRecords_EmployeeId",
+                table: "SalaryRecords",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
@@ -603,11 +562,42 @@ namespace EMS.PostgresMigrations.Migrations
                 name: "IX_WorkHistories_EmployeeId",
                 table: "WorkHistories",
                 column: "EmployeeId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Attendances_Employees_EmployeeId",
+                table: "Attendances",
+                column: "EmployeeId",
+                principalTable: "Employees",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Attendances_TimeCards_TimeCardId",
+                table: "Attendances",
+                column: "TimeCardId",
+                principalTable: "TimeCards",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Departments_Employees_DepartmentManagerId",
+                table: "Departments",
+                column: "DepartmentManagerId",
+                principalTable: "Employees",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Employees_AspNetUsers_UserId",
+                table: "Employees");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Departments_Employees_DepartmentManagerId",
+                table: "Departments");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -645,10 +635,7 @@ namespace EMS.PostgresMigrations.Migrations
                 name: "RolePermissions");
 
             migrationBuilder.DropTable(
-                name: "Salaries");
-
-            migrationBuilder.DropTable(
-                name: "SalaryHistories");
+                name: "SalaryRecords");
 
             migrationBuilder.DropTable(
                 name: "WorkHistories");
@@ -660,13 +647,13 @@ namespace EMS.PostgresMigrations.Migrations
                 name: "Permissions");
 
             migrationBuilder.DropTable(
-                name: "Employees");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Departments");

@@ -6,10 +6,10 @@ namespace EMS.Application.Services.EM
 {
     public interface IHolidayLeavePolicyService
     {
-        Task<HolidayLeavePolicyResponseDto> GetHolidayLeavePolicyByIdAsync(string id);
+        Task<HolidayLeavePolicyResponseDto> GetHolidayLeavePolicyByIdAsync(int id);
         Task<HolidayLeavePolicyResponseDto> CreateHolidayLeavePolicyAsync(HolidayLeavePolicyRequestDto holidayLeavePolicyRequestDto);
-        Task<HolidayLeavePolicyResponseDto> UpdateHolidayLeavePolicyAsync(string id, HolidayLeavePolicyRequestDto holidayLeavePolicyRequestDto);
-        Task<bool> DeleteHolidayLeavePolicyAsync(string id);
+        Task<HolidayLeavePolicyResponseDto> UpdateHolidayLeavePolicyAsync(int id, HolidayLeavePolicyRequestDto holidayLeavePolicyRequestDto);
+        Task<bool> DeleteHolidayLeavePolicyAsync(int id);
         Task<PagedDto<HolidayLeavePolicyResponseDto>> GetPagedHolidayLeavePoliciesAsync(HolidayLeavePolicyFilter filter);
     }
 }

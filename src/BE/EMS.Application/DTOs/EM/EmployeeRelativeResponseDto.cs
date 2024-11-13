@@ -16,6 +16,6 @@ namespace EMS.Application.DTOs.EM
         public required string PhoneNumber { get; set; } // Số điện thoại
         public string? Address { get; set; } // Địa chỉ
         public bool EmergencyContact { get; set; } // Liên hệ khẩn cấp
-        public virtual EmployeeResponseDto Employee { get; set; } // Thông tin nhân viên
+        public virtual EmployeeResponseDto? Employee { get; set; } // Thông tin nhân viên
     }
 }

@@ -13,5 +13,6 @@ namespace EMS.Domain.Repositories.EM
     public interface ISalaryRecordRepository: IBaseRepository<SalaryRecord>
     {
         Task<PagedDto<SalaryRecord>> GetPagedAsync(SalaryRecordFilter filter);
+        Task<ICollection<SalaryRecord>>GetByEmployeeId(string employeeId);
     }
 }

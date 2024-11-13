@@ -28,7 +28,7 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<LeaveBalanceResponseDto>(leaveBalance);
         }
 
-        public async Task<bool> DeleteLeaveBalanceAsync(string id)
+        public async Task<bool> DeleteLeaveBalanceAsync(long id)
         {
             var leaveBalance = await _leaveBalanceRepository.GetByIdAsync(id);
             if (leaveBalance == null)
@@ -38,7 +38,7 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<LeaveBalanceResponseDto> GetLeaveBalanceByIdAsync(string id)
+        public async Task<LeaveBalanceResponseDto> GetLeaveBalanceByIdAsync(long id)
         {
             var leaveBalance = await _leaveBalanceRepository.GetByIdAsync(id);
             if (leaveBalance == null)
@@ -63,7 +63,7 @@ namespace EMS.Application.Services.EM
             );
         }
 
-        public async Task<LeaveBalanceResponseDto> UpdateLeaveBalanceAsync(string id, LeaveBalanceRequestDto leaveBalanceRequestDto)
+        public async Task<LeaveBalanceResponseDto> UpdateLeaveBalanceAsync(long id, LeaveBalanceRequestDto leaveBalanceRequestDto)
         {
             if (leaveBalanceRequestDto == null)
                 throw new ArgumentNullException(nameof(leaveBalanceRequestDto));

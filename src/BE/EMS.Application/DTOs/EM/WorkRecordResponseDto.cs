@@ -1,6 +1,6 @@
 ﻿namespace EMS.Application.DTOs.EM
 {
-    public class WorkHistoryResponseDto
+    public class WorkRecordResponseDto
     {
         public long Id { get; set; } // Mã bản lưu
         public required string EmployeeId { get; set; } // Mã nhân viên

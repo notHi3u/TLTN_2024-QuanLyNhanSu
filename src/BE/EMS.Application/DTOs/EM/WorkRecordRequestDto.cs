@@ -1,6 +1,6 @@
 ﻿namespace EMS.Application.DTOs.EM
 {
-    public class WorkHistoryRequestDto
+    public class WorkRecordRequestDto
     {
         public required string EmployeeId { get; set; } // Mã nhân viên
         public required string Position { get; set; } // Vị trí công việc

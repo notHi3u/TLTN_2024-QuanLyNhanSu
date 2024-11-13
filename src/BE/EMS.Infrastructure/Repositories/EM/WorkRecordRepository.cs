@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace EMS.Infrastructure.Repositories.EM
 {
-    public class WorkHistoryRepository : BaseRepository<WorkRecord>, IWorkRecordRepository
+    public class WorkRecordRepository : BaseRepository<WorkRecord>, IWorkRecordRepository
     {
-        public WorkHistoryRepository(AppDbContext context, ILogger<WorkHistoryRepository> logger)
+        public WorkRecordRepository(AppDbContext context, ILogger<WorkRecordRepository> logger)
             : base(context, logger)
         {
         }

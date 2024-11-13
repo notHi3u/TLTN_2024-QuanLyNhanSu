@@ -32,12 +32,12 @@ namespace EMS.API.Endpoints.EM
             }).ConfigureApiResponses();
             #endregion
 
-            #region Get Leave Balance By Employee Id
-            leaveBalanceGroup.MapGet("/{employeeId:guid}", async (ILeaveBalanceService leaveBalanceService, string employeeId) =>
+            #region Get Leave Balance By Id
+            leaveBalanceGroup.MapGet("/{id}", async (ILeaveBalanceService leaveBalanceService, long id) =>
             {
                 try
                 {
-                    var leaveBalance = await leaveBalanceService.GetLeaveBalanceByIdAsync(employeeId);
+                    var leaveBalance = await leaveBalanceService.GetLeaveBalanceByIdAsync(id);
                     if (leaveBalance == null)
                     {
                         var errorResponse = BaseResponse<LeaveBalanceResponseDto>.Failure("Leave balance not found.");
@@ -81,7 +81,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Update Leave Balance
-            leaveBalanceGroup.MapPut("/{employeeId:guid}", async (ILeaveBalanceService leaveBalanceService, string employeeId, [FromBody] LeaveBalanceRequestDto updateLeaveBalanceDto) =>
+            leaveBalanceGroup.MapPut("/{id}", async (ILeaveBalanceService leaveBalanceService, long id, [FromBody] LeaveBalanceRequestDto updateLeaveBalanceDto) =>
             {
                 if (updateLeaveBalanceDto == null)
                 {
@@ -91,7 +91,7 @@ namespace EMS.API.Endpoints.EM
 
                 try
                 {
-                    var updatedBalance = await leaveBalanceService.UpdateLeaveBalanceAsync(employeeId, updateLeaveBalanceDto);
+                    var updatedBalance = await leaveBalanceService.UpdateLeaveBalanceAsync(id, updateLeaveBalanceDto);
                     return Results.Ok(BaseResponse<LeaveBalanceResponseDto>.Success(updatedBalance));
                 }
                 catch (ArgumentException ex)
@@ -108,11 +108,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Delete Leave Balance
-            leaveBalanceGroup.MapDelete("/{employeeId:guid}", async (ILeaveBalanceService leaveBalanceService, string employeeId) =>
+            leaveBalanceGroup.MapDelete("/{is}", async (ILeaveBalanceService leaveBalanceService, long id) =>
             {
                 try
                 {
-                    var isDeleted = await leaveBalanceService.DeleteLeaveBalanceAsync(employeeId);
+                    var isDeleted = await leaveBalanceService.DeleteLeaveBalanceAsync(id);
                     if (!isDeleted)
                     {
                         var errorResponse = BaseResponse<bool>.Failure("Leave balance not found.");

@@ -28,7 +28,7 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<SalaryRecordResponseDto>(salaryRecord);
         }
 
-        public async Task<bool> DeleteSalaryHistoryAsync(string id)
+        public async Task<bool> DeleteSalaryHistoryAsync(long id)
         {
             var salaryHistory = await _salaryHistoryRepository.GetByIdAsync(id);
             if (salaryHistory == null)
@@ -38,7 +38,7 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<SalaryRecordResponseDto> GetSalaryHistoryByIdAsync(string id)
+        public async Task<SalaryRecordResponseDto> GetSalaryHistoryByIdAsync(long id)
         {
             var salaryHistory = await _salaryHistoryRepository.GetByIdAsync(id);
             if (salaryHistory == null)
@@ -63,7 +63,7 @@ namespace EMS.Application.Services.EM
             );
         }
 
-        public async Task<SalaryRecordResponseDto> UpdateSalaryHistoryAsync(string id, SalaryRecordRequestDto salaryHistoryRequestDto)
+        public async Task<SalaryRecordResponseDto> UpdateSalaryHistoryAsync(long id, SalaryRecordRequestDto salaryHistoryRequestDto)
         {
             if (salaryHistoryRequestDto == null)
                 throw new ArgumentNullException(nameof(salaryHistoryRequestDto));
@@ -76,6 +76,13 @@ namespace EMS.Application.Services.EM
             await _salaryHistoryRepository.UpdateAsync(salaryHistory);
 
             return _mapper.Map<SalaryRecordResponseDto>(salaryHistory);
+        }
+
+        public async Task<ICollection<SalaryRecordResponseDto>> GetSalaryHistoryByEmployeeIdAsync(string id)
+        {
+            var salaryRecords = await _salaryHistoryRepository.GetByEmployeeId(id);
+
+            return _mapper.Map<ICollection<SalaryRecordResponseDto>>(salaryRecords);
         }
     }
 }

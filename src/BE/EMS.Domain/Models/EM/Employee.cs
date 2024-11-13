@@ -20,8 +20,7 @@ namespace EMS.Domain.Models.EM
         public DateOnly? DateOfBirth { get; set; } // Ngày sinh
 
         [Required] // Ensures Gender is always provided
-        [MaxLength(10)] // Limits Gender to a maximum of 10 characters
-        public required string Gender { get; set; } // Giới tính
+        public required Gender Gender { get; set; } // Giới tính
 
         [Required] // Ensures Nationality is always provided
         [MaxLength(50)] // Limits Nationality to 50 characters
@@ -78,16 +77,16 @@ namespace EMS.Domain.Models.EM
 
         // Merged Salary Information
         [Range(0, double.MaxValue, ErrorMessage = "Base salary must be a positive value.")]
-        public decimal BaseSalary { get; set; } // Base salary must be a positive value
+        public decimal? BaseSalary { get; set; } // Base salary must be a positive value
 
         [Range(0, 100, ErrorMessage = "Percent bonus must be between 0 and 100.")]
-        public decimal PercentBonus { get; set; } // Percent bonus should be between 0 and 100
+        public decimal? PercentBonus { get; set; } // Percent bonus should be between 0 and 100
 
         [Range(0, double.MaxValue, ErrorMessage = "Flat bonus must be a positive value.")]
-        public decimal FlatBonus { get; set; } // Flat bonus must be a positive value
+        public decimal? FlatBonus { get; set; } // Flat bonus must be a positive value
 
         [Range(0, double.MaxValue, ErrorMessage = "Deductions must be a positive value.")]
-        public decimal Deductions { get; set; } // Deductions must be a positive value
+        public decimal? Deductions { get; set; } // Deductions must be a positive value
 
         // Navigation property for salary history
         public virtual ICollection<SalaryRecord> SalaryRecords { get; set; } // Historical salary data

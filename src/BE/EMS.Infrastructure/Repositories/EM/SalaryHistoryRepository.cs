@@ -52,5 +52,14 @@ namespace EMS.Infrastructure.Repositories.EM
 
             return new PagedDto<SalaryRecord>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
         }
+
+        async Task<ICollection<SalaryRecord>> ISalaryRecordRepository.GetByEmployeeId(string employeeId)
+        {
+            var query = _dbSet.AsQueryable();
+
+            query = query.Where(sr => sr.EmployeeId == employeeId);
+            
+            return await query.ToListAsync();
+        }
     }
 }
