@@ -2,6 +2,7 @@
 using Common.Dtos;
 using EMS.Application.DTOs.EM;
 using EMS.Application.Services.EM;
+using EMS.Domain.Filters.EMS;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMS.API.Endpoints.EM
@@ -13,26 +14,44 @@ namespace EMS.API.Endpoints.EM
             var timeCardGroup = app.MapGroup("/timecards")
                 .WithTags("TimeCards");
 
-            //#region Get TimeCards By Employee Id
-            //timeCardGroup.MapGet("/employee/{employeeId:guid}", async (ITimeCardService timeCardService, string employeeId, DateTime? startDate, DateTime? endDate) =>
-            //{
-            //    try
-            //    {
-            //        var timeCards = await timeCardService.GetTimeCardsByEmployeeIdAsync(employeeId, startDate, endDate);
-            //        if (timeCards == null || !timeCards.Any())
-            //        {
-            //            var errorResponse = BaseResponse<IEnumerable<TimeCardResponseDto>>.Failure("Time cards not found for the specified employee.");
-            //            return Results.NotFound(errorResponse);
-            //        }
-            //        return Results.Ok(BaseResponse<IEnumerable<TimeCardResponseDto>>.Success(timeCards));
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        var errorResponse = BaseResponse<IEnumerable<TimeCardResponseDto>>.Failure("An error occurred while retrieving time cards.");
-            //        return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
-            //    }
-            //}).ConfigureApiResponses();
-            //#endregion
+            #region Get TimeCards By Filter
+            timeCardGroup.MapGet("/", async (ITimeCardService timeCardService, [AsParameters] TimeCardFilter filter) =>
+            {
+                try
+                {
+                    filter ??= new TimeCardFilter();
+                    var pagedTimeCards = await timeCardService.GetPagedTimeCardsAsync(filter);
+                    var response = BaseResponse<PagedDto<TimeCardResponseDto>>.Success(pagedTimeCards);
+                    return Results.Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<PagedDto<TimeCardResponseDto>>.Failure("An error occurred while retrieving leave requests.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+            #region Get TimeCards By Id
+            timeCardGroup.MapGet("/{id}", async (ITimeCardService timeCardService, long id) =>
+            {
+                try
+                {
+                    var timeCard = await timeCardService.GetTimeCardByIdAsync(id);
+                    if (timeCard == null)
+                    {
+                        var errorResponse = BaseResponse<TimeCardResponseDto>.Failure("Salary history not found.");
+                        return Results.NotFound(errorResponse);
+                    }
+                    return Results.Ok(BaseResponse<TimeCardResponseDto>.Success(timeCard));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<SalaryRecordResponseDto>.Failure("An error occurred while retrieving salary history.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
 
             #region Create TimeCard
             timeCardGroup.MapPost("/", async (ITimeCardService timeCardService, [FromBody] TimeCardRequestDto createTimeCardDto) =>

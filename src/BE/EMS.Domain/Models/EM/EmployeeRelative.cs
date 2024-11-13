@@ -26,7 +26,7 @@ namespace EMS.Domain.Models.EM
         public required string PhoneNumber { get; set; }
 
         [MaxLength(250)] // Limits Address to 250 characters
-        public string? Adress { get; set; }
+        public string? Address { get; set; }
 
         public bool EmergencyContact { get; set; }
 

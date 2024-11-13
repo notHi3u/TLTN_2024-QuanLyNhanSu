@@ -4,22 +4,27 @@ namespace EMS.Application.DTOs.EM
 {
     public class EmployeeRequestDto
     {
-        public required string LastName { get; set; } // Họ
-        public required string FirstName { get; set; } // Tên
-        public DateOnly? DateOfBirth { get; set; } // Ngày sinh
-        public required string Gender { get; set; } // Giới tính
-        public required string Nationality { get; set; } // Quốc tịch
-        public string? Address { get; set; } // Địa chỉ
-        public string? PhoneNumber { get; set; } // Số điện thoại 
-        public DateOnly HireDate { get; set; } // Ngày vào làm
-        public string? Position { get; set; } // Vị trí công việc
-        public EmployeeStatus? Status { get; set; } // Tình trạng hoạt động
-        public string? MaritalStatus { get; set; } // Tình trạng hôn nhân
-        public string? EducationLevel { get; set; } // Trình độ học vấn
-        public string? IdNumber { get; set; } // Mã số CCCD hoặc Passport
-        public string? DepartmentId { get; set; } // Mã phòng ban
-        public string? TaxId { get; set; } // Mã số thuế
-        public required string Email { get; set; } // Email
-        public string? UserId { get; set; } // Tài khoản người dùng
+        public string? LastName { get; set; }
+        public string? FirstName { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
+        public Gender? Gender { get; set; }
+        public string? Nationality { get; set; }
+        public string? Address { get; set; }
+        public string? PhoneNumber { get; set; }
+        public DateOnly? HireDate { get; set; }
+        public string? Position { get; set; }
+        public EmployeeStatus? Status { get; set; }
+        public string? MaritalStatus { get; set; }
+        public string? EducationLevel { get; set; }
+        public string? IdNumber { get; set; }
+        public string? DepartmentId { get; set; } // null when create
+        public string? TaxId { get; set; }
+        public string? Email { get; set; }
+        public string? UserId { get; set; } // null when create
+        public decimal? BaseSalary { get; set; }
+        public decimal? PercentBonus { get; set; }
+        public decimal? FlatBonus { get; set; }
+        public decimal? Deductions { get; set; }
     }
+
 }

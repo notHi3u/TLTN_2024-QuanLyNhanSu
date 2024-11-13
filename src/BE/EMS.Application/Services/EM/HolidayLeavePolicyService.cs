@@ -28,7 +28,7 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<HolidayLeavePolicyResponseDto>(policy);
         }
 
-        public async Task<bool> DeleteHolidayLeavePolicyAsync(string id)
+        public async Task<bool> DeleteHolidayLeavePolicyAsync(int id)
         {
             var policy = await _holidayLeavePolicyRepository.GetByIdAsync(id);
             if (policy == null)
@@ -38,7 +38,7 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<HolidayLeavePolicyResponseDto> GetHolidayLeavePolicyByIdAsync(string id)
+        public async Task<HolidayLeavePolicyResponseDto> GetHolidayLeavePolicyByIdAsync(int id)
         {
             var policy = await _holidayLeavePolicyRepository.GetByIdAsync(id);
             if (policy == null)
@@ -63,7 +63,7 @@ namespace EMS.Application.Services.EM
             );
         }
 
-        public async Task<HolidayLeavePolicyResponseDto> UpdateHolidayLeavePolicyAsync(string id, HolidayLeavePolicyRequestDto holidayLeavePolicyRequestDto)
+        public async Task<HolidayLeavePolicyResponseDto> UpdateHolidayLeavePolicyAsync(int id, HolidayLeavePolicyRequestDto holidayLeavePolicyRequestDto)
         {
             if (holidayLeavePolicyRequestDto == null)
                 throw new ArgumentNullException(nameof(holidayLeavePolicyRequestDto));

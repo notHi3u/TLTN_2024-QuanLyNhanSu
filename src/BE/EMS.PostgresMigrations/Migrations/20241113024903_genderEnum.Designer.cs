@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241112055631_dataAnno5")]
-    partial class dataAnno5
+    [Migration("20241113024903_genderEnum")]
+    partial class genderEnum
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -258,6 +258,9 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentManagerId")
+                        .IsUnique();
+
                     b.ToTable("Departments");
                 });
 
@@ -270,13 +273,16 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
+                    b.Property<decimal?>("BaseSalary")
+                        .HasColumnType("numeric");
+
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
 
-                    b.Property<string>("DepartmentId")
-                        .HasColumnType("text");
+                    b.Property<decimal?>("Deductions")
+                        .HasColumnType("numeric");
 
-                    b.Property<string>("DepartmentId1")
+                    b.Property<string>("DepartmentId")
                         .HasColumnType("text");
 
                     b.Property<string>("EducationLevel")
@@ -296,10 +302,11 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                    b.Property<decimal?>("FlatBonus")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<DateOnly>("HireDate")
                         .HasColumnType("date");
@@ -322,6 +329,9 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<decimal?>("PercentBonus")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)");
@@ -343,9 +353,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("DepartmentId1")
-                        .IsUnique();
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -476,7 +483,7 @@ namespace EMS.PostgresMigrations.Migrations
                     b.ToTable("LeaveRequests");
                 });
 
-            modelBuilder.Entity("EMS.Domain.Models.EM.Salary", b =>
+            modelBuilder.Entity("EMS.Domain.Models.EM.SalaryRecord", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -485,38 +492,6 @@ namespace EMS.PostgresMigrations.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<decimal>("BaseSalary")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("FlatBonus")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("PercentBonus")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
-
-                    b.ToTable("Salaries");
-                });
-
-            modelBuilder.Entity("EMS.Domain.Models.EM.SalaryHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<decimal>("BaseSalary")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("Bonus")
                         .HasColumnType("numeric");
 
                     b.Property<decimal>("Deductions")
@@ -526,10 +501,16 @@ namespace EMS.PostgresMigrations.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<decimal>("FlatBonus")
+                        .HasColumnType("numeric");
+
                     b.Property<int>("Month")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("NetSalary")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("PercentBonus")
                         .HasColumnType("numeric");
 
                     b.Property<int>("Year")
@@ -539,7 +520,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("SalaryHistories");
+                    b.ToTable("SalaryRecords");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.TimeCard", b =>
@@ -573,7 +554,7 @@ namespace EMS.PostgresMigrations.Migrations
                     b.ToTable("TimeCards");
                 });
 
-            modelBuilder.Entity("EMS.Domain.Models.EM.WorkHistory", b =>
+            modelBuilder.Entity("EMS.Domain.Models.EM.WorkRecord", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -765,15 +746,20 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("TimeCard");
                 });
 
+            modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
+                {
+                    b.HasOne("EMS.Domain.Models.EM.Employee", "Manager")
+                        .WithOne("ManagedDepartment")
+                        .HasForeignKey("EMS.Domain.Models.EM.Department", "DepartmentManagerId");
+
+                    b.Navigation("Manager");
+                });
+
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
                 {
                     b.HasOne("EMS.Domain.Models.EM.Department", "Department")
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId");
-
-                    b.HasOne("EMS.Domain.Models.EM.Department", null)
-                        .WithOne("Manager")
-                        .HasForeignKey("EMS.Domain.Models.EM.Employee", "DepartmentId1");
 
                     b.HasOne("EMS.Domain.Models.Account.User", "User")
                         .WithOne("Employee")
@@ -818,21 +804,10 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("EMS.Domain.Models.EM.Salary", b =>
+            modelBuilder.Entity("EMS.Domain.Models.EM.SalaryRecord", b =>
                 {
                     b.HasOne("EMS.Domain.Models.EM.Employee", "Employee")
-                        .WithOne("Salary")
-                        .HasForeignKey("EMS.Domain.Models.EM.Salary", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("EMS.Domain.Models.EM.SalaryHistory", b =>
-                {
-                    b.HasOne("EMS.Domain.Models.EM.Employee", "Employee")
-                        .WithMany("SalaryHistory")
+                        .WithMany("SalaryRecords")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -851,10 +826,10 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("EMS.Domain.Models.EM.WorkHistory", b =>
+            modelBuilder.Entity("EMS.Domain.Models.EM.WorkRecord", b =>
                 {
                     b.HasOne("EMS.Domain.Models.EM.Employee", "Employee")
-                        .WithMany("WorkHistories")
+                        .WithMany("WorkRecord")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -925,9 +900,6 @@ namespace EMS.PostgresMigrations.Migrations
             modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
                 {
                     b.Navigation("Employees");
-
-                    b.Navigation("Manager")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
@@ -940,14 +912,14 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.Navigation("LeaveRequests");
 
-                    b.Navigation("Salary")
+                    b.Navigation("ManagedDepartment")
                         .IsRequired();
 
-                    b.Navigation("SalaryHistory");
+                    b.Navigation("SalaryRecords");
 
                     b.Navigation("TimeCards");
 
-                    b.Navigation("WorkHistories");
+                    b.Navigation("WorkRecord");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.TimeCard", b =>

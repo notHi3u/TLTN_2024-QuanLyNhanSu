@@ -33,7 +33,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Leave Request By Id
-            leaveRequestGroup.MapGet("/{id:guid}", async (ILeaveRequestService leaveRequestService, string id) =>
+            leaveRequestGroup.MapGet("/{id}", async (ILeaveRequestService leaveRequestService, long id) =>
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Update Leave Request
-            leaveRequestGroup.MapPut("/{id:guid}", async (ILeaveRequestService leaveRequestService, string id, [FromBody] LeaveRequestRequestDto updateLeaveRequestDto) =>
+            leaveRequestGroup.MapPut("/{id}", async (ILeaveRequestService leaveRequestService, long id, [FromBody] LeaveRequestRequestDto updateLeaveRequestDto) =>
             {
                 if (updateLeaveRequestDto == null)
                 {
@@ -108,7 +108,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Delete Leave Request
-            leaveRequestGroup.MapDelete("/{id:guid}", async (ILeaveRequestService leaveRequestService, string id) =>
+            leaveRequestGroup.MapDelete("/{id}", async (ILeaveRequestService leaveRequestService, long id) =>
             {
                 try
                 {

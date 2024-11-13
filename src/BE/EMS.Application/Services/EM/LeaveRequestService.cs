@@ -28,7 +28,7 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<LeaveRequestResponseDto>(leaveRequest);
         }
 
-        public async Task<bool> DeleteLeaveRequestAsync(string id)
+        public async Task<bool> DeleteLeaveRequestAsync(long id)
         {
             var leaveRequest = await _leaveRequestRepository.GetByIdAsync(id);
             if (leaveRequest == null)
@@ -38,7 +38,7 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<LeaveRequestResponseDto> GetLeaveRequestByIdAsync(string id)
+        public async Task<LeaveRequestResponseDto> GetLeaveRequestByIdAsync(long id)
         {
             var leaveRequest = await _leaveRequestRepository.GetByIdAsync(id);
             if (leaveRequest == null)
@@ -63,7 +63,7 @@ namespace EMS.Application.Services.EM
             );
         }
 
-        public async Task<LeaveRequestResponseDto> UpdateLeaveRequestAsync(string id, LeaveRequestRequestDto leaveRequestDto)
+        public async Task<LeaveRequestResponseDto> UpdateLeaveRequestAsync(long id, LeaveRequestRequestDto leaveRequestDto)
         {
             if (leaveRequestDto == null)
                 throw new ArgumentNullException(nameof(leaveRequestDto));

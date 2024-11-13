@@ -4,6 +4,5 @@
     {
         public int EffectiveYear { get; set; } // Năm áp dụng
         public List<DateOnly>? Holidays { get; set; } // Những ngày nghỉ
-        public int HolidayCount { get; set; } // Số ngày nghỉ
     }
 }

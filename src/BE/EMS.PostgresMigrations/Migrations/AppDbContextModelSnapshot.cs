@@ -270,13 +270,13 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
-                    b.Property<decimal>("BaseSalary")
+                    b.Property<decimal?>("BaseSalary")
                         .HasColumnType("numeric");
 
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
 
-                    b.Property<decimal>("Deductions")
+                    b.Property<decimal?>("Deductions")
                         .HasColumnType("numeric");
 
                     b.Property<string>("DepartmentId")
@@ -299,13 +299,11 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<decimal>("FlatBonus")
+                    b.Property<decimal?>("FlatBonus")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<DateOnly>("HireDate")
                         .HasColumnType("date");
@@ -328,7 +326,7 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<decimal>("PercentBonus")
+                    b.Property<decimal?>("PercentBonus")
                         .HasColumnType("numeric");
 
                     b.Property<string>("PhoneNumber")
@@ -367,7 +365,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 

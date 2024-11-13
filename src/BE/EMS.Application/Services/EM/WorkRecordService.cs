@@ -7,28 +7,28 @@ using EMS.Domain.Repositories.EM;
 
 namespace EMS.Application.Services.EM
 {
-    public class WorkHistoryService : IWorkHistoryService
+    public class WorkRecordService : IWorkRecordService
     {
         private readonly IWorkRecordRepository _workHistoryRepository;
         private readonly IMapper _mapper;
 
-        public WorkHistoryService(IWorkRecordRepository workHistoryRepository, IMapper mapper)
+        public WorkRecordService(IWorkRecordRepository workHistoryRepository, IMapper mapper)
         {
             _workHistoryRepository = workHistoryRepository ?? throw new ArgumentNullException(nameof(workHistoryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<WorkHistoryResponseDto> CreateWorkHistoryAsync(WorkHistoryRequestDto workHistoryRequestDto)
+        public async Task<WorkRecordResponseDto> CreateWorkHistoryAsync(WorkRecordRequestDto workHistoryRequestDto)
         {
             if (workHistoryRequestDto == null)
                 throw new ArgumentNullException(nameof(workHistoryRequestDto));
 
             WorkRecord workHistory = _mapper.Map<WorkRecord>(workHistoryRequestDto);
             await _workHistoryRepository.AddAsync(workHistory);
-            return _mapper.Map<WorkHistoryResponseDto>(workHistory);
+            return _mapper.Map<WorkRecordResponseDto>(workHistory);
         }
 
-        public async Task<bool> DeleteWorkHistoryAsync(string id)
+        public async Task<bool> DeleteWorkHistoryAsync(long id)
         {
             var workHistory = await _workHistoryRepository.GetByIdAsync(id);
             if (workHistory == null)
@@ -38,24 +38,24 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<WorkHistoryResponseDto> GetWorkHistoryByIdAsync(string id)
+        public async Task<WorkRecordResponseDto> GetWorkHistoryByIdAsync(long id)
         {
             var workHistory = await _workHistoryRepository.GetByIdAsync(id);
             if (workHistory == null)
                 throw new ArgumentNullException(nameof(workHistory));
 
-            return _mapper.Map<WorkHistoryResponseDto>(workHistory);
+            return _mapper.Map<WorkRecordResponseDto>(workHistory);
         }
 
-        public async Task<PagedDto<WorkHistoryResponseDto>> GetPagedWorkHistoriesAsync(WorkRecordFilter filter)
+        public async Task<PagedDto<WorkRecordResponseDto>> GetPagedWorkHistoriesAsync(WorkRecordFilter filter)
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
 
             var pagedWorkHistories = await _workHistoryRepository.GetPagedAsync(filter);
-            var workHistoryDtos = _mapper.Map<IEnumerable<WorkHistoryResponseDto>>(pagedWorkHistories.Items);
+            var workHistoryDtos = _mapper.Map<IEnumerable<WorkRecordResponseDto>>(pagedWorkHistories.Items);
 
-            return new PagedDto<WorkHistoryResponseDto>(
+            return new PagedDto<WorkRecordResponseDto>(
                 workHistoryDtos,
                 pagedWorkHistories.TotalCount,
                 pagedWorkHistories.PageIndex,
@@ -63,7 +63,7 @@ namespace EMS.Application.Services.EM
             );
         }
 
-        public async Task<WorkHistoryResponseDto> UpdateWorkHistoryAsync(string id, WorkHistoryRequestDto workHistoryRequestDto)
+        public async Task<WorkRecordResponseDto> UpdateWorkHistoryAsync(long id, WorkRecordRequestDto workHistoryRequestDto)
         {
             if (workHistoryRequestDto == null)
                 throw new ArgumentNullException(nameof(workHistoryRequestDto));
@@ -75,7 +75,7 @@ namespace EMS.Application.Services.EM
             _mapper.Map(workHistoryRequestDto, workHistory);
             await _workHistoryRepository.UpdateAsync(workHistory);
 
-            return _mapper.Map<WorkHistoryResponseDto>(workHistory);
+            return _mapper.Map<WorkRecordResponseDto>(workHistory);
         }
     }
 }

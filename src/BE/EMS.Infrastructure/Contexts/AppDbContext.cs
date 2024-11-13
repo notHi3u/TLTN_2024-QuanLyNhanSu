@@ -1,5 +1,4 @@
-﻿using Common.Enums;
-using EMS.Domain.Models.Account;
+﻿using EMS.Domain.Models.Account;
 using EMS.Domain.Models.EM;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
