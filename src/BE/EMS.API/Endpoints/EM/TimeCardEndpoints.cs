@@ -1,5 +1,6 @@
 ﻿using Common.Configurations;
 using Common.Dtos;
+using Common.Enums;
 using EMS.Application.DTOs.EM;
 using EMS.Application.Services.EM;
 using EMS.Domain.Filters.EMS;
@@ -123,6 +124,33 @@ namespace EMS.API.Endpoints.EM
                 catch (Exception ex)
                 {
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while deleting the time card.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+            #region Change TimeCard Status
+            timeCardGroup.MapPut("/{id}/status", async (ITimeCardService timeCardService, long id, TimeCardStatus status) =>
+            {
+                if (status == null)
+                {
+                    var errorResponse = BaseResponse<TimeCardResponseDto>.Failure("New status is required.");
+                    return Results.BadRequest(errorResponse);
+                }
+
+                try
+                {
+                    var timeCard = await timeCardService.ChangeTimeCardStatus(id, status);
+                    if (timeCard == null)
+                    {
+                        var errorResponse = BaseResponse<TimeCardResponseDto>.Failure("Time card not found.");
+                        return Results.NotFound(errorResponse);
+                    }
+                    return Results.Ok(BaseResponse<TimeCardResponseDto>.Success(timeCard));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<TimeCardResponseDto>.Failure("An error occurred while changing the time card status.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();

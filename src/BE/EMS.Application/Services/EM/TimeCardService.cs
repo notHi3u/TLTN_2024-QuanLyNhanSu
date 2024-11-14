@@ -79,7 +79,7 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<TimeCardResponseDto>(timeCard);
         }
 
-        public async Task<TimeCardStatus> ChangeTimeCardStatus(long id, TimeCardStatus timeCardStatus)
+        public async Task<TimeCardResponseDto> ChangeTimeCardStatus(long id, TimeCardStatus timeCardStatus)
         {
             var timeCard = await _timeCardRepository.GetByIdAsync(id);
             if (timeCard == null) 
@@ -90,7 +90,7 @@ namespace EMS.Application.Services.EM
             timeCard.Status = timeCardStatus;
             await _timeCardRepository.UpdateAsync(timeCard);
 
-            return (TimeCardStatus)timeCard.Status;
+            return _mapper.Map<TimeCardResponseDto>(timeCard);
         }
     }
 }

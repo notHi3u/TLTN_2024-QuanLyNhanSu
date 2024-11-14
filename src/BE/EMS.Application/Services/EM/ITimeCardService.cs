@@ -12,6 +12,6 @@ namespace EMS.Application.Services.EM
         Task<TimeCardResponseDto> UpdateTimeCardAsync(long id, TimeCardRequestDto timeCardRequestDto);
         Task<bool> DeleteTimeCardAsync(long id);
         Task<PagedDto<TimeCardResponseDto>> GetPagedTimeCardsAsync(TimeCardFilter filter);
-        Task<TimeCardStatus> ChangeTimeCardStatus(long id, TimeCardStatus timeCardStatus);
+        Task<TimeCardResponseDto> ChangeTimeCardStatus(long id, TimeCardStatus timeCardStatus);
     }
 }

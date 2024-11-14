@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace EMS.Infrastructure.Repositories.EM
 {
-    public class SalaryHistoryRepository : BaseRepository<SalaryRecord>, ISalaryRecordRepository
+    public class SalaryRecordRepository : BaseRepository<SalaryRecord>, ISalaryRecordRepository
     {
-        public SalaryHistoryRepository(AppDbContext context, ILogger<SalaryHistoryRepository> logger)
+        public SalaryRecordRepository(AppDbContext context, ILogger<SalaryRecordRepository> logger)
             : base(context, logger)
         {
         }

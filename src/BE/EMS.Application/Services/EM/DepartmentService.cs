@@ -157,7 +157,7 @@ namespace EMS.Application.Services.EM
 
 
             await _departmentRepository.UpdateAsync(department);
-
+            await _employeeRepository.UpdateAsync(manager);
             return _mapper.Map<DepartmentResponseDto>(department);
         }
 

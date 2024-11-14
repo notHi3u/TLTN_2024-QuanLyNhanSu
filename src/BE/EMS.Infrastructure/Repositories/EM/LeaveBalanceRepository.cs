@@ -46,5 +46,17 @@ namespace EMS.Infrastructure.Repositories.EM
 
             return new PagedDto<LeaveBalance>(items, totalCount, filter.PageIndex.Value, filter.PageSize.Value);
         }
+
+        public async Task<bool> BalanceExists(string employeeId)
+        {
+            return await _dbSet.AnyAsync(lb => lb.Year == DateTime.Now.Year && lb.EmployeeId == employeeId);
+        }
+
+        public async Task<LeaveBalance> GetByEmployeeIdAndNow(string employeeId)
+        {
+            var currentYear = DateTime.Now.Year;
+            return await _dbSet.FirstOrDefaultAsync(lb => lb.EmployeeId == employeeId && lb.Year == currentYear);
+        }
+
     }
 }

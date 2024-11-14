@@ -34,7 +34,7 @@ namespace EMS.Infrastructure.Repositories.EM
 
             if (!string.IsNullOrWhiteSpace(filter.Position))
             {
-                query = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<WorkRecord, Employee>)query.Where(wh => wh.Position.Contains(filter.Position));
+                query = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<WorkRecord, Employee>)query.Where(wh => wh.Position == filter.Position);
             }
 
             // Filtering for start and end dates if applicable
