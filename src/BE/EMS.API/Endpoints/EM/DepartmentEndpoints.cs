@@ -156,6 +156,28 @@ namespace EMS.API.Endpoints.EM
             }).ConfigureApiResponses();
             #endregion
 
+            #region Remove Manager from Department
+            departmentGroup.MapPost("/{id}/remove-manager", async (IDepartmentService departmentService, string id) =>
+            {
+                try
+                {
+                    var department = await departmentService.RemoveManagerAsync(id);
+                    if (department == null)
+                    {
+                        var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("Department not found.");
+                        return Results.NotFound(errorResponse);
+                    }
+
+                    return Results.Ok(BaseResponse<DepartmentResponseDto>.Success(department));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("An error occurred while removing the manager.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
             #region Get Employees by Department
             departmentGroup.MapGet("/{id}/employees", async (IDepartmentService departmentService, string id) =>
             {
