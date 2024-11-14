@@ -30,6 +30,7 @@ namespace EMS.Application.Services.EM
                 throw new ArgumentNullException(nameof(departmentRequestDto));
 
             Department department = _mapper.Map<Department>(departmentRequestDto);
+            department.Id = Guid.NewGuid().ToString();
 
             if (await _departmentRepository.ExistsAsync(d => d.DepartmentName == department.DepartmentName))
             {
@@ -54,9 +55,9 @@ namespace EMS.Application.Services.EM
         #endregion
 
         #region Get by Id
-        public async Task<DepartmentResponseDto> GetDepartmentByIdAsync(string id)
+        public async Task<DepartmentResponseDto> GetDepartmentByIdAsync(string id, bool? isDeep)
         {
-            var department = await _departmentRepository.GetByIdAsync(id);
+            var department = await _departmentRepository.GetByIdAsync(id, isDeep);
             if (department == null)
                 throw new ArgumentNullException(nameof(department));
 

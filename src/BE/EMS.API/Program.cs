@@ -15,10 +15,12 @@ using EMS.Infrastructure.Repositories.Account;
 using EMS.Infrastructure.Repositories.EM;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using System.Text;
 using System.Text.Json;
 using System.Threading.RateLimiting;
@@ -54,6 +56,12 @@ builder.Services.AddSwaggerGen(c => {
         }
     });
     c.EnableAnnotations();
+});
+
+builder.Services.Configure<JsonOptions>(options =>
+{
+    // Set ReferenceHandler to ignore cycles to prevent loops in serialization
+    options.SerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
 //Rate limiting middlewares

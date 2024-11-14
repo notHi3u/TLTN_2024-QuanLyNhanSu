@@ -33,11 +33,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Department By Id
-            departmentGroup.MapGet("/{id}", async (IDepartmentService departmentService, string id) =>
+            departmentGroup.MapGet("/{id}", async (IDepartmentService departmentService, string id, bool? isDeep) =>
             {
                 try
                 {
-                    var department = await departmentService.GetDepartmentByIdAsync(id);
+                    var department = await departmentService.GetDepartmentByIdAsync(id, isDeep);
                     if (department == null)
                     {
                         var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("Department not found.");

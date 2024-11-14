@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     /// <inheritdoc />
-    public partial class genderEnum : Migration
+    public partial class loop : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,19 @@ namespace EMS.PostgresMigrations.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    DepartmentName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DepartmentManagerId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,61 +228,6 @@ namespace EMS.PostgresMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RolePermissions",
-                columns: table => new
-                {
-                    RoleId = table.Column<string>(type: "text", nullable: false),
-                    PermissionId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RolePermissions", x => new { x.RoleId, x.PermissionId });
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RolePermissions_Permissions_PermissionId",
-                        column: x => x.PermissionId,
-                        principalTable: "Permissions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Attendances",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EmployeeId = table.Column<string>(type: "text", nullable: false),
-                    Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    WorkStatus = table.Column<bool>(type: "boolean", nullable: false),
-                    AbsentReasons = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Status = table.Column<bool>(type: "boolean", nullable: false),
-                    TimeCardId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Attendances", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Departments",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    DepartmentName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DepartmentManagerId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -314,6 +272,30 @@ namespace EMS.PostgresMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RolePermissions",
+                columns: table => new
+                {
+                    RoleId = table.Column<string>(type: "text", nullable: false),
+                    PermissionId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermissions", x => new { x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EmployeeRelatives",
                 columns: table => new
                 {
@@ -324,7 +306,7 @@ namespace EMS.PostgresMigrations.Migrations
                     FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Relationship = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    Adress = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    Address = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
                     EmergencyContact = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -416,7 +398,6 @@ namespace EMS.PostgresMigrations.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     EmployeeId = table.Column<string>(type: "text", nullable: false),
                     WeekStartDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    AttendanceIds = table.Column<List<long>>(type: "bigint[]", nullable: true),
                     SubmittedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -450,6 +431,36 @@ namespace EMS.PostgresMigrations.Migrations
                         name: "FK_WorkHistories_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Attendances",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EmployeeId = table.Column<string>(type: "text", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    WorkStatus = table.Column<bool>(type: "boolean", nullable: false),
+                    AbsentReasons = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Status = table.Column<bool>(type: "boolean", nullable: false),
+                    TimeCardId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attendances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Attendances_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Attendances_TimeCards_TimeCardId",
+                        column: x => x.TimeCardId,
+                        principalTable: "TimeCards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -500,12 +511,6 @@ namespace EMS.PostgresMigrations.Migrations
                 name: "IX_Attendances_TimeCardId",
                 table: "Attendances",
                 column: "TimeCardId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Departments_DepartmentManagerId",
-                table: "Departments",
-                column: "DepartmentManagerId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmployeeRelatives_EmployeeId",
@@ -562,42 +567,11 @@ namespace EMS.PostgresMigrations.Migrations
                 name: "IX_WorkHistories_EmployeeId",
                 table: "WorkHistories",
                 column: "EmployeeId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Attendances_Employees_EmployeeId",
-                table: "Attendances",
-                column: "EmployeeId",
-                principalTable: "Employees",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Attendances_TimeCards_TimeCardId",
-                table: "Attendances",
-                column: "TimeCardId",
-                principalTable: "TimeCards",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Departments_Employees_DepartmentManagerId",
-                table: "Departments",
-                column: "DepartmentManagerId",
-                principalTable: "Employees",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Employees_AspNetUsers_UserId",
-                table: "Employees");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Departments_Employees_DepartmentManagerId",
-                table: "Departments");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -647,13 +621,13 @@ namespace EMS.PostgresMigrations.Migrations
                 name: "Permissions");
 
             migrationBuilder.DropTable(
+                name: "Employees");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Departments");

@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241113032028_EmployeeRelativeAddress")]
-    partial class EmployeeRelativeAddress
+    [Migration("20241114030448_loop2")]
+    partial class loop2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,9 +257,6 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentManagerId")
-                        .IsUnique();
 
                     b.ToTable("Departments");
                 });
@@ -531,9 +528,6 @@ namespace EMS.PostgresMigrations.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<List<long>>("AttendanceIds")
-                        .HasColumnType("bigint[]");
-
                     b.Property<string>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -746,15 +740,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("TimeCard");
                 });
 
-            modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
-                {
-                    b.HasOne("EMS.Domain.Models.EM.Employee", "Manager")
-                        .WithOne("ManagedDepartment")
-                        .HasForeignKey("EMS.Domain.Models.EM.Department", "DepartmentManagerId");
-
-                    b.Navigation("Manager");
-                });
-
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
                 {
                     b.HasOne("EMS.Domain.Models.EM.Department", "Department")
@@ -911,9 +896,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("LeaveBalances");
 
                     b.Navigation("LeaveRequests");
-
-                    b.Navigation("ManagedDepartment")
-                        .IsRequired();
 
                     b.Navigation("SalaryRecords");
 

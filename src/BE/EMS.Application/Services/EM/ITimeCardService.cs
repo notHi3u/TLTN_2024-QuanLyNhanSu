@@ -7,7 +7,7 @@ namespace EMS.Application.Services.EM
 {
     public interface ITimeCardService
     {
-        Task<TimeCardResponseDto> GetTimeCardByIdAsync(long id);
+        Task<TimeCardResponseDto> GetTimeCardByIdAsync(long id, bool? isDeep);
         Task<TimeCardResponseDto> CreateTimeCardAsync(TimeCardRequestDto timeCardRequestDto);
         Task<TimeCardResponseDto> UpdateTimeCardAsync(long id, TimeCardRequestDto timeCardRequestDto);
         Task<bool> DeleteTimeCardAsync(long id);

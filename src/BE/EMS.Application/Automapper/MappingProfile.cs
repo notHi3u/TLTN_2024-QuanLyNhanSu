@@ -40,21 +40,19 @@ namespace EMS.Application.Automapper
 
             #region Employee
             CreateMap<EmployeeRequestDto, Employee>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString())) // Set EmployeeId to a new GUID
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? EmployeeStatus.Active)) // Set default status if null
-            // Add other mappings as needed for other properties, e.g.:
-            // .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
-            ;
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString())) // Set EmployeeId to a new GUID
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? EmployeeStatus.Active)) // Set default status if null
+                ;
             CreateMap<Employee, EmployeeResponseDto>()
+                .ForMember(dest => dest.Department, opt => opt.Ignore()) // Ignore Department property
+                .ForMember(dest => dest.ManagedDepartment, opt => opt.Ignore()) // Ignore ManagedDepartment property
                 .ForMember(dest => dest.TimeCards, opt => opt.MapFrom(src => src.TimeCards)) // Mapping for TimeCards
                 .ForMember(dest => dest.LeaveRequests, opt => opt.MapFrom(src => src.LeaveRequests)) // Mapping for LeaveRequests
                 .ForMember(dest => dest.LeaveBalances, opt => opt.MapFrom(src => src.LeaveBalances)) // Mapping for LeaveBalances
                 .ForMember(dest => dest.Attendances, opt => opt.MapFrom(src => src.Attendances)) // Mapping for Attendances
                 .ForMember(dest => dest.EmployeeRelatives, opt => opt.MapFrom(src => src.EmployeeRelatives)) // Mapping for EmployeeRelatives
-                .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department)) // Mapping for Department
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User)) // Mapping for User
-                .ForMember(dest => dest.SalaryRecords, opt => opt.MapFrom(src => src.SalaryRecords)) // Mapping for SalaryHistory
-                .ForMember(dest => dest.WorkRecords, opt => opt.MapFrom(src => src.WorkRecord)); // Mapping for WorkHistories
+                .ForMember(dest => dest.WorkRecord, opt => opt.MapFrom(src => src.WorkRecord)); // Mapping for WorkRecord
+
             #endregion
 
             #region LeaveRequest
@@ -75,6 +73,7 @@ namespace EMS.Application.Automapper
             #region TimeCard
             CreateMap<TimeCardRequestDto, TimeCard>();
             CreateMap<TimeCard, TimeCardResponseDto>()
+                .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.Employee)) // Map Employee
                 .ForMember(dest => dest.Attendances, opt => opt.MapFrom(src => src.Attendances));
             #endregion
 
@@ -89,6 +88,7 @@ namespace EMS.Application.Automapper
                 .ForMember(dest => dest.Employees, opt => opt.MapFrom(src => src.Employees)) // Mapping for Employees
                 .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager)); // Mapping for Manager
             #endregion
+
 
             #region HolidayLeavePolicy
             CreateMap<HolidayLeavePolicyRequestDto, HolidayLeavePolicy>();

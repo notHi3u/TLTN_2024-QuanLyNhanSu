@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace EMS.Domain.Models.EM
 {
@@ -15,7 +16,9 @@ namespace EMS.Domain.Models.EM
         public string? DepartmentManagerId { get; set; } // Mã quản lý phòng ban
 
         // Navigation properties (no data annotations needed here)
-        public virtual ICollection<Employee> Employees { get; set; } // One Department has many Employees
-        public virtual Employee Manager { get; set; } // One Department has one Manager (Employee)
+        [JsonIgnore]
+        public virtual ICollection<Employee>? Employees { get; set; } // One Department has many Employees
+        [JsonIgnore]
+        public virtual Employee? Manager { get; set; } // One Department has one Manager (Employee)
     }
 }

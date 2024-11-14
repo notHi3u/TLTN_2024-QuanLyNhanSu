@@ -11,5 +11,7 @@ namespace EMS.Application.Services.EM
         Task<EmployeeResponseDto> UpdateEmployeeAsync(string id, EmployeeRequestDto employeeRequestDto);
         Task<bool> DeleteEmployeeAsync(string id);
         Task<PagedDto<EmployeeResponseDto>> GetPagedEmployeesAsync(EmployeeFilter filter);
+        Task<bool> AssignDepartmentAsync(string id, string departmentId);
+        Task<bool> RemoveDepartmentAsync(string id);
     }
 }

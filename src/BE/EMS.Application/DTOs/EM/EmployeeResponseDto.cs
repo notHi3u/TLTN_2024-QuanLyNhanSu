@@ -43,6 +43,8 @@ namespace EMS.Application.DTOs.EM
         public ICollection<SalaryRecordResponseDto> SalaryRecords { get; set; }
         public DepartmentResponseDto Department {  get; set; } 
         public UserResponseDto User { get; set; }
+        public DepartmentResponseDto ManagedDepartment { get; set; }
+        public WorkRecordResponseDto WorkRecord { get; set; }
     }
 
 }
