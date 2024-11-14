@@ -15,5 +15,8 @@ namespace EMS.Domain.Models.EM
 
         [Range(0, int.MaxValue)] // Ensures HolidayCount is a non-negative number
         public int HolidayCount { get; set; }
+
+        [Range(0, int.MaxValue)] // Ensures HolidayCount is a non-negative number
+        public int LeaveDayCount { get; set; }
     }
 }

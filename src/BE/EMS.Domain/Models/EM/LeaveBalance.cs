@@ -13,9 +13,6 @@ namespace EMS.Domain.Models.EM
         [Range(1900, int.MaxValue)] // Ensures the year is a valid number, typically no year should be before 1900
         public int Year { get; set; }
 
-        [Range(0, int.MaxValue)] // Ensures LeaveDayCount is a non-negative integer
-        public int LeaveDayCount { get; set; }
-
         [Range(0, int.MaxValue)] // Ensures UsedLeaveDays is a non-negative integer
         public int UsedLeaveDays { get; set; }
 

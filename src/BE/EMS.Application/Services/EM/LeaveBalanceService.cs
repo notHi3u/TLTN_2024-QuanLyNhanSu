@@ -4,6 +4,7 @@ using EMS.Application.DTOs.EM;
 using EMS.Domain.Filters.EMS;
 using EMS.Domain.Models.EM;
 using EMS.Domain.Repositories.EM;
+using EMS.Infrastructure.Repositories.EM;
 
 namespace EMS.Application.Services.EM
 {
@@ -23,7 +24,19 @@ namespace EMS.Application.Services.EM
             if (leaveBalanceRequestDto == null)
                 throw new ArgumentNullException(nameof(leaveBalanceRequestDto));
 
+            bool policyExists = await _leaveBalanceRepository.ExistsAsync(
+                x => x.Year == leaveBalanceRequestDto.Year && x.EmployeeId == leaveBalanceRequestDto.EmployeeId);
+
+            if (policyExists)
+            {
+                throw new InvalidOperationException($"A holiday leave policy already exists for the year {leaveBalanceRequestDto.Year}.");
+            }
+
             LeaveBalance leaveBalance = _mapper.Map<LeaveBalance>(leaveBalanceRequestDto);
+
+            leaveBalance.UsedLeaveDays = 0;
+            leaveBalance.Year = DateTime.Now.Year;
+
             await _leaveBalanceRepository.AddAsync(leaveBalance);
             return _mapper.Map<LeaveBalanceResponseDto>(leaveBalance);
         }

@@ -151,7 +151,7 @@ builder.Services.AddScoped<ILeaveBalanceService, LeaveBalanceService>();
 builder.Services.AddScoped<ILeaveBalanceRepository, LeaveBalanceRepository>();
 
 builder.Services.AddScoped<ISalaryRecordService, SalaryRecordService>();
-builder.Services.AddScoped<ISalaryRecordRepository, SalaryHistoryRepository>();
+builder.Services.AddScoped<ISalaryRecordRepository, SalaryRecordRepository>();
 
 builder.Services.AddScoped<ITimeCardService, TimeCardService>();
 builder.Services.AddScoped<ITimeCardRepository, TimeCardRepository>();

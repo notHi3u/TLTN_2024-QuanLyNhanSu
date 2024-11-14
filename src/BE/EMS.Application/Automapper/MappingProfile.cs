@@ -89,7 +89,6 @@ namespace EMS.Application.Automapper
                 .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager)); // Mapping for Manager
             #endregion
 
-
             #region HolidayLeavePolicy
             CreateMap<HolidayLeavePolicyRequestDto, HolidayLeavePolicy>();
             CreateMap<HolidayLeavePolicy, HolidayLeavePolicyResponseDto>();

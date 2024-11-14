@@ -13,5 +13,7 @@ namespace EMS.Domain.Repositories.EM
     public interface ILeaveBalanceRepository: IBaseRepository<LeaveBalance>
     {
         Task<PagedDto<LeaveBalance>> GetPagedAsync(LeaveBalanceFilter filter);
+        Task<bool> BalanceExists(string employeeId);
+        Task<LeaveBalance> GetByEmployeeIdAndNow(string employeeId);
     }
 }

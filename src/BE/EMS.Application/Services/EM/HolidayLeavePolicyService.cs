@@ -20,13 +20,32 @@ namespace EMS.Application.Services.EM
 
         public async Task<HolidayLeavePolicyResponseDto> CreateHolidayLeavePolicyAsync(HolidayLeavePolicyRequestDto holidayLeavePolicyRequestDto)
         {
+            // Ensure the DTO is not null
             if (holidayLeavePolicyRequestDto == null)
                 throw new ArgumentNullException(nameof(holidayLeavePolicyRequestDto));
 
+            // Check if a HolidayLeavePolicy already exists for the given year
+            bool policyExists = await _holidayLeavePolicyRepository.ExistsAsync(
+                x => x.EffectiveYear == holidayLeavePolicyRequestDto.EffectiveYear);
+
+            if (policyExists)
+            {
+                throw new InvalidOperationException($"A holiday leave policy already exists for the year {holidayLeavePolicyRequestDto.EffectiveYear}.");
+            }
+
+            // Map the request DTO to the HolidayLeavePolicy model
             HolidayLeavePolicy policy = _mapper.Map<HolidayLeavePolicy>(holidayLeavePolicyRequestDto);
+
+            // Calculate the number of holidays
+            policy.HolidayCount = policy.Holidays.Count();
+
+            // Add the new policy to the repository
             await _holidayLeavePolicyRepository.AddAsync(policy);
+
+            // Return the response DTO after mapping the policy
             return _mapper.Map<HolidayLeavePolicyResponseDto>(policy);
         }
+
 
         public async Task<bool> DeleteHolidayLeavePolicyAsync(int id)
         {
