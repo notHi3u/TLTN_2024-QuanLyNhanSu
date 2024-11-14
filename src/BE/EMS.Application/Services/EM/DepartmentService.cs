@@ -4,6 +4,7 @@ using EMS.Application.DTOs.EM;
 using EMS.Domain.Filters.EMS;
 using EMS.Domain.Models.EM;
 using EMS.Domain.Repositories.EM;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace EMS.Application.Services.EM
                 throw new ArgumentNullException(nameof(departmentRequestDto));
 
             Department department = _mapper.Map<Department>(departmentRequestDto);
+            department.Id = Guid.NewGuid().ToString();
 
             if (await _departmentRepository.ExistsAsync(d => d.DepartmentName == department.DepartmentName))
             {
@@ -54,9 +56,9 @@ namespace EMS.Application.Services.EM
         #endregion
 
         #region Get by Id
-        public async Task<DepartmentResponseDto> GetDepartmentByIdAsync(string id)
+        public async Task<DepartmentResponseDto> GetDepartmentByIdAsync(string id, bool? isDeep)
         {
-            var department = await _departmentRepository.GetByIdAsync(id);
+            var department = await _departmentRepository.GetByIdAsync(id, isDeep);
             if (department == null)
                 throw new ArgumentNullException(nameof(department));
 
@@ -109,25 +111,55 @@ namespace EMS.Application.Services.EM
         public async Task<DepartmentResponseDto> AssignManagerAsync(string departmentId, string managerId)
         {
             var department = await _departmentRepository.GetByIdAsync(departmentId);
-
+            var oldManager = await GetDepartmentManagerAsync(departmentId);
+            var manager = await _employeeRepository.GetByIdAsync(managerId);
             if(department == null)
                 throw new ArgumentNullException(nameof(department));
 
-            bool managerExists = await _employeeRepository.ExistsAsync(e => e.Id == managerId);
-
-            if (!managerExists)
+            if (manager == null)
             {
                 throw new ArgumentNullException(nameof(managerId));
             }
-
+            
+            if(oldManager != null)
+            {
+                oldManager.DepartmentId = null;
+                oldManager.Position = null;
+            }
             department.DepartmentManagerId = managerId;
+            manager.DepartmentId = departmentId;
+            manager.Position = "Manager";
 
             await _departmentRepository.UpdateAsync(department);
+            await _employeeRepository.UpdateAsync(manager);
 
             return _mapper.Map<DepartmentResponseDto>(department);
 
         }
         #endregion
+
+        public async Task<DepartmentResponseDto> RemoveManagerAsync(string departmentId)
+        {
+            var department = await _departmentRepository.GetByIdAsync(departmentId);
+            var manager = await _employeeRepository.GetByIdAsync(department.DepartmentManagerId);
+            if (department == null)
+                throw new ArgumentNullException(nameof(department));
+
+
+            if (department.DepartmentManagerId == null)
+            {
+                throw new ArgumentNullException("No manager found");
+            }
+            
+            department.DepartmentManagerId = null;
+            manager.Position= null;
+            manager.DepartmentId = null;
+
+
+            await _departmentRepository.UpdateAsync(department);
+
+            return _mapper.Map<DepartmentResponseDto>(department);
+        }
 
         #region Get Employees By Department
         public async Task<IEnumerable<EmployeeResponseDto>> GetEmployeesByDepartmentAsync(string departmentId)

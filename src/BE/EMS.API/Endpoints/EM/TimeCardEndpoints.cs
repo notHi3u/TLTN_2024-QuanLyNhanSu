@@ -33,11 +33,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get TimeCards By Id
-            timeCardGroup.MapGet("/{id}", async (ITimeCardService timeCardService, long id) =>
+            timeCardGroup.MapGet("/{id}", async (ITimeCardService timeCardService, long id, bool? isDeep) =>
             {
                 try
                 {
-                    var timeCard = await timeCardService.GetTimeCardByIdAsync(id);
+                    var timeCard = await timeCardService.GetTimeCardByIdAsync(id, isDeep);
                     if (timeCard == null)
                     {
                         var errorResponse = BaseResponse<TimeCardResponseDto>.Failure("Salary history not found.");

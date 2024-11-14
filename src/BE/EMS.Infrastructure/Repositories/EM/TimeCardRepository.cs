@@ -30,10 +30,9 @@ namespace EMS.Infrastructure.Repositories.EM
             if (filter.IsDeep.HasValue && filter.IsDeep.Value)
             {
                 query = query
-                    .Include(tc => tc.Attendances) // Include related Attendance records if necessary
-                    .Include(tc => tc.Employee); // Include related Employee if necessary
+                    .Include(tc => tc.Attendances); // Include Attendances
+                    //.Include(tc => tc.Employee); // Include related Employee if necessary
             }
-                
 
             // Apply filtering based on filter properties
             if (!string.IsNullOrWhiteSpace(filter.EmployeeId))
@@ -68,8 +67,8 @@ namespace EMS.Infrastructure.Repositories.EM
             if (isDeep.HasValue && isDeep.Value)
             {
                 timeCardQuery = timeCardQuery
-                    .Include(tc => tc.Attendances)
-                    .Include(tc => tc.Employee);
+                    .Include(tc => tc.Attendances);
+                    //.Include(tc => tc.Employee);
             }
 
             var timecard = await timeCardQuery.FirstOrDefaultAsync();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241113104021_loop")]
+    partial class loop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,9 +317,6 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("ManagedDepartmentId")
-                        .HasColumnType("text");
-
                     b.Property<string>("MaritalStatus")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -350,9 +350,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("ManagedDepartmentId")
-                        .IsUnique();
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -749,18 +746,12 @@ namespace EMS.PostgresMigrations.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("EMS.Domain.Models.EM.Department", "ManagedDepartment")
-                        .WithOne("Manager")
-                        .HasForeignKey("EMS.Domain.Models.EM.Employee", "ManagedDepartmentId");
-
                     b.HasOne("EMS.Domain.Models.Account.User", "User")
                         .WithOne("Employee")
                         .HasForeignKey("EMS.Domain.Models.EM.Employee", "UserId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Department");
-
-                    b.Navigation("ManagedDepartment");
 
                     b.Navigation("User");
                 });
@@ -894,8 +885,6 @@ namespace EMS.PostgresMigrations.Migrations
             modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
                 {
                     b.Navigation("Employees");
-
-                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>

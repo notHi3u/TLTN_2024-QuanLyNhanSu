@@ -39,9 +39,9 @@ namespace EMS.Application.Services.EM
             return true;
         }
 
-        public async Task<TimeCardResponseDto> GetTimeCardByIdAsync(long id)
+        public async Task<TimeCardResponseDto> GetTimeCardByIdAsync(long id, bool? isDeep)
         {
-            var timeCard = await _timeCardRepository.GetByIdAsync(id);
+            var timeCard = await _timeCardRepository.GetByIdAsync(id, isDeep);
             if (timeCard == null)
                 throw new ArgumentNullException(nameof(timeCard));
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Common.Enums;
 using EMS.Domain.Models.Account;
 
@@ -72,8 +73,10 @@ namespace EMS.Domain.Models.EM
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<EmployeeRelative> EmployeeRelatives { get; set; }
         public virtual ICollection<WorkRecord> WorkRecord { get; set; }
-        public virtual Department Department { get; set; }
-        public virtual Department ManagedDepartment { get; set; }
+        [JsonIgnore]
+        public virtual Department? Department { get; set; }
+        [JsonIgnore]
+        public virtual Department? ManagedDepartment { get; set; }
 
         // Merged Salary Information
         [Range(0, double.MaxValue, ErrorMessage = "Base salary must be a positive value.")]

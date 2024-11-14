@@ -77,5 +77,42 @@ namespace EMS.Application.Services.EM
 
             return _mapper.Map<EmployeeResponseDto>(employee);
         }
+
+        public async Task<bool> AssignDepartmentAsync(string id, string departmentId)
+        {
+            var employee = await _employeeRepository.GetByIdAsync(id);
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee));
+
+            employee.DepartmentId = departmentId;
+            try
+            {
+                await _employeeRepository.UpdateAsync(employee);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> RemoveDepartmentAsync(string id)
+        {
+            var employee = await _employeeRepository.GetByIdAsync(id);
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee));
+
+            employee.DepartmentId = null;
+
+            try
+            {
+                await _employeeRepository.UpdateAsync(employee);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

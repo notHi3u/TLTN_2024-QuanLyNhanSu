@@ -88,13 +88,6 @@ namespace EMS.Infrastructure.Contexts
                 .WithMany(d => d.Employees)
                 .HasForeignKey(e => e.DepartmentId);
 
-            builder.Entity<Department>()
-                .HasOne(d=> d.Manager)  // A department has one manager (employee)
-                .WithOne(e => e.ManagedDepartment)  // The employee has exactly one department manager (1-1)
-                .HasForeignKey<Department>(d => d.DepartmentManagerId);  // The DepartmentManagerId in Department is the FK
-
-
-
             // Configure Employee and Attendance relationship (1-n)
             builder.Entity<Employee>()
                 .HasMany(e => e.Attendances)
@@ -138,6 +131,14 @@ namespace EMS.Infrastructure.Contexts
                 .WithOne(wh => wh.Employee)
                 .HasForeignKey(wh => wh.EmployeeId);
 
+            // Configure TimeCard and WorkHistory Atendances (1-n)
+            builder.Entity<TimeCard>()
+                .HasMany(tc => tc.Attendances)
+                .WithOne(a => a.TimeCard)
+                .HasForeignKey(a => a.TimeCardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //
             #endregion
 
             #region Seeding

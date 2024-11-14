@@ -127,6 +127,60 @@ namespace EMS.API.Endpoints.EM
                 }
             }).ConfigureApiResponses();
             #endregion
+
+            #region Assign Department to Employee
+            employeeGroup.MapPut("/{id}/assign-department", async (IEmployeeService employeeService, string id, [FromBody] string departmentId) =>
+            {
+                if (departmentId == null || string.IsNullOrEmpty(departmentId))
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("Department ID is required.");
+                    return Results.BadRequest(errorResponse);
+                }
+
+                try
+                {
+                    // Attempt to assign the department to the employee
+                    var updatedEmployee = await employeeService.AssignDepartmentAsync(id, departmentId);
+
+                    if (updatedEmployee == null)
+                    {
+                        var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("Employee or Department not found.");
+                        return Results.NotFound(errorResponse);
+                    }
+
+                    return Results.Ok(BaseResponse<bool>.Success(updatedEmployee));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("An error occurred while assigning the department.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+            #region Remove Department from Employee
+            employeeGroup.MapPut("/{id}/remove-department", async (IEmployeeService employeeService, string id) =>
+            {
+                try
+                {
+                    // Attempt to remove the department from the employee
+                    var updatedEmployee = await employeeService.RemoveDepartmentAsync(id);
+
+                    if (updatedEmployee == null)
+                    {
+                        var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("Employee not found.");
+                        return Results.NotFound(errorResponse);
+                    }
+
+                    return Results.Ok(BaseResponse<bool>.Success(updatedEmployee));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("An error occurred while removing the department.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
         }
     }
 }

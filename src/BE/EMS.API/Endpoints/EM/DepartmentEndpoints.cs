@@ -33,11 +33,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Department By Id
-            departmentGroup.MapGet("/{id}", async (IDepartmentService departmentService, string id) =>
+            departmentGroup.MapGet("/{id}", async (IDepartmentService departmentService, string id, bool? isDeep) =>
             {
                 try
                 {
-                    var department = await departmentService.GetDepartmentByIdAsync(id);
+                    var department = await departmentService.GetDepartmentByIdAsync(id, isDeep);
                     if (department == null)
                     {
                         var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("Department not found.");
@@ -151,6 +151,28 @@ namespace EMS.API.Endpoints.EM
                 catch (Exception ex)
                 {
                     var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("An error occurred while assigning the manager.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+            #region Remove Manager from Department
+            departmentGroup.MapPost("/{id}/remove-manager", async (IDepartmentService departmentService, string id) =>
+            {
+                try
+                {
+                    var department = await departmentService.RemoveManagerAsync(id);
+                    if (department == null)
+                    {
+                        var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("Department not found.");
+                        return Results.NotFound(errorResponse);
+                    }
+
+                    return Results.Ok(BaseResponse<DepartmentResponseDto>.Success(department));
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("An error occurred while removing the manager.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();

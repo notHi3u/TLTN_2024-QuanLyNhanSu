@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241113024903_genderEnum")]
-    partial class genderEnum
+    [Migration("20241114031638_loop3")]
+    partial class loop3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -258,9 +258,6 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentManagerId")
-                        .IsUnique();
-
                     b.ToTable("Departments");
                 });
 
@@ -320,6 +317,9 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("ManagedDepartmentId")
+                        .HasColumnType("text");
+
                     b.Property<string>("MaritalStatus")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -354,6 +354,9 @@ namespace EMS.PostgresMigrations.Migrations
 
                     b.HasIndex("DepartmentId");
 
+                    b.HasIndex("ManagedDepartmentId")
+                        .IsUnique();
+
                     b.HasIndex("UserId")
                         .IsUnique();
 
@@ -368,7 +371,7 @@ namespace EMS.PostgresMigrations.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
@@ -530,9 +533,6 @@ namespace EMS.PostgresMigrations.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<List<long>>("AttendanceIds")
-                        .HasColumnType("bigint[]");
 
                     b.Property<string>("EmployeeId")
                         .IsRequired()
@@ -746,20 +746,15 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("TimeCard");
                 });
 
-            modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
-                {
-                    b.HasOne("EMS.Domain.Models.EM.Employee", "Manager")
-                        .WithOne("ManagedDepartment")
-                        .HasForeignKey("EMS.Domain.Models.EM.Department", "DepartmentManagerId");
-
-                    b.Navigation("Manager");
-                });
-
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
                 {
                     b.HasOne("EMS.Domain.Models.EM.Department", "Department")
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId");
+
+                    b.HasOne("EMS.Domain.Models.EM.Department", "ManagedDepartment")
+                        .WithOne("Manager")
+                        .HasForeignKey("EMS.Domain.Models.EM.Employee", "ManagedDepartmentId");
 
                     b.HasOne("EMS.Domain.Models.Account.User", "User")
                         .WithOne("Employee")
@@ -767,6 +762,8 @@ namespace EMS.PostgresMigrations.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Department");
+
+                    b.Navigation("ManagedDepartment");
 
                     b.Navigation("User");
                 });
@@ -900,6 +897,8 @@ namespace EMS.PostgresMigrations.Migrations
             modelBuilder.Entity("EMS.Domain.Models.EM.Department", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Employee", b =>
@@ -911,9 +910,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.Navigation("LeaveBalances");
 
                     b.Navigation("LeaveRequests");
-
-                    b.Navigation("ManagedDepartment")
-                        .IsRequired();
 
                     b.Navigation("SalaryRecords");
 

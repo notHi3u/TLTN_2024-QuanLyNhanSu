@@ -65,8 +65,8 @@ namespace EMS.Infrastructure.Repositories.EM
             if (isDeep.HasValue && isDeep.Value)
             {
                 query = query
-                    .Include(d => d.Employees)  // Include employees in the department
-                    .Include(d => d.Manager);   // Include the manager of the department
+                    .Include(d => d.Employees)
+                    .Include(d => d.Manager);
             }
 
             // Retrieve the department by ID
