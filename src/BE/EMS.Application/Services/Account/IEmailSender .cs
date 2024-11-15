@@ -9,7 +9,7 @@ namespace EMS.Application.Services.Account
     public interface IEmailSender
     {
         Task SendEmailAsync(string email, string subject, string message);
-        Task SendWelcomeEmailAsync(string email, string userName, string confirmationLink);
+        Task SendWelcomeEmailAsync(string email, string userName, string confirmationLink, string initialPassword);
         Task SendPasswordResetCodeAsync(string email, string userName, string resetLink);
 
     }

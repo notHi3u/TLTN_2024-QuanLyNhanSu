@@ -44,7 +44,7 @@ namespace EMS.Application.Services.Account
             return client.SendMailAsync(mailMessage);
         }
 
-        public async Task SendWelcomeEmailAsync(string email, string userName, string confirmationLink)
+        public async Task SendWelcomeEmailAsync(string email, string userName, string confirmationLink, string initialPassword)
         {
             var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "WelcomeEmail.html");
             var emailBody = await File.ReadAllTextAsync(templatePath);
@@ -52,6 +52,7 @@ namespace EMS.Application.Services.Account
             // Replace placeholders in the email template
             emailBody = emailBody.Replace("{{UserName}}", userName);
             emailBody = emailBody.Replace("{{ConfirmationLink}}", confirmationLink);
+            emailBody = emailBody.Replace("{{Password}}", initialPassword);
 
             // Send the email
             await SendEmailAsync(email, "Welcome to Our Service", emailBody);
