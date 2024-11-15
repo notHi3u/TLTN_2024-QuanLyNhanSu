@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Common.Dtos;
+using EMS.Application.DTOs.Account;
 using EMS.Application.DTOs.EM;
 using EMS.Domain.Filters.EMS;
 using EMS.Domain.Models.EM;
+using EMS.Domain.Repositories.Account;
 using EMS.Domain.Repositories.EM;
 
 namespace EMS.Application.Services.EM
@@ -11,11 +13,13 @@ namespace EMS.Application.Services.EM
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, IUserRepository userRepository)
         {
             _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _userRepository = userRepository ?? throw new ArgumentNullException( nameof(userRepository));
         }
 
         public async Task<EmployeeResponseDto> CreateEmployeeAsync(EmployeeRequestDto employeeRequestDto)
@@ -112,6 +116,38 @@ namespace EMS.Application.Services.EM
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public async Task<EmployeeResponseDto> BindUserToEmployeeAsync(string employeeId, string userId)
+        {
+            // Retrieve the Employee by employeeId
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), "Employee not found.");
+
+            // Retrieve the User by userId
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "User not found.");
+
+            // Check if the employee is already linked to a user
+            if (employee.UserId != null)
+                throw new InvalidOperationException("Employee is already linked to a user.");
+
+            try
+            {
+                // Bind User to Employee
+                employee.UserId = user.Id;
+                await _employeeRepository.UpdateAsync(employee);
+
+                // Map to EmployeeResponseDto and return
+                return _mapper.Map<EmployeeResponseDto>(employee);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle exception if necessary
+                throw new ApplicationException("An error occurred while binding user to employee.", ex);
             }
         }
     }

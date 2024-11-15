@@ -302,7 +302,7 @@ namespace EMS.API.Endpoints.Account
                 var activationLink = $"http://localhost:5165/Auth/ConfirmEmail?userId={user.Id}&code={encodeToken}";
 
                 // Gửi email chào mừng với liên kết kích hoạt
-                await emailSender.SendWelcomeEmailAsync(user.Email, user.UserName, activationLink);
+                await emailSender.SendWelcomeEmailAsync(user.Email, user.UserName, activationLink, null);
                 return TypedResults.Ok();
             });
             #endregion

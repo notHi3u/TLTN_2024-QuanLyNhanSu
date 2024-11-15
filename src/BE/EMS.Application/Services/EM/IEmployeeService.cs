@@ -13,5 +13,6 @@ namespace EMS.Application.Services.EM
         Task<PagedDto<EmployeeResponseDto>> GetPagedEmployeesAsync(EmployeeFilter filter);
         Task<bool> AssignDepartmentAsync(string id, string departmentId);
         Task<bool> RemoveDepartmentAsync(string id);
+        Task<EmployeeResponseDto> BindUserToEmployeeAsync(string employeeId, string userId);
     }
 }

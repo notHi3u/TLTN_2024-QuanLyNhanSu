@@ -1,6 +1,8 @@
 ﻿using Common.Configurations;
 using Common.Dtos;
+using EMS.Application.DTOs.Account;
 using EMS.Application.DTOs.EM;
+using EMS.Application.Services.Account;
 using EMS.Application.Services.EM;
 using EMS.Domain.Filters.EMS;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +56,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Create Employee
-            employeeGroup.MapPost("/", async (IEmployeeService employeeService, [FromBody] EmployeeRequestDto createEmployeeDto) =>
+            employeeGroup.MapPost("/", async (IEmployeeService employeeService, IUserService userService, [FromBody] EmployeeRequestDto createEmployeeDto) =>
             {
                 if (createEmployeeDto == null)
                 {
@@ -65,6 +67,12 @@ namespace EMS.API.Endpoints.EM
                 try
                 {
                     var employee = await employeeService.CreateEmployeeAsync(createEmployeeDto);
+                    var password = await userService.GenerateInitPassword();
+
+                    var user = new UserRequestDto { Email = employee.Email, Password = password };
+                    var createdUser = await userService.CreateUserAsync(user);
+
+                    await employeeService.BindUserToEmployeeAsync(employee.Id, createdUser.Data.Id);
                     return Results.Ok(BaseResponse<EmployeeResponseDto>.Success(employee));
                 }
                 catch (ArgumentException ex)

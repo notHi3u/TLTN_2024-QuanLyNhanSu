@@ -22,5 +22,7 @@ namespace EMS.Application.Services.Account
         Task<BaseResponse<bool>> RemoveRoleFromUserAsync(string userId, string roleName);
         Task<BaseResponse<bool>> RemoveRolesFromUserAsync(string userid, IEnumerable<string> roleNames);
         Task<BaseResponse<bool>> UpdateUserRolesAsync(string userId, IEnumerable<string> roleNames);
+
+        Task<string> GenerateInitPassword();
     }
 }

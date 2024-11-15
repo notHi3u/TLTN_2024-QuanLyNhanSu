@@ -7,11 +7,8 @@ using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EMS.Application.Services.Account
 {
@@ -80,7 +77,7 @@ namespace EMS.Application.Services.Account
                 var activationLink = $"http://localhost:5202/Auth/ConfirmEmail?userId={user.Id}&code={encodeToken}";
 
                 // Gửi email chào mừng với liên kết kích hoạt
-                await _emailSender.SendWelcomeEmailAsync(user.Email, user.UserName, activationLink);
+                await _emailSender.SendWelcomeEmailAsync(user.Email, user.UserName, activationLink, userRequestDto.Password);
 
                 // Trả về phản hồi thành công với dữ liệu người dùng đã tạo
                 var userResponseDto = _mapper.Map<UserResponseDto>(user);
@@ -352,7 +349,6 @@ namespace EMS.Application.Services.Account
 
         #endregion
 
-
         #region Update User Roles
 
         public async Task<BaseResponse<bool>> UpdateUserRolesAsync(string userId, IEnumerable<string> roleNames)
@@ -394,5 +390,63 @@ namespace EMS.Application.Services.Account
 
         #endregion
 
+        public async Task<string> GenerateInitPassword()
+        {
+            return await Task.Run(() => GeneratePassword(12)); // Default length of 12 characters
+        }
+
+        public string GeneratePassword(int length)
+        {
+            if (length < 6) // Minimum length for ASP.NET Identity default policy
+                throw new ArgumentException("Password length must be at least 6.", nameof(length));
+
+            // Character sets for different password requirements
+            const string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string lowerChars = "abcdefghijklmnopqrstuvwxyz";
+            const string digits = "0123456789";
+            const string specialChars = "!@#$%^&*()-_+=<>?";
+            const string allChars = upperChars + lowerChars + digits + specialChars;
+
+            var password = new StringBuilder(length);
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                // Ensure password meets complexity requirements
+                password.Append(GetRandomChar(upperChars, rng));
+                password.Append(GetRandomChar(lowerChars, rng));
+                password.Append(GetRandomChar(digits, rng));
+                password.Append(GetRandomChar(specialChars, rng));
+
+                // Fill the rest of the password with random characters from all sets
+                while (password.Length < length)
+                {
+                    password.Append(GetRandomChar(allChars, rng));
+                }
+
+                // Shuffle the characters to avoid predictable patterns
+                return ShuffleString(password.ToString(), rng);
+            }
+        }
+
+        private char GetRandomChar(string charSet, RandomNumberGenerator rng)
+        {
+            var buffer = new byte[1];
+            rng.GetBytes(buffer);
+            return charSet[buffer[0] % charSet.Length];
+        }
+
+        private string ShuffleString(string input, RandomNumberGenerator rng)
+        {
+            var array = input.ToCharArray();
+            for (int i = array.Length - 1; i > 0; i--)
+            {
+                var buffer = new byte[1];
+                rng.GetBytes(buffer);
+                int j = buffer[0] % (i + 1);
+
+                // Swap array[i] with array[j]
+                (array[i], array[j]) = (array[j], array[i]);
+            }
+            return new string(array);
+        }
     }
 }
