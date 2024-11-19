@@ -150,5 +150,33 @@ namespace EMS.Application.Services.EM
                 throw new ApplicationException("An error occurred while binding user to employee.", ex);
             }
         }
+
+        public async Task<EmployeeResponseDto> UnBindUserToEmployeeAsync(string employeeId)
+        {
+            // Retrieve the Employee by employeeId
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), "Employee not found.");
+
+            // Check if the employee is linked to the provided user
+            if (employee.UserId == null)
+                throw new InvalidOperationException("The employee is not linked to the specified user.");
+
+            try
+            {
+                // Unbind User from Employee
+                employee.UserId = null;
+                await _employeeRepository.UpdateAsync(employee);
+
+                // Map to EmployeeResponseDto and return
+                return _mapper.Map<EmployeeResponseDto>(employee);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle exception if necessary
+                throw new ApplicationException("An error occurred while unbinding user from employee.", ex);
+            }
+        }
+
     }
 }

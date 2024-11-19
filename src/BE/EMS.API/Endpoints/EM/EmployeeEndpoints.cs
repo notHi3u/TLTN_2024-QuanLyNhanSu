@@ -189,6 +189,66 @@ namespace EMS.API.Endpoints.EM
                 }
             }).ConfigureApiResponses();
             #endregion
+
+            #region Bind to User
+            employeeGroup.MapPut("/{id}/bind-user", async (IEmployeeService employeeService, string id, [FromBody] string userId) =>
+            {
+                if (string.IsNullOrEmpty(userId))
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("User ID is required.");
+                    return Results.BadRequest(errorResponse);
+                }
+
+                try
+                {
+                    var updatedEmployee = await employeeService.BindUserToEmployeeAsync(id, userId);
+                    return Results.Ok(BaseResponse<EmployeeResponseDto>.Success(updatedEmployee));
+                }
+                catch (ArgumentNullException ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure(ex.Message);
+                    return Results.NotFound(errorResponse);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure(ex.Message);
+                    return Results.BadRequest(errorResponse);
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("An error occurred while binding the user to the employee.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+
+            #region Unbind to User
+            employeeGroup.MapPut("/{id}/unbind-user", async (IEmployeeService employeeService, string id) =>
+            {
+                try
+                {
+                    var updatedEmployee = await employeeService.UnBindUserToEmployeeAsync(id);
+                    return Results.Ok(BaseResponse<EmployeeResponseDto>.Success(updatedEmployee));
+                }
+                catch (ArgumentNullException ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure(ex.Message);
+                    return Results.NotFound(errorResponse);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure(ex.Message);
+                    return Results.BadRequest(errorResponse);
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("An error occurred while unbinding the user from the employee.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
         }
     }
 }

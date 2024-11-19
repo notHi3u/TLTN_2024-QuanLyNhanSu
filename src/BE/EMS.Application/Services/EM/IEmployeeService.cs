@@ -14,5 +14,6 @@ namespace EMS.Application.Services.EM
         Task<bool> AssignDepartmentAsync(string id, string departmentId);
         Task<bool> RemoveDepartmentAsync(string id);
         Task<EmployeeResponseDto> BindUserToEmployeeAsync(string employeeId, string userId);
+        Task<EmployeeResponseDto> UnBindUserToEmployeeAsync(string employeeId);
     }
 }
