@@ -179,5 +179,9 @@ namespace EMS.Application.Services.EM
             }
         }
 
+        public async Task<decimal> GetTotalSalaryAsync()
+        {
+            return await _employeeRepository.GetTotalSalaryAsync();
+        }
     }
 }

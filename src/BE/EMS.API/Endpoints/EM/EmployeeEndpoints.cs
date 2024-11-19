@@ -249,6 +249,27 @@ namespace EMS.API.Endpoints.EM
             }).ConfigureApiResponses();
             #endregion
 
+            #region Get Total Salary
+            employeeGroup.MapGet("/total-salary", async (IEmployeeService employeeService) =>
+            {
+                try
+                {
+                    // Call the service to get the total salary
+                    var totalSalary = await employeeService.GetTotalSalaryAsync();
+
+                    // Return the result in a base response
+                    var response = BaseResponse<decimal>.Success(totalSalary);
+                    return Results.Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions and return an error response
+                    var errorResponse = BaseResponse<decimal>.Failure("An error occurred while calculating the total salary.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
         }
     }
 }
