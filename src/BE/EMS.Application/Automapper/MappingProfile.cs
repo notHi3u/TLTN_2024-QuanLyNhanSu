@@ -40,7 +40,7 @@ namespace EMS.Application.Automapper
 
             #region Employee
             CreateMap<EmployeeRequestDto, Employee>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString())) // Set EmployeeId to a new GUID
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) // Set EmployeeId to a new GUID
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? EmployeeStatus.Active)) // Set default status if null
                 ;
             CreateMap<Employee, EmployeeResponseDto>()
@@ -86,7 +86,8 @@ namespace EMS.Application.Automapper
             CreateMap<DepartmentRequestDto, Department>();
             CreateMap<Department, DepartmentResponseDto>()
                 .ForMember(dest => dest.Employees, opt => opt.MapFrom(src => src.Employees)) // Mapping for Employees
-                .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager)); // Mapping for Manager
+                .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager)) // Mapping for Manager
+                .ForMember(dest => dest.TotalSalary, opt => opt.MapFrom(src => src.TotalSalary));
             #endregion
 
             #region HolidayLeavePolicy
