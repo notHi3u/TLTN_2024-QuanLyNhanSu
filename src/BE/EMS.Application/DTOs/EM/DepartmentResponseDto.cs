@@ -13,5 +13,6 @@ namespace EMS.Application.DTOs.EM
         public string? DepartmentManagerId { get; set; } // Mã quản lý phòng ban
         public virtual ICollection<EmployeeResponseDto> Employees { get; set; } // List of employees in the department
         public virtual EmployeeResponseDto Manager { get; set; } // Department manager details
+        public decimal TotalSalary { get; set; }
     }
 }

@@ -14,5 +14,6 @@ namespace EMS.Domain.Repositories.EM
     {
         Task<PagedDto<Department>> GetPagedAsync(DepartmentFilter filter);
         Task<Department> GetByIdAsync(string id, bool? isDeep);
+        //Task<decimal> GetDepartmentTotalSalaryAsync(string departmentId);
     }
 }

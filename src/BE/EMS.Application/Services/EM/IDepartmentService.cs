@@ -15,6 +15,6 @@ namespace EMS.Application.Services.EM
         Task<IEnumerable<EmployeeResponseDto>> GetEmployeesByDepartmentAsync(string departmentId);
         Task<EmployeeResponseDto> GetDepartmentManagerAsync(string departmentId);
         Task<DepartmentResponseDto> RemoveManagerAsync(string departmentId);
-
+        //Task<decimal> GetDepartmentTotalSalaryAsync(string departmentId);
     }
 }

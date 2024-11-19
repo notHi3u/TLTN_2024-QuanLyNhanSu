@@ -20,7 +20,6 @@ namespace EMS.Application.DTOs.EM
         public string? DepartmentId { get; set; } // null when create
         public string? TaxId { get; set; }
         public string? Email { get; set; }
-        public decimal? BaseSalary { get; set; }
+        public decimal? Salary { get; set; }
     }
-
 }

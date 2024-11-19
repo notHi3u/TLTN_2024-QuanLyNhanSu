@@ -20,5 +20,7 @@ namespace EMS.Domain.Models.EM
         public virtual ICollection<Employee>? Employees { get; set; } // One Department has many Employees
         [JsonIgnore]
         public virtual Employee? Manager { get; set; } // One Department has one Manager (Employee)
+
+        public decimal TotalSalary => Employees?.Sum(e => e.Salary ?? 0) ?? 0;
     }
 }

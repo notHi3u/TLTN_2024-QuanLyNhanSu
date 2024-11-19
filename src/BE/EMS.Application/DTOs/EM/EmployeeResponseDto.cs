@@ -28,10 +28,7 @@ namespace EMS.Application.DTOs.EM
         public string? UserId { get; set; }
 
         // Salary Information
-        public decimal? BaseSalary { get; set; }
-        public decimal? PercentBonus { get; set; }
-        public decimal? FlatBonus { get; set; }
-        public decimal? Deductions { get; set; }
+        public decimal? Salary { get; set; }
 
         // Collections for related data
         public ICollection<TimeCardResponseDto> TimeCards { get; set; }

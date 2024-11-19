@@ -198,5 +198,12 @@ namespace EMS.Application.Services.EM
             return _mapper.Map<EmployeeResponseDto>(manager);
         }
         #endregion
+            
+        //#region Get Department Salary
+        //public async Task<decimal> GetDepartmentTotalSalaryAsync(string departmentId)
+        //{
+        //    return await _departmentRepository.GetDepartmentTotalSalaryAsync(departmentId);
+        //}
+        //#endregion
     }
 }

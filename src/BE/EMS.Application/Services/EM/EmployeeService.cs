@@ -28,6 +28,7 @@ namespace EMS.Application.Services.EM
                 throw new ArgumentNullException(nameof(employeeRequestDto));
 
             Employee employee = _mapper.Map<Employee>(employeeRequestDto);
+            employee.Id = Guid.NewGuid().ToString();
             await _employeeRepository.AddAsync(employee);
             return _mapper.Map<EmployeeResponseDto>(employee);
         }
