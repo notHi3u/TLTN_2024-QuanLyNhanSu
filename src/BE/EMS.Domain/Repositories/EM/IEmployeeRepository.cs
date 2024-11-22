@@ -15,5 +15,6 @@ namespace EMS.Domain.Repositories.EM
         Task<bool> LinkEmployeeToUserAsync(string employeeId, string userId);
         Task<IEnumerable<Employee>> GetByDepartmentIdAsync(string departmentId);
         Task<decimal> GetTotalSalaryAsync();
+        Task<Employee> GetEmployeeByUserIdAsync(string userId)
     }
 }

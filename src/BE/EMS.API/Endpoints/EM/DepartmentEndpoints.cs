@@ -33,11 +33,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Department By Id
-            departmentGroup.MapGet("/{id}", async (IDepartmentService departmentService, string id, bool? isDeep) =>
+            departmentGroup.MapGet("/{departmentId}", async (IDepartmentService departmentService, string departmentId, bool? isDeep) =>
             {
                 try
                 {
-                    var department = await departmentService.GetDepartmentByIdAsync(id, isDeep);
+                    var department = await departmentService.GetDepartmentByIdAsync(departmentId, isDeep);
                     if (department == null)
                     {
                         var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("Department not found.");
@@ -81,7 +81,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Update Department
-            departmentGroup.MapPut("/{id}", async (IDepartmentService departmentService, string id, [FromBody] DepartmentRequestDto updateDepartmentDto) =>
+            departmentGroup.MapPut("/{departmentId}", async (IDepartmentService departmentService, string departmentId, [FromBody] DepartmentRequestDto updateDepartmentDto) =>
             {
                 if (updateDepartmentDto == null)
                 {
@@ -91,7 +91,7 @@ namespace EMS.API.Endpoints.EM
 
                 try
                 {
-                    var updatedDepartment = await departmentService.UpdateDepartmentAsync(id, updateDepartmentDto);
+                    var updatedDepartment = await departmentService.UpdateDepartmentAsync(departmentId, updateDepartmentDto);
                     return Results.Ok(BaseResponse<DepartmentResponseDto>.Success(updatedDepartment));
                 }
                 catch (ArgumentException ex)
@@ -108,11 +108,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Delete Department
-            departmentGroup.MapDelete("/{id}", async (IDepartmentService departmentService, string id) =>
+            departmentGroup.MapDelete("/{departmentId}", async (IDepartmentService departmentService, string departmentId) =>
             {
                 try
                 {
-                    var isDeleted = await departmentService.DeleteDepartmentAsync(id);
+                    var isDeleted = await departmentService.DeleteDepartmentAsync(departmentId);
                     if (!isDeleted)
                     {
                         var errorResponse = BaseResponse<bool>.Failure("Department not found.");
@@ -129,7 +129,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Assign Manager to Department
-            departmentGroup.MapPost("/{id}/assign-manager", async (IDepartmentService departmentService, string id, [FromBody] AssignManagerRequestDto assignManagerDto) =>
+            departmentGroup.MapPost("/{departmentId}/assign-manager", async (IDepartmentService departmentService, string departmentId, [FromBody] AssignManagerRequestDto assignManagerDto) =>
             {
                 if (assignManagerDto == null || string.IsNullOrWhiteSpace(assignManagerDto.ManagerId))
                 {
@@ -139,7 +139,7 @@ namespace EMS.API.Endpoints.EM
 
                 try
                 {
-                    var department = await departmentService.AssignManagerAsync(id, assignManagerDto.ManagerId);
+                    var department = await departmentService.AssignManagerAsync(departmentId, assignManagerDto.ManagerId);
                     if (department == null)
                     {
                         var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("Department not found.");
@@ -157,11 +157,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Remove Manager from Department
-            departmentGroup.MapPost("/{id}/remove-manager", async (IDepartmentService departmentService, string id) =>
+            departmentGroup.MapPost("/{departmentId}/remove-manager", async (IDepartmentService departmentService, string departmentId) =>
             {
                 try
                 {
-                    var department = await departmentService.RemoveManagerAsync(id);
+                    var department = await departmentService.RemoveManagerAsync(departmentId);
                     if (department == null)
                     {
                         var errorResponse = BaseResponse<DepartmentResponseDto>.Failure("Department not found.");
@@ -179,11 +179,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Employees by Department
-            departmentGroup.MapGet("/{id}/employees", async (IDepartmentService departmentService, string id) =>
+            departmentGroup.MapGet("/{departmentId}/employees", async (IDepartmentService departmentService, string departmentId) =>
             {
                 try
                 {
-                    var employees = await departmentService.GetEmployeesByDepartmentAsync(id);
+                    var employees = await departmentService.GetEmployeesByDepartmentAsync(departmentId);
                     if (employees == null || !employees.Any())
                     {
                         var errorResponse = BaseResponse<IEnumerable<EmployeeResponseDto>>.Failure("No employees found in this department.");
@@ -201,11 +201,11 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Get Department Manager
-            departmentGroup.MapGet("/{id}/manager", async (IDepartmentService departmentService, string id) =>
+            departmentGroup.MapGet("/{departmentId}/manager", async (IDepartmentService departmentService, string departmentId) =>
             {
                 try
                 {
-                    var manager = await departmentService.GetDepartmentManagerAsync(id);
+                    var manager = await departmentService.GetDepartmentManagerAsync(departmentId);
                     if (manager == null)
                     {
                         var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("Department manager not found.");

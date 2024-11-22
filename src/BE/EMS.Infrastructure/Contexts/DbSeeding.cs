@@ -66,16 +66,16 @@ namespace EMS.Infrastructure.Contexts
             var adminUser = new User
             {
                 Id = adminUserId,  // Set the static ID
-                UserName = "admin",
+                UserName = "admin@example.com",
                 Email = "admin@example.com",
                 EmailConfirmed = true,
-                NormalizedEmail = "adminUser@EXAMPLE.COM",
-                NormalizedUserName = "ADMIN",
+                NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                NormalizedUserName = "ADMIN@EXAMPLE.COM",
             };
 
             // Hash the password "admin" using PasswordHasher
             var passwordHasher = new PasswordHasher<User>();
-            var hashedPassword = passwordHasher.HashPassword(adminUser, "admin"); // Hashing the password "admin"
+            var hashedPassword = passwordHasher.HashPassword(adminUser, "Abc@123"); // Hashing the password "admin"
             adminUser.PasswordHash = hashedPassword;
 
             // Seed the admin user first

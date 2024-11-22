@@ -14,6 +14,7 @@ using EMS.Infrastructure.Contexts;
 using EMS.Infrastructure.Repositories.Account;
 using EMS.Infrastructure.Repositories.EM;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
@@ -76,7 +77,17 @@ builder.Services.AddRateLimiter(_ => _
     }));
 
 // Add Identity services
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("HR", policy => policy.RequireRole("HR"));
+    options.AddPolicy("DepartmentManager", policy =>
+    {
+        policy.RequireRole("Department Manager");
+        policy.Requirements.Add(new DepartmentManagerRequirement("DepartmentId"));
+    });
+    options.AddPolicy("Employee", policy => policy.RequireRole("Employee"));
+});
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -162,6 +173,8 @@ builder.Services.AddScoped<IWorkRecordRepository, WorkRecordRepository>();
 
 builder.Services.AddScoped<UserManager<User>>();
 builder.Services.AddScoped<RoleManager<Role>>();
+
+builder.Services.AddSingleton<IAuthorizationHandler, DepartmentManagerHandler>();
 
 // Add DbContext configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
