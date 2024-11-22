@@ -11,61 +11,61 @@ namespace EMS.API.Endpoints.EM
     {
         public static void Map(WebApplication app)
         {
-            var workHistoryGroup = app.MapGroup("/workrecord")
+            var workRecordGroup = app.MapGroup("/workrecord") // Changed "workHistoryGroup" to "workRecordGroup"
                 .WithTags("WorkRecords");
 
             #region Get by Id
-            workHistoryGroup.MapGet("/{id}", async (IWorkRecordService workRecordService, long id) =>
+            workRecordGroup.MapGet("/{id}", async (IWorkRecordService workRecordService, long id) =>
             {
                 try
                 {
-                    var workRecord = await workRecordService.GetWorkHistoryByIdAsync(id);
+                    var workRecord = await workRecordService.GetWorkRecordByIdAsync(id); // Changed method name to "GetWorkRecordByIdAsync"
                     if (workRecord == null)
                     {
-                        var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("Salary history not found.");
+                        var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("Work record not found."); // Updated error message
                         return Results.NotFound(errorResponse);
                     }
                     return Results.Ok(BaseResponse<WorkRecordResponseDto>.Success(workRecord));
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("An error occurred while retrieving Work record.");
+                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("An error occurred while retrieving work record."); // Updated error message
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
             #endregion
 
             #region Get All
-            workHistoryGroup.MapGet("/", async (IWorkRecordService workRecordService, [AsParameters] WorkRecordFilter filter) =>
+            workRecordGroup.MapGet("/", async (IWorkRecordService workRecordService, [AsParameters] WorkRecordFilter filter) =>
             {
                 try
                 {
                     filter ??= new WorkRecordFilter();
-                    var pagedWorkRecords = await workRecordService.GetPagedWorkHistoriesAsync(filter);
+                    var pagedWorkRecords = await workRecordService.GetPagedWorkRecordsAsync(filter); // Changed method name to "GetPagedWorkRecordsAsync"
                     var response = BaseResponse<PagedDto<WorkRecordResponseDto>>.Success(pagedWorkRecords);
                     return Results.Ok(response);
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<PagedDto<WorkRecordResponseDto>>.Failure("An error occurred while retrieving Work records.");
+                    var errorResponse = BaseResponse<PagedDto<WorkRecordResponseDto>>.Failure("An error occurred while retrieving work records."); // Updated error message
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
             #endregion
 
-            #region Create WorkHistory
-            workHistoryGroup.MapPost("/", async (IWorkRecordService workHistoryService, [FromBody] WorkRecordRequestDto createWorkHistoryDto) =>
+            #region Create WorkRecord
+            workRecordGroup.MapPost("/", async (IWorkRecordService workRecordService, [FromBody] WorkRecordRequestDto createWorkRecordDto) =>
             {
-                if (createWorkHistoryDto == null)
+                if (createWorkRecordDto == null)
                 {
-                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("Work history data is required.");
+                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("Work record data is required."); // Updated error message
                     return Results.BadRequest(errorResponse);
                 }
 
                 try
                 {
-                    var workHistory = await workHistoryService.CreateWorkHistoryAsync(createWorkHistoryDto);
-                    return Results.Ok(BaseResponse<WorkRecordResponseDto>.Success(workHistory));
+                    var workRecord = await workRecordService.CreateWorkRecordAsync(createWorkRecordDto); // Changed method name to "CreateWorkRecordAsync"
+                    return Results.Ok(BaseResponse<WorkRecordResponseDto>.Success(workRecord));
                 }
                 catch (ArgumentException ex)
                 {
@@ -74,55 +74,55 @@ namespace EMS.API.Endpoints.EM
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("An error occurred while creating the work history.");
+                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("An error occurred while creating the work record."); // Updated error message
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
             #endregion
 
-            #region Update WorkHistory
-            workHistoryGroup.MapPut("/{id}", async (IWorkRecordService workHistoryService, long id, [FromBody] WorkRecordRequestDto updateWorkHistoryDto) =>
+            #region Update WorkRecord
+            workRecordGroup.MapPut("/{id}", async (IWorkRecordService workRecordService, long id, [FromBody] WorkRecordRequestDto updateWorkRecordDto) =>
             {
-                if (updateWorkHistoryDto == null)
+                if (updateWorkRecordDto == null)
                 {
-                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("Work history data is required.");
+                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("Work record data is required."); // Updated error message
                     return Results.BadRequest(errorResponse);
                 }
 
                 try
                 {
-                    var updatedWorkHistory = await workHistoryService.UpdateWorkHistoryAsync(id, updateWorkHistoryDto);
-                    if (updatedWorkHistory == null)
+                    var updatedWorkRecord = await workRecordService.UpdateWorkRecordAsync(id, updateWorkRecordDto); // Changed method name to "UpdateWorkRecordAsync"
+                    if (updatedWorkRecord == null)
                     {
-                        var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("Work history not found.");
+                        var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("Work record not found."); // Updated error message
                         return Results.NotFound(errorResponse);
                     }
-                    return Results.Ok(BaseResponse<WorkRecordResponseDto>.Success(updatedWorkHistory));
+                    return Results.Ok(BaseResponse<WorkRecordResponseDto>.Success(updatedWorkRecord));
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("An error occurred while updating the work history.");
+                    var errorResponse = BaseResponse<WorkRecordResponseDto>.Failure("An error occurred while updating the work record."); // Updated error message
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();
             #endregion
 
-            #region Delete WorkHistory
-            workHistoryGroup.MapDelete("/{id}", async (IWorkRecordService workHistoryService, long id) =>
+            #region Delete WorkRecord
+            workRecordGroup.MapDelete("/{id}", async (IWorkRecordService workRecordService, long id) =>
             {
                 try
                 {
-                    var isDeleted = await workHistoryService.DeleteWorkHistoryAsync(id);
+                    var isDeleted = await workRecordService.DeleteWorkRecordAsync(id); // Changed method name to "DeleteWorkRecordAsync"
                     if (!isDeleted)
                     {
-                        var errorResponse = BaseResponse<bool>.Failure("Work history not found.");
+                        var errorResponse = BaseResponse<bool>.Failure("Work record not found."); // Updated error message
                         return Results.NotFound(errorResponse);
                     }
                     return Results.NoContent();
                 }
                 catch (Exception ex)
                 {
-                    var errorResponse = BaseResponse<bool>.Failure("An error occurred while deleting the work history.");
+                    var errorResponse = BaseResponse<bool>.Failure("An error occurred while deleting the work record."); // Updated error message
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();

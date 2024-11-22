@@ -56,7 +56,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Create Employee
-            employeeGroup.MapPost("/", async (IEmployeeService employeeService, IUserService userService, [FromBody] EmployeeRequestDto createEmployeeDto) =>
+            employeeGroup.MapPost("/", async (IEmployeeService employeeService, IUserService userService, ISalaryRecordService salaryRecordService, [FromBody] EmployeeRequestDto createEmployeeDto) =>
             {
                 if (createEmployeeDto == null)
                 {
@@ -73,6 +73,7 @@ namespace EMS.API.Endpoints.EM
                     var createdUser = await userService.CreateUserAsync(user);
 
                     await employeeService.BindUserToEmployeeAsync(employee.Id, createdUser.Data.Id);
+
                     return Results.Ok(BaseResponse<EmployeeResponseDto>.Success(employee));
                 }
                 catch (ArgumentException ex)
@@ -89,7 +90,7 @@ namespace EMS.API.Endpoints.EM
             #endregion
 
             #region Update Employee
-            employeeGroup.MapPut("/{id}", async (IEmployeeService employeeService, string id, [FromBody] EmployeeRequestDto updateEmployeeDto) =>
+            employeeGroup.MapPut("/{id}", async (IEmployeeService employeeService, ISalaryRecordService salaryRecordService, string id, [FromBody] EmployeeRequestDto updateEmployeeDto) =>
             {
                 if (updateEmployeeDto == null)
                 {
@@ -100,6 +101,16 @@ namespace EMS.API.Endpoints.EM
                 try
                 {
                     var updatedEmployee = await employeeService.UpdateEmployeeAsync(id, updateEmployeeDto);
+                    try
+                    {
+                        var salaryRecord = new SalaryRecordRequestDto
+                            { EmployeeId = id };
+                        //var createdSalaryRecord = salaryRecordService.CreateSalaryHistoryAsync()
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                     return Results.Ok(BaseResponse<EmployeeResponseDto>.Success(updatedEmployee));
                 }
                 catch (ArgumentException ex)

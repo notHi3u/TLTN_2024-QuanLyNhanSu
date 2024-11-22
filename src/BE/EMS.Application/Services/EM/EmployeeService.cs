@@ -14,12 +14,14 @@ namespace EMS.Application.Services.EM
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly ISalaryRecordRepository _salaryRecordRepository;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, IUserRepository userRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, IUserRepository userRepository, ISalaryRecordRepository salaryRecordRepository)
         {
             _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _userRepository = userRepository ?? throw new ArgumentNullException( nameof(userRepository));
+            _salaryRecordRepository = salaryRecordRepository ?? throw new ArgumentNullException(nameof(salaryRecordRepository));
         }
 
         public async Task<EmployeeResponseDto> CreateEmployeeAsync(EmployeeRequestDto employeeRequestDto)
@@ -30,6 +32,12 @@ namespace EMS.Application.Services.EM
             Employee employee = _mapper.Map<Employee>(employeeRequestDto);
             employee.Id = Guid.NewGuid().ToString();
             await _employeeRepository.AddAsync(employee);
+
+            var initSalaryRecord = _mapper.Map<SalaryRecord>(employee);
+            initSalaryRecord.Year = DateTime.Now.Year;
+            initSalaryRecord.Month = DateTime.Now.Month;
+            await _salaryRecordRepository.AddAsync(initSalaryRecord);
+
             return _mapper.Map<EmployeeResponseDto>(employee);
         }
 
@@ -77,11 +85,47 @@ namespace EMS.Application.Services.EM
             if (employee == null)
                 throw new ArgumentNullException(nameof(employee));
 
+            // Validation for positive values
+            if (employeeRequestDto.BaseSalary <= 0)
+                throw new ArgumentException("Base salary must be a positive value.", nameof(employeeRequestDto.BaseSalary));
+
+            if (employeeRequestDto.Bonuses < 0)
+                throw new ArgumentException("Bonuses cannot be negative.", nameof(employeeRequestDto.Bonuses));
+
+            if (employeeRequestDto.Deductions < 0)
+                throw new ArgumentException("Deductions cannot be negative.", nameof(employeeRequestDto.Deductions));
+
+            // Check for changes in BaseSalary
+            bool hasSalaryRelatedChanges =
+                employeeRequestDto.BaseSalary != employee.BaseSalary ||
+                employeeRequestDto.Bonuses != employee.Bonuses ||
+                employeeRequestDto.Deductions != employee.Deductions;
+
+            // Map updated fields
             _mapper.Map(employeeRequestDto, employee);
+
+            // Update employee record
             await _employeeRepository.UpdateAsync(employee);
+
+            // Add new salary record if salary has changed
+            if (hasSalaryRelatedChanges)
+            {
+                var newSalaryRecord = new SalaryRecord
+                {
+                    EmployeeId = employee.Id ?? id,
+                    BaseSalary = employee.BaseSalary,
+                    Bonuses = employee.Bonuses,
+                    Deductions = employee.Deductions,
+                    Year = DateTime.Now.Year,
+                    Month = DateTime.Now.Month
+                };
+
+                await _salaryRecordRepository.AddAsync(newSalaryRecord);
+            }
 
             return _mapper.Map<EmployeeResponseDto>(employee);
         }
+
 
         public async Task<bool> AssignDepartmentAsync(string id, string departmentId)
         {

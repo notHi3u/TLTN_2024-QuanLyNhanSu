@@ -21,6 +21,6 @@ namespace EMS.Domain.Models.EM
         [JsonIgnore]
         public virtual Employee? Manager { get; set; } // One Department has one Manager (Employee)
 
-        public decimal TotalSalary => Employees?.Sum(e => e.Salary ?? 0) ?? 0;
+        public decimal TotalSalary => Employees?.Sum(e => e.NetSalary) ?? 0;
     }
 }

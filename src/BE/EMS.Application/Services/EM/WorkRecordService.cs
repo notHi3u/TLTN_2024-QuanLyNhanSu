@@ -9,73 +9,73 @@ namespace EMS.Application.Services.EM
 {
     public class WorkRecordService : IWorkRecordService
     {
-        private readonly IWorkRecordRepository _workHistoryRepository;
+        private readonly IWorkRecordRepository _workRecordRepository; // Changed "workHistoryRepository" to "workRecordRepository"
         private readonly IMapper _mapper;
 
-        public WorkRecordService(IWorkRecordRepository workHistoryRepository, IMapper mapper)
+        public WorkRecordService(IWorkRecordRepository workRecordRepository, IMapper mapper) // Updated constructor parameter
         {
-            _workHistoryRepository = workHistoryRepository ?? throw new ArgumentNullException(nameof(workHistoryRepository));
+            _workRecordRepository = workRecordRepository ?? throw new ArgumentNullException(nameof(workRecordRepository)); // Updated variable name
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<WorkRecordResponseDto> CreateWorkHistoryAsync(WorkRecordRequestDto workHistoryRequestDto)
+        public async Task<WorkRecordResponseDto> CreateWorkRecordAsync(WorkRecordRequestDto workRecordRequestDto) // Changed method name to "CreateWorkRecordAsync"
         {
-            if (workHistoryRequestDto == null)
-                throw new ArgumentNullException(nameof(workHistoryRequestDto));
+            if (workRecordRequestDto == null)
+                throw new ArgumentNullException(nameof(workRecordRequestDto));
 
-            WorkRecord workHistory = _mapper.Map<WorkRecord>(workHistoryRequestDto);
-            await _workHistoryRepository.AddAsync(workHistory);
-            return _mapper.Map<WorkRecordResponseDto>(workHistory);
+            WorkRecord workRecord = _mapper.Map<WorkRecord>(workRecordRequestDto); // Changed "workHistory" to "workRecord"
+            await _workRecordRepository.AddAsync(workRecord); // Updated repository method
+            return _mapper.Map<WorkRecordResponseDto>(workRecord);
         }
 
-        public async Task<bool> DeleteWorkHistoryAsync(long id)
+        public async Task<bool> DeleteWorkRecordAsync(long id) // Changed method name to "DeleteWorkRecordAsync"
         {
-            var workHistory = await _workHistoryRepository.GetByIdAsync(id);
-            if (workHistory == null)
-                throw new ArgumentNullException(nameof(workHistory));
+            var workRecord = await _workRecordRepository.GetByIdAsync(id); // Updated variable name
+            if (workRecord == null)
+                throw new ArgumentNullException(nameof(workRecord));
 
-            await _workHistoryRepository.DeleteAsync(workHistory);
+            await _workRecordRepository.DeleteAsync(workRecord); // Updated repository method
             return true;
         }
 
-        public async Task<WorkRecordResponseDto> GetWorkHistoryByIdAsync(long id)
+        public async Task<WorkRecordResponseDto> GetWorkRecordByIdAsync(long id) // Changed method name to "GetWorkRecordByIdAsync"
         {
-            var workHistory = await _workHistoryRepository.GetByIdAsync(id);
-            if (workHistory == null)
-                throw new ArgumentNullException(nameof(workHistory));
+            var workRecord = await _workRecordRepository.GetByIdAsync(id); // Updated variable name
+            if (workRecord == null)
+                throw new ArgumentNullException(nameof(workRecord));
 
-            return _mapper.Map<WorkRecordResponseDto>(workHistory);
+            return _mapper.Map<WorkRecordResponseDto>(workRecord);
         }
 
-        public async Task<PagedDto<WorkRecordResponseDto>> GetPagedWorkHistoriesAsync(WorkRecordFilter filter)
+        public async Task<PagedDto<WorkRecordResponseDto>> GetPagedWorkRecordsAsync(WorkRecordFilter filter) // Changed method name to "GetPagedWorkRecordsAsync"
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
 
-            var pagedWorkHistories = await _workHistoryRepository.GetPagedAsync(filter);
-            var workHistoryDtos = _mapper.Map<IEnumerable<WorkRecordResponseDto>>(pagedWorkHistories.Items);
+            var pagedWorkRecords = await _workRecordRepository.GetPagedAsync(filter); // Updated variable name
+            var workRecordDtos = _mapper.Map<IEnumerable<WorkRecordResponseDto>>(pagedWorkRecords.Items); // Updated variable name
 
             return new PagedDto<WorkRecordResponseDto>(
-                workHistoryDtos,
-                pagedWorkHistories.TotalCount,
-                pagedWorkHistories.PageIndex,
-                pagedWorkHistories.PageSize
+                workRecordDtos,
+                pagedWorkRecords.TotalCount,
+                pagedWorkRecords.PageIndex,
+                pagedWorkRecords.PageSize
             );
         }
 
-        public async Task<WorkRecordResponseDto> UpdateWorkHistoryAsync(long id, WorkRecordRequestDto workHistoryRequestDto)
+        public async Task<WorkRecordResponseDto> UpdateWorkRecordAsync(long id, WorkRecordRequestDto workRecordRequestDto) // Changed method name to "UpdateWorkRecordAsync"
         {
-            if (workHistoryRequestDto == null)
-                throw new ArgumentNullException(nameof(workHistoryRequestDto));
+            if (workRecordRequestDto == null)
+                throw new ArgumentNullException(nameof(workRecordRequestDto));
 
-            var workHistory = await _workHistoryRepository.GetByIdAsync(id);
-            if (workHistory == null)
-                throw new ArgumentNullException(nameof(workHistory));
+            var workRecord = await _workRecordRepository.GetByIdAsync(id); // Updated variable name
+            if (workRecord == null)
+                throw new ArgumentNullException(nameof(workRecord));
 
-            _mapper.Map(workHistoryRequestDto, workHistory);
-            await _workHistoryRepository.UpdateAsync(workHistory);
+            _mapper.Map(workRecordRequestDto, workRecord);
+            await _workRecordRepository.UpdateAsync(workRecord);
 
-            return _mapper.Map<WorkRecordResponseDto>(workHistory);
+            return _mapper.Map<WorkRecordResponseDto>(workRecord);
         }
     }
 }

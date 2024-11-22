@@ -1,4 +1,5 @@
 ﻿using Common.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace EMS.Application.DTOs.EM
 {
@@ -20,6 +21,11 @@ namespace EMS.Application.DTOs.EM
         public string? DepartmentId { get; set; } // null when create
         public string? TaxId { get; set; }
         public string? Email { get; set; }
-        public decimal? Salary { get; set; }
+        
+        public decimal BaseSalary { get; set; } // Base salary must be a positive value
+
+        public decimal Bonuses { get; set; } // Flat bonus must be a positive value
+
+        public decimal Deductions { get; set; } // Deductions must be a positive value
     }
 }

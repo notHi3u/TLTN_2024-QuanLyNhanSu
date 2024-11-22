@@ -19,19 +19,17 @@ namespace EMS.Domain.Models.EM
         [Range(0, double.MaxValue, ErrorMessage = "Base salary must be a positive value.")]
         public decimal BaseSalary { get; set; } // Base salary must be a positive value
 
-        [Range(0, 100, ErrorMessage = "Percent bonus must be between 0 and 100.")]
-        public decimal PercentBonus { get; set; } // Percent bonus should be between 0 and 100
-
         [Range(0, double.MaxValue, ErrorMessage = "Flat bonus must be a positive value.")]
-        public decimal FlatBonus { get; set; } // Flat bonus must be a positive value
+        public decimal Bonuses { get; set; } // Flat bonus must be a positive value
 
         [Range(0, double.MaxValue, ErrorMessage = "Deductions must be a positive value.")]
         public decimal Deductions { get; set; } // Deductions must be a positive value
 
-        [Range(0, double.MaxValue, ErrorMessage = "Net salary must be a positive value.")]
-        public decimal NetSalary { get; set; } // Net salary must be a positive value
-
         // Navigation property
         public virtual Employee Employee { get; set; }
+
+        // Read-only property that calculates the net salary
+        public decimal NetSalary => BaseSalary + Bonuses - Deductions;
+
     }
 }

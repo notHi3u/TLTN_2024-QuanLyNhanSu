@@ -28,7 +28,13 @@ namespace EMS.Application.DTOs.EM
         public string? UserId { get; set; }
 
         // Salary Information
-        public decimal? Salary { get; set; }
+        public decimal BaseSalary { get; set; } // Base salary must be a positive value
+
+        public decimal Bonuses { get; set; } // Flat bonus must be a positive value
+
+        public decimal Deductions { get; set; } // Deductions must be a positive value
+
+        public decimal NetSalary { get; set; }
 
         // Collections for related data
         public ICollection<TimeCardResponseDto> TimeCards { get; set; }
