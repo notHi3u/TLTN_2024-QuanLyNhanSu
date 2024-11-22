@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241122065820_testSeed")]
+    partial class testSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,15 +377,12 @@ namespace EMS.PostgresMigrations.Migrations
                         {
                             Id = "00000000-0000-0000-0000-000000000100",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0cea5e41-515c-4943-973c-869d37d5f4b2",
+                            ConcurrencyStamp = "5a103b79-2cb1-436a-ab4a-1efc192706c2",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedEmail = "adminUser@EXAMPLE.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM2PiwuXWvbjMnd5TuRr8PTQLyk36IaNCVmGy1EZtbusixmpZWkh8ZW4QHC9TqVFtQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fe184064-84eb-405d-93b9-aac29915b86b",
+                            SecurityStamp = "5bb1c38e-aa11-4790-8fc8-bcbecea613fc",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -401,13 +401,6 @@ namespace EMS.PostgresMigrations.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "00000000-0000-0000-0000-000000000100",
-                            RoleId = "00000000-0000-0000-0000-000000000000"
-                        });
                 });
 
             modelBuilder.Entity("EMS.Domain.Models.EM.Attendance", b =>

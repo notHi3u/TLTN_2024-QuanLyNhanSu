@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241122070814_testSeed3")]
+    partial class testSeed3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,15 +377,15 @@ namespace EMS.PostgresMigrations.Migrations
                         {
                             Id = "00000000-0000-0000-0000-000000000100",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0cea5e41-515c-4943-973c-869d37d5f4b2",
+                            ConcurrencyStamp = "2d7406c2-5b3f-4e03-be91-7f127017ea54",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "adminUser@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM2PiwuXWvbjMnd5TuRr8PTQLyk36IaNCVmGy1EZtbusixmpZWkh8ZW4QHC9TqVFtQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDtMzbymyy53IJM7W5KdICjMFIZzf/WmfKwsDWAQyJuIQzgaDwxOyJyyBrTCvKuG8A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fe184064-84eb-405d-93b9-aac29915b86b",
+                            SecurityStamp = "037b955e-1015-47cb-9ec5-c9d324d655ca",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -781,6 +784,33 @@ namespace EMS.PostgresMigrations.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("WorkHistories");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "00000000-0000-0000-0000-000000000000",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

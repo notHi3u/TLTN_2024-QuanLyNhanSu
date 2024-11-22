@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241122070549_testSeed2")]
+    partial class testSeed2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,15 +377,14 @@ namespace EMS.PostgresMigrations.Migrations
                         {
                             Id = "00000000-0000-0000-0000-000000000100",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0cea5e41-515c-4943-973c-869d37d5f4b2",
+                            ConcurrencyStamp = "89dcdce2-8a58-4332-8d1b-4be948ce47ef",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "adminUser@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM2PiwuXWvbjMnd5TuRr8PTQLyk36IaNCVmGy1EZtbusixmpZWkh8ZW4QHC9TqVFtQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fe184064-84eb-405d-93b9-aac29915b86b",
+                            SecurityStamp = "54beddd1-68cd-420b-9dfb-8b1bb33a9ce3",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });

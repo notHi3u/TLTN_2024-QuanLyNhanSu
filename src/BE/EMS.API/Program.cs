@@ -16,6 +16,7 @@ using EMS.Infrastructure.Repositories.EM;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -159,6 +160,9 @@ builder.Services.AddScoped<ITimeCardRepository, TimeCardRepository>();
 builder.Services.AddScoped<IWorkRecordService, WorkRecordService>();
 builder.Services.AddScoped<IWorkRecordRepository, WorkRecordRepository>();
 
+builder.Services.AddScoped<UserManager<User>>();
+builder.Services.AddScoped<RoleManager<Role>>();
+
 // Add DbContext configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
            options.UseNpgsql(
@@ -167,6 +171,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddIdentityApiEndpoints<User>().AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>();
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 
 builder.Services.AddCors(options =>
 {
