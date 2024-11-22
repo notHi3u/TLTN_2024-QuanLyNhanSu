@@ -99,6 +99,15 @@ namespace EMS.Application.Automapper
             CreateMap<EmployeeRelativeRequestDto, EmployeeRelative>();
             CreateMap<EmployeeRelative, EmployeeRelativeResponseDto>();
             #endregion
+
+            //#region Employee - SalaryRecord
+            //CreateMap<Employee, SalaryRecord>()
+            //    .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.Id)) // Mapping EmployeeId
+            //    .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.BaseSalary)) // Map BaseSalary
+            //    .ForMember(dest => dest.Bonuses, opt => opt.MapFrom(src => src.Bonuses)) // Map Bonuses
+            //    .ForMember(dest => dest.Deductions, opt => opt.MapFrom(src => src.Deductions)) // Map Deductions
+            //    .ForMember(dest => dest.NetSalary, opt => opt.MapFrom(src => src.BaseSalary + src.Bonuses - src.Deductions)); // Calculate NetSalary
+            //#endregion
         }
     }
 }

@@ -78,5 +78,9 @@ namespace EMS.Infrastructure.Repositories.EM
             return employees;
         }
 
+        public async Task<decimal> GetTotalSalaryAsync()
+        {
+            return await _dbSet.SumAsync(e => e.NetSalary);
+        }
     }
 }

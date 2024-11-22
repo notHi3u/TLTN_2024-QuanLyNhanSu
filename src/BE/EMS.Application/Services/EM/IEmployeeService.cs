@@ -15,5 +15,6 @@ namespace EMS.Application.Services.EM
         Task<bool> RemoveDepartmentAsync(string id);
         Task<EmployeeResponseDto> BindUserToEmployeeAsync(string employeeId, string userId);
         Task<EmployeeResponseDto> UnBindUserToEmployeeAsync(string employeeId);
+        Task<decimal> GetTotalSalaryAsync();
     }
 }

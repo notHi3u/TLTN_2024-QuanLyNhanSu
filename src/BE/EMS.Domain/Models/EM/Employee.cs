@@ -80,7 +80,15 @@ namespace EMS.Domain.Models.EM
 
         // Merged Salary Information
         [Range(0, double.MaxValue, ErrorMessage = "Base salary must be a positive value.")]
-        public decimal? Salary { get; set; } // Base salary must be a positive value
+        public decimal BaseSalary { get; set; } // Base salary must be a positive value
+
+        [Range(0, double.MaxValue, ErrorMessage = "Flat bonus must be a positive value.")]
+        public decimal Bonuses { get; set; } // Flat bonus must be a positive value
+
+        [Range(0, double.MaxValue, ErrorMessage = "Deductions must be a positive value.")]
+        public decimal Deductions { get; set; } // Deductions must be a positive value
+
+        public decimal NetSalary => BaseSalary + Bonuses - Deductions;
 
         // Navigation property for salary history
         public virtual ICollection<SalaryRecord> SalaryRecords { get; set; } // Historical salary data
