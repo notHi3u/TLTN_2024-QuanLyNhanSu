@@ -14,7 +14,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var employeeGroup = app.MapGroup("/employees")
-                .WithTags("Employee");
+                .WithTags("Employee")
+                .RequireAuthorization();
 
             #region Get All Employees
             employeeGroup.MapGet("/", async (IEmployeeService employeeService, [AsParameters] EmployeeFilter filter) =>

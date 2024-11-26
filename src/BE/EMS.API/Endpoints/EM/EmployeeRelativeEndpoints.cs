@@ -12,7 +12,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var relativeGroup = app.MapGroup("/employee-relatives")
-                .WithTags("Employee Relative");
+                .WithTags("Employee Relative")
+                .RequireAuthorization();
 
             #region Get All Employee Relatives
             relativeGroup.MapGet("/", async (IEmployeeRelativeService relativeService, [AsParameters] EmployeeRelativeFilter filter) =>

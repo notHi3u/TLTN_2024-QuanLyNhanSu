@@ -12,7 +12,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var policyGroup = app.MapGroup("/holiday-leave-policies")
-                .WithTags("Holiday Leave Policy");
+                .WithTags("Holiday Leave Policy")
+                .RequireAuthorization();
 
             #region Get All Holiday Leave Policies
             policyGroup.MapGet("/", async (IHolidayLeavePolicyService policyService, [AsParameters] HolidayLeavePolicyFilter filter) =>

@@ -13,7 +13,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var attendanceGroup = app.MapGroup("/attendances")
-                .WithTags("Attendance");
+                .WithTags("Attendance")
+                .RequireAuthorization();
 
             #region Get All Attendances
             attendanceGroup.MapGet("/", async (IAttendanceService attendanceService, [AsParameters] AttendanceFilter filter) =>
@@ -149,7 +150,6 @@ namespace EMS.API.Endpoints.EM
                 }
             }).ConfigureApiResponses();
             #endregion
-
 
             #region Get by TimeCardId
             attendanceGroup.MapGet("/timecard/{timeCardId:long}", async (IAttendanceService attendanceService, long timeCardId) =>

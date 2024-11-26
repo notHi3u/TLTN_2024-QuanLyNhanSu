@@ -12,7 +12,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var leaveBalanceGroup = app.MapGroup("/leave-balances")
-                .WithTags("Leave Balance");
+                .WithTags("Leave Balance")
+                .RequireAuthorization();
 
             #region Get All Leave Balances
             leaveBalanceGroup.MapGet("/", async (ILeaveBalanceService leaveBalanceService, [AsParameters] LeaveBalanceFilter filter) =>

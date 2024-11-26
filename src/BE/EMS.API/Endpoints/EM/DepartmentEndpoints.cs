@@ -12,7 +12,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var departmentGroup = app.MapGroup("/departments")
-                .WithTags("Department");
+                .WithTags("Department")
+                .RequireAuthorization();
 
             #region Get All Departments
             departmentGroup.MapGet("/", async (IDepartmentService departmentService, [AsParameters] DepartmentFilter filter) =>

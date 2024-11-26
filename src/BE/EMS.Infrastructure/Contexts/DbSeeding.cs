@@ -60,7 +60,7 @@ namespace EMS.Infrastructure.Contexts
         public static async Task SeedAdmin(ModelBuilder builder)
         {
             // Static ID for the admin user
-            var adminUserId = "00000000-0000-0000-0000-000000000100"; // Static ID for the admin user
+            var adminUserId = "00000000-0000-0000-0000-000000000100"    ; // Static ID for the admin user
 
             // Create the admin user
             var adminUser = new User

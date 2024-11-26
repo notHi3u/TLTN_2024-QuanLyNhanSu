@@ -12,7 +12,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var salaryHistoryGroup = app.MapGroup("/salary-record")
-                .WithTags("SalaryRecord");
+                .WithTags("SalaryRecord")
+                .RequireAuthorization();
 
             #region Get Salary Records By Filter
             salaryHistoryGroup.MapGet("/", async (ISalaryRecordService salaryRecordService, [AsParameters] SalaryRecordFilter filter) =>

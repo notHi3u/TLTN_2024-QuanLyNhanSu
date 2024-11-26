@@ -79,15 +79,22 @@ builder.Services.AddRateLimiter(_ => _
 // Add Identity services
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("HR", policy => policy.RequireRole("HR"));
+    options.AddPolicy("Admin", policy =>
+        policy.Requirements.Add(new RoleRequirement("Admin")));
+
+    options.AddPolicy("HR", policy =>
+        policy.Requirements.Add(new RoleRequirement("HR")));
+
     options.AddPolicy("DepartmentManager", policy =>
     {
-        policy.RequireRole("Department Manager");
-        policy.Requirements.Add(new DepartmentManagerRequirement("DepartmentId"));
+        policy.Requirements.Add(new RoleRequirement("Department Manager"));
+        policy.Requirements.Add(new DepartmentManagerRequirement("DepartmentId")); // Custom department-specific check
     });
-    options.AddPolicy("Employee", policy => policy.RequireRole("Employee"));
+
+    options.AddPolicy("Employee", policy =>
+        policy.Requirements.Add(new RoleRequirement("Employee")));
 });
+
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -174,7 +181,9 @@ builder.Services.AddScoped<IWorkRecordRepository, WorkRecordRepository>();
 builder.Services.AddScoped<UserManager<User>>();
 builder.Services.AddScoped<RoleManager<Role>>();
 
-builder.Services.AddSingleton<IAuthorizationHandler, DepartmentManagerHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, DepartmentManagerHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, RoleRequirementHandler>();
+
 
 // Add DbContext configuration
 builder.Services.AddDbContext<AppDbContext>(options =>

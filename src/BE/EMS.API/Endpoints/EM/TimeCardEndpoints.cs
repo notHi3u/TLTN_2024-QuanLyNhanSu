@@ -13,7 +13,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var timeCardGroup = app.MapGroup("/timecards")
-                .WithTags("TimeCards");
+                .WithTags("TimeCards")
+                .RequireAuthorization();
 
             #region Get TimeCards By Filter
             timeCardGroup.MapGet("/", async (ITimeCardService timeCardService, [AsParameters] TimeCardFilter filter) =>
