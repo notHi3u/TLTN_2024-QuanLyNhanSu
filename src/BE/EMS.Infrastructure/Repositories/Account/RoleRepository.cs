@@ -4,6 +4,7 @@ using EMS.Domain.Filters.Account;
 using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
 using EMS.Infrastructure.Contexts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,7 +15,7 @@ namespace EMS.Infrastructure.Repositories.Account
 {
     public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
-        public RoleRepository(AppDbContext context, ILogger<RoleRepository> logger)
+        public RoleRepository(AppDbContext context, ILogger<RoleRepository> logger, UserManager<User> userManager)
             : base(context, logger)
         {
         }

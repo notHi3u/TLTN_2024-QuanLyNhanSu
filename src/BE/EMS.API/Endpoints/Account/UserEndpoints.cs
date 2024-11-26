@@ -30,7 +30,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<PagedDto<UserResponseDto>>.Failure("An error occurred while retrieving users.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization("Admin", "HR")
+                .ConfigureApiResponses();
             #endregion
 
             #region Get User By Id
@@ -51,7 +53,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<UserResponseDto>.Failure("An error occurred while retrieving the user.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization()
+                .ConfigureApiResponses();
             #endregion
 
             #region Create User
@@ -78,7 +82,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<UserResponseDto>.Failure("An error occurred while creating the user.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization("Admin", "HR")
+                .ConfigureApiResponses();
             #endregion
 
             #region Update User
@@ -105,7 +111,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<UserResponseDto>.Failure("An error occurred while updating the user.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization("Admin", "HR")
+                .ConfigureApiResponses();
             #endregion
 
             #region Delete User
@@ -126,7 +134,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<UserResponseDto>.Failure("An error occurred while deleting the user.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization("Admin", "HR")
+                .ConfigureApiResponses();
             #endregion
 
             #region Assign Single Role to User
@@ -147,7 +157,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while assigning the role.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization("Admin", "HR")
+                .ConfigureApiResponses();
             #endregion
 
             #region Assign Multiple Roles to User
@@ -168,7 +180,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while assigning the roles.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization("Admin", "HR")
+                .ConfigureApiResponses();
             #endregion
 
             #region Remove Role from User
@@ -189,7 +203,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while removing the role.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization("Admin", "HR")
+                .ConfigureApiResponses();
             #endregion
 
             #region Remove Multiple Roles from User
@@ -210,7 +226,9 @@ namespace EMS.API.Endpoints.Account
                     var errorResponse = BaseResponse<bool>.Failure("An error occurred while removing roles.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
-            }).ConfigureApiResponses();
+            })
+                .RequireAuthorization("Admin", "HR")
+                .ConfigureApiResponses();
             #endregion
         }
     }

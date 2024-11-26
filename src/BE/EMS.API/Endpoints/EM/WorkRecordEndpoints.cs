@@ -12,7 +12,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var workRecordGroup = app.MapGroup("/workrecord") // Changed "workHistoryGroup" to "workRecordGroup"
-                .WithTags("WorkRecords");
+                .WithTags("WorkRecords")
+                .RequireAuthorization();
 
             #region Get by Id
             workRecordGroup.MapGet("/{id}", async (IWorkRecordService workRecordService, long id) =>

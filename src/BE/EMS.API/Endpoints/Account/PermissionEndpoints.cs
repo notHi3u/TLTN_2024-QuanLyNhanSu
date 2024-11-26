@@ -13,8 +13,8 @@ namespace EMS.API.Endpoints.Account
         {
             #region Define
             var permissionGroup = app.MapGroup("/permissions")
-                .WithTags("Permission");
-            //.RequireAuthorization();
+                .WithTags("Permission")
+                .RequireAuthorization("Admin", "HR");
             #endregion
 
             #region Get all permissions
@@ -31,7 +31,8 @@ namespace EMS.API.Endpoints.Account
                     // Log the exception if necessary
                     return Results.Problem(ex.Message);
                 }
-            }).ConfigureApiResponses();
+            })
+            .ConfigureApiResponses();
             #endregion
 
             #region Get permission by Id

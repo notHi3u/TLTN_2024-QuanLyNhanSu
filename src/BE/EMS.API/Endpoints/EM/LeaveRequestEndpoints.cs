@@ -12,7 +12,8 @@ namespace EMS.API.Endpoints.EM
         public static void Map(WebApplication app)
         {
             var leaveRequestGroup = app.MapGroup("/leave-requests")
-                .WithTags("Leave Request");
+                .WithTags("Leave Request")
+                .RequireAuthorization();
 
             #region Get All Leave Requests
             leaveRequestGroup.MapGet("/", async (ILeaveRequestService leaveRequestService, [AsParameters] LeaveRequestFilter filter) =>

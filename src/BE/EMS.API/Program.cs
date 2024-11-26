@@ -14,8 +14,10 @@ using EMS.Infrastructure.Contexts;
 using EMS.Infrastructure.Repositories.Account;
 using EMS.Infrastructure.Repositories.EM;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -75,7 +77,24 @@ builder.Services.AddRateLimiter(_ => _
     }));
 
 // Add Identity services
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy =>
+        policy.Requirements.Add(new RoleRequirement("Admin")));
+
+    options.AddPolicy("HR", policy =>
+        policy.Requirements.Add(new RoleRequirement("HR")));
+
+    options.AddPolicy("DepartmentManager", policy =>
+    {
+        policy.Requirements.Add(new RoleRequirement("Department Manager"));
+        policy.Requirements.Add(new DepartmentManagerRequirement("DepartmentId")); // Custom department-specific check
+    });
+
+    options.AddPolicy("Employee", policy =>
+        policy.Requirements.Add(new RoleRequirement("Employee")));
+});
+
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -159,6 +178,13 @@ builder.Services.AddScoped<ITimeCardRepository, TimeCardRepository>();
 builder.Services.AddScoped<IWorkRecordService, WorkRecordService>();
 builder.Services.AddScoped<IWorkRecordRepository, WorkRecordRepository>();
 
+builder.Services.AddScoped<UserManager<User>>();
+builder.Services.AddScoped<RoleManager<Role>>();
+
+builder.Services.AddScoped<IAuthorizationHandler, DepartmentManagerHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, RoleRequirementHandler>();
+
+
 // Add DbContext configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
            options.UseNpgsql(
@@ -167,6 +193,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddIdentityApiEndpoints<User>().AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>();
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 
 builder.Services.AddCors(options =>
 {

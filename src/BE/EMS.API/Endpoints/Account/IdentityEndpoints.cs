@@ -459,6 +459,7 @@ namespace EMS.API.Endpoints.Account
                 var successResponse = BaseResponse<TwoFactorAuthSetupInfoDto>.Success(enableAuthenInfo);
                 return TypedResults.Ok(successResponse);
             })
+            .RequireAuthorization()
             .ConfigureApiResponses();
             #endregion
 
@@ -502,6 +503,7 @@ namespace EMS.API.Endpoints.Account
                 //});
                 return TypedResults.NotFound();
             })
+            .RequireAuthorization()
             .ConfigureApiResponses();
             #endregion
 
@@ -521,7 +523,9 @@ namespace EMS.API.Endpoints.Account
                 var successResponse = BaseResponse<InfoResponse>.Success(infoResponse);
 
                 return TypedResults.Ok(successResponse);
-            });
+            })
+            .RequireAuthorization()
+            .ConfigureApiResponses();
             #endregion
 
             #region Post info
@@ -565,7 +569,9 @@ namespace EMS.API.Endpoints.Account
                 }
 
                 return TypedResults.Ok(await CreateInfoResponseAsync(user, userManager));
-            });
+            })
+            .RequireAuthorization()
+            .ConfigureApiResponses();
             #endregion
 
             #region Send email func

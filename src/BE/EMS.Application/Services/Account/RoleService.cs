@@ -180,6 +180,5 @@ namespace EMS.Application.Services.Account
             }
             return true; // Indicate success
         }
-
     }
 }

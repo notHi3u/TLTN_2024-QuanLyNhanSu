@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EMS.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EMS.PostgresMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241122070549_testSeed2")]
+    partial class testSeed2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,17 +377,16 @@ namespace EMS.PostgresMigrations.Migrations
                         {
                             Id = "00000000-0000-0000-0000-000000000100",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "16bbc0bb-12fe-4ecc-8bc6-4e9a6b4563a9",
+                            ConcurrencyStamp = "89dcdce2-8a58-4332-8d1b-4be948ce47ef",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                            NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELZ9eD+5IKOgemH1pduVkjjhVkC37cAF5VpoxVLqhFfrjetMi3ifLUwHPfu5w6q/Nw==",
+                            NormalizedEmail = "adminUser@EXAMPLE.COM",
+                            NormalizedUserName = "ADMIN",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "abb94131-b1f4-45be-bfa1-cb28b6290752",
+                            SecurityStamp = "54beddd1-68cd-420b-9dfb-8b1bb33a9ce3",
                             TwoFactorEnabled = false,
-                            UserName = "admin@example.com"
+                            UserName = "admin"
                         });
                 });
 

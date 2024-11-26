@@ -82,5 +82,11 @@ namespace EMS.Infrastructure.Repositories.EM
         {
             return await _dbSet.SumAsync(e => e.NetSalary);
         }
+
+        public async Task<Employee> GetEmployeeByUserIdAsync(string userId)
+        {
+            var employee = await _dbSet.FirstOrDefaultAsync(e => e.UserId == userId);
+            return employee;
+        }
     }
 }

@@ -33,7 +33,9 @@ namespace EMS.Infrastructure.Contexts
         public DbSet<WorkRecord> WorkHistories { get; set; }
         public DbSet<HolidayLeavePolicy> HolidayLeavePolicies { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        
+
+        protected override async void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
@@ -138,12 +140,12 @@ namespace EMS.Infrastructure.Contexts
                 .HasForeignKey(a => a.TimeCardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //
             #endregion
 
-            #region Seeding
-
-            #endregion
+            await DbSeeding.SeedRoles(builder);
+            await DbSeeding.SeedPermissions(builder);
+            await DbSeeding.SeedRolePermissions(builder);
+            await DbSeeding.SeedAdmin(builder);
         }
     }
 }
