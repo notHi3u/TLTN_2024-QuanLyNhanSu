@@ -200,8 +200,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:4200",
-                                              "https://localhost:4200")
+                          policy.WithOrigins("http://localhost3000",
+                                              "https://localhost:3000")
                              .AllowAnyMethod()
                                 .AllowAnyHeader(); // Cho phép tất cả các header
                           ;
