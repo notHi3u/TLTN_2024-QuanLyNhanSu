@@ -16,5 +16,6 @@ namespace EMS.Application.Services.EM
         Task<EmployeeResponseDto> BindUserToEmployeeAsync(string employeeId, string userId);
         Task<EmployeeResponseDto> UnBindUserToEmployeeAsync(string employeeId);
         Task<decimal> GetTotalSalaryAsync();
+        Task<string> SaveEmployeeImage(EmployeeImageDto employeeImageDto);
     }
 }

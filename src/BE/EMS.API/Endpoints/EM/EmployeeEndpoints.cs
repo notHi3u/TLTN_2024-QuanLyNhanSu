@@ -15,6 +15,7 @@ namespace EMS.API.Endpoints.EM
         {
             var employeeGroup = app.MapGroup("/employees")
                 .WithTags("Employee")
+                .DisableAntiforgery()
                 .RequireAuthorization();
 
             #region Get All Employees
@@ -56,39 +57,39 @@ namespace EMS.API.Endpoints.EM
             }).ConfigureApiResponses();
             #endregion
 
-            #region Create Employee
-            employeeGroup.MapPost("/", async (IEmployeeService employeeService, IUserService userService, ISalaryRecordService salaryRecordService, [FromBody] EmployeeRequestDto createEmployeeDto) =>
-            {
-                if (createEmployeeDto == null)
+                #region Create Employee
+                employeeGroup.MapPost("/", async (IEmployeeService employeeService, IUserService userService, ISalaryRecordService salaryRecordService, [FromForm] EmployeeRequestDto? createEmployeeDto, IFormFile? image ) =>
                 {
-                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("Employee data is required.");
-                    return Results.BadRequest(errorResponse);
-                }
+                    if (createEmployeeDto == null)
+                    {
+                        var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("Employee data is required.");
+                        return Results.BadRequest(errorResponse);
+                    }
 
-                try
-                {
-                    var employee = await employeeService.CreateEmployeeAsync(createEmployeeDto);
-                    var password = await userService.GenerateInitPassword();
+                    try
+                    {
+                        var employee = await employeeService.CreateEmployeeAsync(createEmployeeDto);
+                        var password = await userService.GenerateInitPassword();
 
-                    var user = new UserRequestDto { Email = employee.Email, Password = password };
-                    var createdUser = await userService.CreateUserAsync(user);
+                        var user = new UserRequestDto { Email = employee.Email, Password = password };
+                        var createdUser = await userService.CreateUserAsync(user);// If email is fake, throw 400
 
-                    await employeeService.BindUserToEmployeeAsync(employee.Id, createdUser.Data.Id);
+                        await employeeService.BindUserToEmployeeAsync(employee.Id, createdUser.Data.Id);
 
-                    return Results.Ok(BaseResponse<EmployeeResponseDto>.Success(employee));
-                }
-                catch (ArgumentException ex)
-                {
-                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure(ex.Message);
-                    return Results.BadRequest(errorResponse);
-                }
-                catch (Exception ex)
-                {
-                    var errorResponse = BaseResponse<EmployeeResponseDto>.Failure("An error occurred while creating the employee.");
-                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
-                }
-            }).ConfigureApiResponses();
-            #endregion
+                        if (image != null)
+                        {   
+                            var imageDto = new EmployeeImageDto { Image = image, EmployeeId = employee.Id };
+                            await employeeService.SaveEmployeeImage(imageDto);
+                        }
+                        return Results.Ok(BaseResponse<EmployeeResponseDto>.Success(employee));
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        var errorResponse = BaseResponse<EmployeeResponseDto>.Failure(ex.Message);
+                        return Results.BadRequest(errorResponse);
+                    }
+                }).ConfigureApiResponses();
+                #endregion
 
             #region Update Employee
             employeeGroup.MapPut("/{id}", async (IEmployeeService employeeService, ISalaryRecordService salaryRecordService, string id, [FromBody] EmployeeRequestDto updateEmployeeDto) =>
@@ -277,6 +278,38 @@ namespace EMS.API.Endpoints.EM
                 {
                     // Handle exceptions and return an error response
                     var errorResponse = BaseResponse<decimal>.Failure("An error occurred while calculating the total salary.");
+                    return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
+                }
+            }).ConfigureApiResponses();
+            #endregion
+
+            #region Update Employee Image
+            employeeGroup.MapPut("/{id}/update-image", async (IEmployeeService employeeService,[FromForm] string id, IFormFile? image) =>
+            {
+                var employeeImageDto = new EmployeeImageDto() { EmployeeId = id, Image = image };
+                if (employeeImageDto?.Image == null)
+                {
+                    var errorResponse = BaseResponse<string>.Failure("No image file provided.");
+                    return Results.BadRequest(errorResponse);
+                }
+
+                try
+                {
+                    // Call the service to save the image and update the employee's image URL
+                    var imageUrl = await employeeService.SaveEmployeeImage(employeeImageDto);
+
+                    // Return the updated image URL
+                    var response = BaseResponse<string>.Success(imageUrl);
+                    return Results.Ok(response);
+                }
+                catch (ArgumentException ex)
+                {
+                    var errorResponse = BaseResponse<string>.Failure(ex.Message);
+                    return Results.BadRequest(errorResponse);
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = BaseResponse<string>.Failure("An error occurred while updating the employee image.");
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             }).ConfigureApiResponses();

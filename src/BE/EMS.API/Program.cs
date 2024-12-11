@@ -13,6 +13,7 @@ using EMS.Domain.Repositories.EM;
 using EMS.Infrastructure.Contexts;
 using EMS.Infrastructure.Repositories.Account;
 using EMS.Infrastructure.Repositories.EM;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
@@ -200,10 +201,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost3000",
-                                              "https://localhost:3000")
-                             .AllowAnyMethod()
-                                .AllowAnyHeader(); // Cho phép tất cả các header
+                          policy.AllowAnyOrigin()
+                                .AllowAnyMethod()
+                                .AllowAnyHeader() // Cho phép tất cả các header
+                                //.AllowCredentials();
                           ;
                       });
 });
@@ -215,6 +216,12 @@ builder.Services.AddHsts(options =>
     options.ExcludedHosts.Add("example.com");
     options.ExcludedHosts.Add("www.example.com");
 });
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.SuppressXFrameOptionsHeader = true;
+});
+
 var app = builder.Build();
 app.UseCors(MyAllowSpecificOrigins);
 
@@ -246,8 +253,19 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    context.Features.Set<IAntiforgeryValidationFeature>(null);
+    await next();
+});
+
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+//app.UseAntiforgery();
+
 app.UseRateLimiter();
 
 //Minimals APIs

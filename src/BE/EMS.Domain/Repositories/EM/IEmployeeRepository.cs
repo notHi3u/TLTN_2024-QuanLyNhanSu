@@ -16,5 +16,6 @@ namespace EMS.Domain.Repositories.EM
         Task<IEnumerable<Employee>> GetByDepartmentIdAsync(string departmentId);
         Task<decimal> GetTotalSalaryAsync();
         Task<Employee> GetEmployeeByUserIdAsync(string userId);
+        Task<string> SaveImageUrl(string imgUrl, string employeeId);
     }
 }

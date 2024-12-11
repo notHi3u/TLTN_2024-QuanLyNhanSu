@@ -180,58 +180,58 @@ namespace EMS.API.Endpoints.Account
             .RequireAuthorization();
             #endregion
 
-            #region Refresh Token
-            routeGroup.MapPost("/refresh", async Task<IResult> (
-                [FromServices] IServiceProvider sp,
-                [FromBody] RefreshRequest refreshRequest) =>
-            {
-                var userManager = sp.GetRequiredService<UserManager<User>>();
-                var jwtTokenService = sp.GetRequiredService<IJwtTokenService>();
-                var configuration = sp.GetRequiredService<IConfiguration>();
-
-                // Retrieve the refresh token from the request
-                var refreshTokenCode = refreshRequest.RefreshToken;
-
-                // Validate the refresh token
-                if (!await jwtTokenService.ValidateRefreshToken(refreshTokenCode))
+                #region Refresh Token
+                routeGroup.MapPost("/refresh", async Task<IResult> (
+                    [FromServices] IServiceProvider sp,
+                    [FromBody] RefreshRequest refreshRequest) =>
                 {
-                    var errorResponse = BaseResponse<string>.Failure("Invalid or expired refresh token");
-                    return Results.BadRequest(errorResponse);
-                }
+                    var userManager = sp.GetRequiredService<UserManager<User>>();
+                    var jwtTokenService = sp.GetRequiredService<IJwtTokenService>();
+                    var configuration = sp.GetRequiredService<IConfiguration>();
 
-                // Get information from the refresh token
-                var token = await jwtTokenService.GetTokenByCodeAsync(refreshTokenCode);
-                if (token == null || token.Expiry < DateTime.UtcNow)
-                {
-                    var errorResponse = BaseResponse<string>.Failure("Invalid or expired refresh token");
-                    return Results.BadRequest(errorResponse);
-                }
+                    // Retrieve the refresh token from the request
+                    var refreshTokenCode = refreshRequest.RefreshToken;
 
-                // Authenticate the user using UserManager
-                var user = await userManager.FindByIdAsync(token.UserId);
-                if (user == null)
-                {
-                    var errorResponse = BaseResponse<string>.Failure("User validation failed");
-                    return Results.BadRequest(errorResponse);
-                }
+                    // Validate the refresh token
+                    if (!await jwtTokenService.ValidateRefreshToken(refreshTokenCode))
+                    {
+                        var errorResponse = BaseResponse<string>.Failure("Invalid or expired refresh token");
+                        return Results.BadRequest(errorResponse);
+                    }
 
-                // Generate a new access token
-                var newAccessToken = jwtTokenService.GenerateAccessToken(token.UserId, user.Email);
+                    // Get information from the refresh token
+                    var token = await jwtTokenService.GetTokenByCodeAsync(refreshTokenCode);
+                    if (token == null || token.Expiry < DateTime.UtcNow)
+                    {
+                        var errorResponse = BaseResponse<string>.Failure("Invalid or expired refresh token");
+                        return Results.BadRequest(errorResponse);
+                    }
 
-                // Calculate the expiration time (ticks)
-                var expiryInMinutes = Convert.ToDouble(configuration.GetSection("Jwt")["ExpiryInMinutes"]);
-                var expiresInTicks = TimeSpan.FromMinutes(expiryInMinutes).Ticks;
+                    // Authenticate the user using UserManager
+                    var user = await userManager.FindByIdAsync(token.UserId);
+                    if (user == null)
+                    {
+                        var errorResponse = BaseResponse<string>.Failure("User validation failed");
+                        return Results.BadRequest(errorResponse);
+                    }
 
-                var response = new RequestTokenResponseDto
-                {
-                    AccessToken = newAccessToken,
-                    Expires = expiresInTicks // Use ticks instead of seconds
-                };
+                    // Generate a new access token
+                    var newAccessToken = jwtTokenService.GenerateAccessToken(token.UserId, user.Email);
 
-                var successResponse = BaseResponse<RequestTokenResponseDto>.Success(response);
-                return Results.Ok(successResponse);
-            }).ConfigureApiResponses();
-            #endregion
+                    // Calculate the expiration time (ticks)
+                    var expiryInMinutes = Convert.ToDouble(configuration.GetSection("Jwt")["ExpiryInMinutes"]);
+                    var expiresInTicks = TimeSpan.FromMinutes(expiryInMinutes).Ticks;
+
+                    var response = new RequestTokenResponseDto
+                    {
+                        AccessToken = newAccessToken,
+                        Expires = expiresInTicks // Use ticks instead of seconds
+                    };
+
+                    var successResponse = BaseResponse<RequestTokenResponseDto>.Success(response);
+                    return Results.Ok(successResponse);
+                }).ConfigureApiResponses();
+                #endregion
 
             #region Confirm Email
             routeGroup.MapGet("/confirmEmail", async Task<Results<ContentHttpResult, UnauthorizedHttpResult>>

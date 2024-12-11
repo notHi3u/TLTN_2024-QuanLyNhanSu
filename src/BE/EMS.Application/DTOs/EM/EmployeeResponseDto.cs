@@ -26,6 +26,7 @@ namespace EMS.Application.DTOs.EM
         public string? TaxId { get; set; }
         public string? Email { get; set; }
         public string? UserId { get; set; }
+        public string? ImageUrl { get; set; }
 
         // Salary Information
         public decimal BaseSalary { get; set; } // Base salary must be a positive value
