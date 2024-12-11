@@ -33,7 +33,9 @@ namespace EMS.Application.Services.EM
             employee.Id = Guid.NewGuid().ToString();
             await _employeeRepository.AddAsync(employee);
 
-            var initSalaryRecord = _mapper.Map<SalaryRecord>(employee);
+            //var initSalaryRecord = _mapper.Map<SalaryRecord>(employee);
+            var initSalaryRecord = new SalaryRecord()
+            { EmployeeId = employee.Id, BaseSalary = employee.BaseSalary, Bonuses = employee.Bonuses, Deductions = employee.Deductions };
             initSalaryRecord.Year = DateTime.Now.Year;
             initSalaryRecord.Month = DateTime.Now.Month;
             await _salaryRecordRepository.AddAsync(initSalaryRecord);
@@ -227,5 +229,62 @@ namespace EMS.Application.Services.EM
         {
             return await _employeeRepository.GetTotalSalaryAsync();
         }
+
+        public async Task<string> SaveEmployeeImage(EmployeeImageDto employeeImageDto)
+        {
+            // Fetch the employee from the repository
+            var employee = await _employeeRepository.GetByIdAsync(employeeImageDto.EmployeeId);
+            if (employee == null)
+            {
+                throw new ArgumentNullException(nameof(employee), $"Employee with ID {employeeImageDto.EmployeeId} not found.");
+            }
+
+            // Check if an image is provided
+            if (employeeImageDto.Image == null || employeeImageDto.Image.Length == 0)
+            {
+                throw new ArgumentException("No image file provided.", nameof(employeeImageDto.Image));
+            }
+
+            // If the employee already has an image, delete the old one
+            if (!string.IsNullOrEmpty(employee.ImageUrl))
+            {
+                var existingImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", employee.ImageUrl.TrimStart('/'));
+                if (File.Exists(existingImagePath))
+                {
+                    // Delete the existing image file
+                    File.Delete(existingImagePath);
+                }
+            }
+
+            // Generate a unique file name for the new image
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(employeeImageDto.Image.FileName);
+
+            // Define the path to save the new image (e.g., in wwwroot/Images)
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", fileName);
+
+            // Ensure the directory exists
+            var imagesFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images");
+            if (!Directory.Exists(imagesFolder))
+            {
+                Directory.CreateDirectory(imagesFolder);
+            }
+
+            // Save the new image to the file system
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                await employeeImageDto.Image.CopyToAsync(stream);
+            }
+
+            // Update the employee's image URL with the relative path
+            employee.ImageUrl = $"/Images/{fileName}";
+
+            // Save the new image URL in the database using the repository
+            var url = await _employeeRepository.SaveImageUrl(employee.ImageUrl, employee.Id);
+
+            // Return the updated URL to the image (or a confirmation message)
+            return url;
+        }
+
+
     }
 }

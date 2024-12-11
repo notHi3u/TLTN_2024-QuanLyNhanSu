@@ -72,7 +72,7 @@ namespace EMS.Domain.Models.EM
         public virtual ICollection<LeaveBalance> LeaveBalances { get; set; }
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<EmployeeRelative> EmployeeRelatives { get; set; }
-        public virtual ICollection<WorkRecord> WorkRecord { get; set; }
+        public virtual ICollection<WorkRecord> WorkRecord { get; set; } 
         [JsonIgnore]
         public virtual Department? Department { get; set; }
         [JsonIgnore]
@@ -92,5 +92,8 @@ namespace EMS.Domain.Models.EM
 
         // Navigation property for salary history
         public virtual ICollection<SalaryRecord> SalaryRecords { get; set; } // Historical salary data
+
+        [MaxLength(250)] // Optional: Limits Image URL to 250 characters
+        public string? ImageUrl { get; set; } // URL or path to the image
     }
 }

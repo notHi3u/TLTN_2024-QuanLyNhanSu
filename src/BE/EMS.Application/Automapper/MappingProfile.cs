@@ -42,16 +42,17 @@ namespace EMS.Application.Automapper
             CreateMap<EmployeeRequestDto, Employee>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()) // Set EmployeeId to a new GUID
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? EmployeeStatus.Active)) // Set default status if null
-                ;
+                .ForMember(dest => dest.UserId, opt => opt.Ignore()) // UserId will be set later
+                .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
             CreateMap<Employee, EmployeeResponseDto>()
-                .ForMember(dest => dest.Department, opt => opt.Ignore()) // Ignore Department property
-                .ForMember(dest => dest.ManagedDepartment, opt => opt.Ignore()) // Ignore ManagedDepartment property
-                .ForMember(dest => dest.TimeCards, opt => opt.MapFrom(src => src.TimeCards)) // Mapping for TimeCards
-                .ForMember(dest => dest.LeaveRequests, opt => opt.MapFrom(src => src.LeaveRequests)) // Mapping for LeaveRequests
-                .ForMember(dest => dest.LeaveBalances, opt => opt.MapFrom(src => src.LeaveBalances)) // Mapping for LeaveBalances
-                .ForMember(dest => dest.Attendances, opt => opt.MapFrom(src => src.Attendances)) // Mapping for Attendances
-                .ForMember(dest => dest.EmployeeRelatives, opt => opt.MapFrom(src => src.EmployeeRelatives)) // Mapping for EmployeeRelatives
-                .ForMember(dest => dest.WorkRecord, opt => opt.MapFrom(src => src.WorkRecord)); // Mapping for WorkRecord
+                // Ignoring complex navigation properties if they are not needed in the response.
+                .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department)) // Map Department if needed
+                .ForMember(dest => dest.ManagedDepartment, opt => opt.MapFrom(src => src.ManagedDepartment)) // Map ManagedDepartment if needed
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User)) // Map the User entity (if User is part of Employee)
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl))
+
+                // Mapping and calculating NetSalary based on BaseSalary, Bonuses, and Deductions
+                .ForMember(dest => dest.NetSalary, opt => opt.MapFrom(src => src.BaseSalary + src.Bonuses - src.Deductions));
 
             #endregion
 
@@ -100,14 +101,14 @@ namespace EMS.Application.Automapper
             CreateMap<EmployeeRelative, EmployeeRelativeResponseDto>();
             #endregion
 
-            //#region Employee - SalaryRecord
-            //CreateMap<Employee, SalaryRecord>()
-            //    .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.Id)) // Mapping EmployeeId
-            //    .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.BaseSalary)) // Map BaseSalary
-            //    .ForMember(dest => dest.Bonuses, opt => opt.MapFrom(src => src.Bonuses)) // Map Bonuses
-            //    .ForMember(dest => dest.Deductions, opt => opt.MapFrom(src => src.Deductions)) // Map Deductions
-            //    .ForMember(dest => dest.NetSalary, opt => opt.MapFrom(src => src.BaseSalary + src.Bonuses - src.Deductions)); // Calculate NetSalary
-            //#endregion
+            #region Employee - SalaryRecord
+            CreateMap<Employee, SalaryRecord>()
+                .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.Id)) // Mapping EmployeeId
+                .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.BaseSalary)) // Map BaseSalary
+                .ForMember(dest => dest.Bonuses, opt => opt.MapFrom(src => src.Bonuses)) // Map Bonuses
+                .ForMember(dest => dest.Deductions, opt => opt.MapFrom(src => src.Deductions)) // Map Deductions
+                .ForMember(dest => dest.NetSalary, opt => opt.MapFrom(src => src.BaseSalary + src.Bonuses - src.Deductions)); // Calculate NetSalary
+            #endregion
         }
     }
 }

@@ -88,5 +88,17 @@ namespace EMS.Infrastructure.Repositories.EM
             var employee = await _dbSet.FirstOrDefaultAsync(e => e.UserId == userId);
             return employee;
         }
+
+        public async Task<string> SaveImageUrl(string imgUrl, string employeeId)
+        {
+            var employee = await _dbSet.FirstOrDefaultAsync(e => e.Id == employeeId);
+            if (employee != null)
+            {
+                employee.ImageUrl = imgUrl;
+                await _context.SaveChangesAsync();
+                return employee.ImageUrl;
+            }
+            return "";
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace EMS.Application.DTOs.Account
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
-        public DateTime Expires { get; set; }
+        public long ExpiresIn { get; set; }
+        public string UserName { get; set; }
+
     }
 }
