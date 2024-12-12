@@ -17,10 +17,11 @@ namespace EMS.Application.Services.Account
         Task<BaseResponse<bool>> DeleteUserAsync(string id);
         Task<PagedDto<UserResponseDto>> GetPagedUsersAsync(UserFilter filter); // Đã điều chỉnh để sử dụng BaseResponse
         Task<BaseResponse<bool>> AssignRoleToUserAsync(string userId, string roleName);
-        Task<BaseResponse<bool>> AssignRolesToUserAsync(string userId, IEnumerable<string> roleNames);
+        Task<BaseResponse<int>> AssignRolesToUserAsync(string userId, IEnumerable<string> roleNames);
 
         Task<BaseResponse<bool>> RemoveRoleFromUserAsync(string userId, string roleName);
-        Task<BaseResponse<bool>> RemoveRolesFromUserAsync(string userid, IEnumerable<string> roleNames);
+        Task<BaseResponse<int>> RemoveRolesFromUserAsync(string userid, IEnumerable<string> roleNames);
+
         Task<BaseResponse<bool>> UpdateUserRolesAsync(string userId, IEnumerable<string> roleNames);
 
         Task<string> GenerateInitPassword();

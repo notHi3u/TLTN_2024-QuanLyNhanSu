@@ -20,12 +20,17 @@ namespace EMS.Application.Services.Account
         private readonly UserManager<User> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly IMailHelper _mailHelper;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
+
         public UserService(
             IUserRepository userRepository,
             IMapper mapper,
             UserManager<User> userManager,
             IEmailSender emailSender,
-            IMailHelper mailHelper
+            IMailHelper mailHelper,
+            IRoleRepository roleRepository,
+            IUserRoleRepository userRoleRepository
             )
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
@@ -33,6 +38,8 @@ namespace EMS.Application.Services.Account
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _mailHelper = mailHelper ?? throw new ArgumentNullException(nameof(mailHelper));
+            _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(_roleRepository));
+            _userRoleRepository = userRoleRepository ?? throw new ArgumentNullException( nameof(_userRoleRepository));
         }
         #endregion
 
@@ -198,71 +205,76 @@ namespace EMS.Application.Services.Account
                 return BaseResponse<bool>.Failure("User not found.");
             }
 
+            // Gán vai trò cho người dùng
+            var roleNames = new List<string> { roleName };
+
+            // Await the asynchronous method to get the role IDs
+            var roleIds = await _roleRepository.GetIdByNameAsync(roleNames);
+
             // Kiểm tra xem vai trò đã tồn tại chưa
-            var roleExists = await _userManager.IsInRoleAsync(user, roleName);
-            if (roleExists)
+            var hasRole = await _userRoleRepository.GetByUserAndRoleIdAsync(userId, roleIds.First());
+            if (hasRole != null)
             {
                 return BaseResponse<bool>.Failure("User already has this role.");
             }
 
-            // Gán vai trò cho người dùng
-            var result = await _userManager.AddToRoleAsync(user, roleName);
+            
 
-            if (result.Succeeded)
+            int count = 0;
+
+            // Iterate over the retrieved role IDs and assign roles to the user
+            foreach (var roleId in roleIds)
+            {
+                var userRole = new UserRole() { RoleId = roleId, UserId = userId };
+                await _userRoleRepository.AddAsync(userRole);
+                ++count;
+            }
+
+            // If at least one role was added, return success
+            if (count > 0)
             {
                 return BaseResponse<bool>.Success(true);
             }
             else
             {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                return BaseResponse<bool>.Failure(errors);
+                return BaseResponse<bool>.Failure("No roles were assigned to the user.");
             }
         }
 
         #endregion
 
+
         #region Assign Roles to User
 
-        public async Task<BaseResponse<bool>> AssignRolesToUserAsync(string userId, IEnumerable<string> roleNames)
+        public async Task<BaseResponse<int>> AssignRolesToUserAsync(string userId, IEnumerable<string> roleNames)
         {
             if (string.IsNullOrWhiteSpace(userId) || roleNames == null || !roleNames.Any())
             {
-                return BaseResponse<bool>.Failure("User ID and Role Names cannot be null or empty.");
+                return BaseResponse<int>.Failure("User ID and Role Names cannot be null or empty.");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return BaseResponse<bool>.Failure("User not found.");
+                return BaseResponse<int>.Failure("User not found.");
             }
 
-            // Kiểm tra xem tất cả các vai trò có tồn tại không
-            var validRoleNames = new List<string>();
-            foreach (var roleName in roleNames)
+            var roleIds = await _roleRepository.GetIdByNameAsync(roleNames);
+
+            var count = 0;
+            foreach (var roleId in roleIds)
             {
-                if (await _userManager.IsInRoleAsync(user, roleName) == false)
+                var userRole = new UserRole() { UserId = userId, RoleId = roleId };
+                try
                 {
-                    validRoleNames.Add(roleName);
+                    await _userRoleRepository.AddAsync(userRole);
+                    ++count;
                 }
+                catch (Exception ex) { }
             }
-
-            if (!validRoleNames.Any())
-            {
-                return BaseResponse<bool>.Failure("No valid roles to assign.");
-            }
-
-            // Gán tất cả các vai trò cho người dùng
-            var result = await _userManager.AddToRolesAsync(user, validRoleNames);
-
-            if (result.Succeeded)
-            {
-                return BaseResponse<bool>.Success(true);
-            }
-            else
-            {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                return BaseResponse<bool>.Failure(errors);
-            }
+            if (count >0)
+                return BaseResponse<int>.Success(count);
+            return BaseResponse<int>.Failure("Create failed");
         }
 
         #endregion
@@ -282,24 +294,44 @@ namespace EMS.Application.Services.Account
                 return BaseResponse<bool>.Failure("User not found.");
             }
 
-            // Kiểm tra xem người dùng có vai trò này không
-            var roleExists = await _userManager.IsInRoleAsync(user, roleName);
-            if (!roleExists)
+            // Gán vai trò cho người dùng
+            var roleNames = new List<string> { roleName };
+
+            // Await the asynchronous method to get the role IDs
+            var roleIds = await _roleRepository.GetIdByNameAsync(roleNames);
+
+            // Kiểm tra xem vai trò đã tồn tại chưa
+            var hasRole = await _userRoleRepository.GetByUserAndRoleIdAsync(userId, roleIds.First());
+            if (hasRole == null)
             {
                 return BaseResponse<bool>.Failure("User does not have this role.");
             }
 
-            // Xóa vai trò khỏi người dùng
-            var result = await _userManager.RemoveFromRoleAsync(user, roleName);
 
-            if (result.Succeeded)
+
+            int count = 0;
+
+            // Iterate over the retrieved role IDs and assign roles to the user
+            foreach (var roleId in roleIds)
+            {
+                var userRole = new UserRole() { RoleId = roleId, UserId = userId };
+                try
+                {
+                    await _userRoleRepository.DeleteAsync(userRole);
+                    ++count;
+                }
+                catch (Exception ex) { }
+                
+            }
+
+            // If at least one role was added, return success
+            if (count > 0)
             {
                 return BaseResponse<bool>.Success(true);
             }
             else
             {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                return BaseResponse<bool>.Failure(errors);
+                return BaseResponse<bool>.Failure("No roles were removed to the user.");
             }
         }
 
@@ -307,47 +339,42 @@ namespace EMS.Application.Services.Account
 
         #region Remove Roles from User
 
-        public async Task<BaseResponse<bool>> RemoveRolesFromUserAsync(string userId, IEnumerable<string> roleNames)
+        public async Task<BaseResponse<int>> RemoveRolesFromUserAsync(string userId, IEnumerable<string> roleNames)
         {
             if (string.IsNullOrWhiteSpace(userId) || roleNames == null || !roleNames.Any())
             {
-                return BaseResponse<bool>.Failure("User ID cannot be null or empty, and at least one role name must be provided.");
+                return BaseResponse<int>.Failure("User ID cannot be null or empty, and at least one role name must be provided.");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return BaseResponse<bool>.Failure("User not found.");
+                return BaseResponse<int>.Failure("User not found.");
             }
 
             var errors = new List<string>();
 
-            foreach (var roleName in roleNames)
+            var roleIds = await _roleRepository.GetIdByNameAsync(roleNames);
+
+            var count = 0;
+
+            foreach (var roleId in roleIds)
             {
-                // Check if the user is in this role
-                if (!await _userManager.IsInRoleAsync(user, roleName))
+                var userRole = new UserRole() { UserId = userId, RoleId = roleId };
+                try
                 {
-                    errors.Add($"User is not in role '{roleName}'.");
-                    continue; // Skip to the next role
+                    await _userRoleRepository.DeleteAsync(userRole);
+                    ++count;
                 }
-
-                // Remove the role from the user
-                var result = await _userManager.RemoveFromRoleAsync(user, roleName);
-                if (!result.Succeeded)
-                {
-                    errors.AddRange(result.Errors.Select(e => e.Description));
-                }
+                catch (Exception ex) { }
             }
-
-            if (errors.Any())
-            {
-                return BaseResponse<bool>.Failure(errors);
-            }
-
-            return BaseResponse<bool>.Success(true);
+            if (count > 0)
+                return BaseResponse<int>.Success(count);
+            return BaseResponse<int>.Failure("Delete failed");
         }
 
         #endregion
+
 
         #region Update User Roles
 

@@ -14,7 +14,7 @@ namespace EMS.API.Endpoints.Account
             #region Define
             var userGroup = app.MapGroup("/roles")
                 .WithTags("Role")
-                .RequireAuthorization("Admin","HR");
+                .RequireAuthorization();
             #endregion
 
             #region Get all roles
