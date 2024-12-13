@@ -4,6 +4,7 @@ using EMS.Application.DTOs.Account;
 using EMS.Domain.Filters.Account;
 using EMS.Domain.Models.Account;
 using EMS.Domain.Repositories.Account;
+using EMS.Infrastructure.Repositories.Account;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,17 @@ namespace EMS.Application.Services.Account
     {
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
-        private readonly RoleManager<Role> _roleManager;
+        private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly UserManager<User> _userManager;
+        private readonly IUserRoleRepository _userRoleRepository;
 
-        public RoleService(IRoleRepository roleRepository, IMapper mapper, RoleManager<Role> roleManager, UserManager<User> userManager)
+        public RoleService(IRoleRepository roleRepository, IMapper mapper, IRolePermissionRepository rolePermissionRepository, UserManager<User> userManager, IUserRoleRepository userRoleRepository)
         {
             _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _userManager = userManager;
+            _rolePermissionRepository = rolePermissionRepository ?? throw new ArgumentNullException(nameof(_rolePermissionRepository));
+            _userRoleRepository = userRoleRepository ?? throw new ArgumentNullException(nameof(_userRoleRepository));
         }
 
         public async Task<RoleResponseDto> GetRoleByIdAsync(string id, bool IsDeep)
@@ -46,9 +50,9 @@ namespace EMS.Application.Services.Account
             }
 
             // Check if a role with the same name already exists using ExistsAsync
-            bool roleExists = await _roleRepository.ExistsAsync(r => r.Name == roleRequestDto.Name);
+            var roledb = await _roleRepository.GetByIdAsync(roleRequestDto.Id);
 
-            if (roleExists)
+            if (roledb != null)
             {
                 throw new InvalidOperationException($"Role with name '{roleRequestDto.Name}' already exists.");
             }
@@ -61,27 +65,64 @@ namespace EMS.Application.Services.Account
             // Add the new role to the repository
             await _roleRepository.AddAsync(role);
 
+            //Add RolePermission
+            foreach(var permission in roleRequestDto.PermissionsIds)
+            {
+
+            }
+
             // Return the mapped RoleResponseDto
             return _mapper.Map<RoleResponseDto>(role);
         }
 
-        public async Task<RoleResponseDto> UpdateRoleAsync(string id, RoleRequestDto roleRequestDto)
+        public async Task<RoleResponseDto> UpdateRoleAsync(RoleRequestDto roleRequestDto)
         {
             if (roleRequestDto == null)
             {
                 throw new ArgumentNullException(nameof(roleRequestDto));
             }
 
-            var role = await _roleRepository.GetByIdAsync(id);
+            var role = await _roleRepository.GetByIdAsync(roleRequestDto.Id);
             if (role == null)
             {
                 throw new ArgumentNullException(nameof(role));
             }
 
+            // Handle Permissions
+            var currentPermissions = await _rolePermissionRepository.GetByRoleIdAsync(roleRequestDto.Id);
+            var currentPermissionIds = currentPermissions.Select(rp => rp.PermissionId).ToHashSet();
+
+            // Add new permissions
+            foreach (var permissionId in roleRequestDto.PermissionsIds)
+            {
+                if (!currentPermissionIds.Contains(permissionId))
+                {
+                    var newRolePermission = new RolePermission
+                    {
+                        RoleId = roleRequestDto.Id,
+                        PermissionId = permissionId
+                    };
+                    await _rolePermissionRepository.AddAsync(newRolePermission);
+                }
+            }
+
+            // Remove permissions not in the new list
+            foreach (var permission in currentPermissions)
+            {
+                if (!roleRequestDto.PermissionsIds.Contains(permission.PermissionId))
+                {
+                    await _rolePermissionRepository.DeleteAsync(permission);
+                }
+            }
+
+            // Update the role's basic details
             _mapper.Map(roleRequestDto, role);
             await _roleRepository.UpdateAsync(role);
+
+            // Return the updated role as a response DTO
             return _mapper.Map<RoleResponseDto>(role);
         }
+
 
         public async Task<bool> DeleteRoleAsync(string id)
         {
@@ -123,8 +164,9 @@ namespace EMS.Application.Services.Account
                 return BaseResponse<bool>.Failure("Role ID cannot be null or empty, and at least one user ID must be provided.");
             }
 
-            var roleExists = await _roleManager.RoleExistsAsync(roleId);
-            if (!roleExists)
+            // Check if the role exists
+            var roleExists = await _roleRepository.GetByIdAsync(roleId);
+            if (roleExists == null)
             {
                 return BaseResponse<bool>.Failure("Role not found.");
             }
@@ -133,6 +175,7 @@ namespace EMS.Application.Services.Account
 
             foreach (var userId in userIds)
             {
+                // Check if the user exists
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null)
                 {
@@ -140,10 +183,27 @@ namespace EMS.Application.Services.Account
                     continue; // Skip to the next user
                 }
 
-                var result = await _userManager.AddToRoleAsync(user, roleId);
-                if (!result.Succeeded)
+                // Check if the user already has the role
+                var existingUserRole = await _userRoleRepository.GetByUserAndRoleIdAsync(userId, roleId);
+                if (existingUserRole != null)
                 {
-                    errors.AddRange(result.Errors.Select(e => e.Description));
+                    continue; // User already has the role, skip
+                }
+
+                // Add the role to the user
+                var newUserRole = new UserRole
+                {
+                    UserId = userId,
+                    RoleId = roleId
+                };
+
+                try
+                {
+                    await _userRoleRepository.AddAsync(newUserRole);
+                }
+                catch (Exception ex)
+                {
+                    errors.Add($"Failed to assign role to user '{userId}': {ex.Message}");
                 }
             }
 
@@ -155,19 +215,19 @@ namespace EMS.Application.Services.Account
             return BaseResponse<bool>.Success(true);
         }
 
+
         public async Task<IEnumerable<UserResponseDto>> GetUsersByRoleIdAsync(string roleId)
         {
-            var role = await _roleManager.FindByIdAsync(roleId);
+            var role = await _roleRepository.GetByIdAsync(roleId);
             if (role == null)
                 throw new ArgumentNullException(nameof(role));
-
             var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
             return _mapper.Map <IEnumerable<UserResponseDto>> (usersInRole);
         }
 
         public async Task<bool> RemoveUsersFromRoleAsync(string roleId, IEnumerable<string> userIds)
         {
-            var role = await _roleManager.FindByIdAsync(roleId);
+            var role = await _roleRepository.GetByIdAsync(roleId);
             if (role == null) return false;
 
             foreach (var userId in userIds)
@@ -180,5 +240,7 @@ namespace EMS.Application.Services.Account
             }
             return true; // Indicate success
         }
+
+        
     }
 }

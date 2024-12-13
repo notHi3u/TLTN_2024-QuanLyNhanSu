@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EMS.Application.DTOs.Account
+﻿namespace EMS.Application.DTOs.Account
 {
     public class RoleRequestDto
     {
-        public required string Name { get; set; }
-        public string? Description { get; set; }
+        public string Id { get; set; }
 
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+        public IEnumerable<string> PermissionsIds { get; set; } = new List<string>();
     }
 }
