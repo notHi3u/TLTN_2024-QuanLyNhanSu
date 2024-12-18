@@ -19,7 +19,6 @@ namespace EMS.Application.Services.Account
         Task<BaseResponse<bool>> AssignRoleToMultipleUsersAsync(string roleId, IEnumerable<string> userIds);
         Task<IEnumerable<UserResponseDto>> GetUsersByRoleIdAsync(string roleId);
         Task<bool> RemoveUsersFromRoleAsync(string roleId, IEnumerable<string> userIds);
-        //Task<RoleResponseDto> AddPermissionToRole(RoleRequestDto permissionRequestDto);
-        
+        Task<IEnumerable<string>> GetRoleByUserIdAsync(string userId);
     }
 }

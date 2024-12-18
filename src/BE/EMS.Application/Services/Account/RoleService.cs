@@ -241,6 +241,35 @@ namespace EMS.Application.Services.Account
             return true; // Indicate success
         }
 
-        
+        public async Task<IEnumerable<string>> GetRoleByUserIdAsync(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentNullException(nameof(userId), "User ID cannot be null or empty.");
+            }
+
+            // Retrieve all roles associated with the userId
+            var userRoles = await _userRoleRepository.GetByUserIdAsync(userId);
+            if (userRoles == null || !userRoles.Any())
+            {
+                throw new InvalidOperationException($"No roles found for user with ID {userId}.");
+            }
+
+            // Use LINQ to fetch role names directly, reducing additional looping
+            var roleNames = new List<string>();
+            foreach (var userRole in userRoles)
+            {
+                var role = await _roleRepository.GetByIdAsync(userRole.RoleId);
+                if (role != null && !string.IsNullOrEmpty(role.Name))
+                {
+                    roleNames.Add(role.Name);
+                }
+            }
+
+            return roleNames;
+        }
+
+
+
     }
 }
