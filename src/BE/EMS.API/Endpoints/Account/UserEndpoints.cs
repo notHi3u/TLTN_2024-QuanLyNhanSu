@@ -12,6 +12,7 @@ namespace EMS.API.Endpoints.Account
         public static void Map(WebApplication app)
         {
             var userGroup = app.MapGroup("/users")
+                .RequireAuthorization()
                 .WithTags("User");
 
             #region Get All Users
@@ -31,7 +32,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization("Admin", "HR")
+                //.RequireAuthorization("Admin", "HR")
                 .ConfigureApiResponses();
             #endregion
 
@@ -54,7 +55,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization()
+                //.RequireAuthorization()
                 .ConfigureApiResponses();
             #endregion
 
@@ -83,7 +84,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization("Admin", "HR")
+                //.RequireAuthorization("Admin", "HR")
                 .ConfigureApiResponses();
             #endregion
 
@@ -112,7 +113,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization("Admin", "HR")
+                //.RequireAuthorization("Admin", "HR")
                 .ConfigureApiResponses();
             #endregion
 
@@ -135,7 +136,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization("Admin", "HR")
+                //.RequireAuthorization("Admin", "HR")
                 .ConfigureApiResponses();
             #endregion
 
@@ -158,7 +159,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization("Admin", "HR")
+                //.RequireAuthorization("Admin", "HR")
                 .ConfigureApiResponses();
             #endregion
 
@@ -181,7 +182,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization("Admin", "HR")
+                //.RequireAuthorization("Admin", "HR")
                 .ConfigureApiResponses();
             #endregion
 
@@ -204,7 +205,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization("Admin", "HR")
+                //.RequireAuthorization("Admin", "HR")
                 .ConfigureApiResponses();
             #endregion
 
@@ -227,7 +228,7 @@ namespace EMS.API.Endpoints.Account
                     return Results.Problem(detail: errorResponse.Errors[0], statusCode: errorResponse.StatusCode);
                 }
             })
-                .RequireAuthorization("Admin", "HR")
+                //.RequireAuthorization("Admin", "HR")
                 .ConfigureApiResponses();
             #endregion
         }

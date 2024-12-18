@@ -9,5 +9,6 @@ namespace EMS.Domain.Repositories.Account
     {
         Task<Role> GetByIdAsync(string id, bool? isDeep);
         Task<PagedDto<Role>> GetPagedAsync(RoleFilter filter);
+        Task<IEnumerable<string>> GetIdByNameAsync(IEnumerable<string> name);
     }
 }

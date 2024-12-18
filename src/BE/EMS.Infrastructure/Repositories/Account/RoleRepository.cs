@@ -20,17 +20,40 @@ namespace EMS.Infrastructure.Repositories.Account
         {
         }
 
-        public async Task<Role?> GetByIdAsync(string id, bool? isDeep)
+        public async Task<Role> GetByIdAsync(string id, bool? isDeep = false)
         {
-            // Retrieve the role from the database using the provided ID
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id), "ID cannot be null or empty.");
+
+            var query = _dbSet.AsQueryable();
+
             if (isDeep.HasValue && isDeep.Value)
-                return await _dbSet.FindAsync(id);
-            return await _dbSet
-                .AsNoTracking()
-                .Include(r => r.RolePermissions)
-                .ThenInclude(rp => rp.Permission)
-                .FirstOrDefaultAsync(r => r.Id == id);
+            {
+                // Include related entities for deep fetching
+                query = query.Include(r => r.RolePermissions)
+                             .ThenInclude(rp => rp.Permission);
+            }
+            else
+            {
+                // Use AsNoTracking for lightweight fetching
+                query = query.AsNoTracking();
+            }
+
+            return await query.FirstOrDefaultAsync(r => r.Id == id);
         }
+
+
+        public async Task<IEnumerable<string>> GetIdByNameAsync(IEnumerable<string> names)
+        {
+            if (names == null || !names.Any())
+                throw new ArgumentNullException(nameof(names), "Names cannot be null or empty.");
+
+            return await _dbSet
+                .Where(r => names.Contains(r.Name)) // Filter roles by the provided names
+                .Select(r => r.Id)                 // Project only the IDs
+                .ToListAsync();                    // Execute the query and return the results as a list
+        }
+
 
         public async Task<PagedDto<Role>> GetPagedAsync(RoleFilter filter)
         {
